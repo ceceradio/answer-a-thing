@@ -1,5 +1,5 @@
 {
-  "name": "answer-athing",
+  "name": "answer-a-thing",
   "version": "0.0.0",
   "main": "server/app.js",
   "dependencies": {
