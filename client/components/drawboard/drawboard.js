@@ -5,8 +5,7 @@ angular.module('answerAThingApp')
     return {
       restrict: 'E',
       scope: {
-        width: '=',
-        height: '='
+        onSubmit: '@'
       },
       templateUrl: '/components/drawboard/drawboard.html',
       controller: function($scope) {
@@ -14,25 +13,41 @@ angular.module('answerAThingApp')
         $scope.lastFrame = true;
       },
       link: function(scope, element, attr) {
-        var canvas = element[0].children[0];
+        var cumulativeOffset = function(element) {
+          var top = 0, left = 0;
+          do {
+              top += element.offsetTop  || 0;
+              left += element.offsetLeft || 0;
+              element = element.offsetParent;
+          } while(element);
+
+          return {
+              top: top,
+              left: left
+          };
+      };
+
+        var canvas = element[0].querySelector("canvas");
+        var row = element[0].querySelector(".row");
 
         var ctx = canvas.getContext('2d');
-    
-        var sketch = canvas.parentElement;
-        var sketch_style = getComputedStyle(sketch);
-        canvas.width = parseInt(scope.width);
-        canvas.height = parseInt(scope.height);
 
-        ctx.rect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle="#fff";
-        ctx.fill();
+        var row_style = getComputedStyle(row, null);
+        canvas.width = parseInt(row_style.getPropertyValue('width').replace(/[^-\d\.]/g, ''));
+        canvas.height = parseInt(row_style.getPropertyValue('width').replace(/[^-\d\.]/g, '') * 9 / 16);
+
+        scope.clear = function() {
+          ctx.fillStyle="#ffffff";
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+        }
+        scope.clear();
 
         var mouse = {x: 0, y: 0};
          
         /* Mouse Capturing Work */
         canvas.addEventListener('mousemove', function(e) {
-          mouse.x = e.pageX - this.offsetLeft;
-          mouse.y = e.pageY - this.offsetTop;
+          mouse.x = e.pageX - cumulativeOffset(canvas).left;
+          mouse.y = e.pageY - cumulativeOffset(canvas).top;
         }, false);
         
         /* Drawing on Paint App */
