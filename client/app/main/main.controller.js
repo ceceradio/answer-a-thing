@@ -21,6 +21,10 @@ angular.module('answerAThingApp')
       $http.delete('/api/things/' + thing._id);
     };
 
+    $scope.progress = function(imageData) {
+      document.getElementById("thumbnail").setAttribute('src',imageData);
+    }
+
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('thing');
     });

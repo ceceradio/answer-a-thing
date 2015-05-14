@@ -1,16 +1,19 @@
 'use strict';
 
 angular.module('answerAThingApp')
-  .directive('drawboard', function () {
+  .directive('drawboard', function ($document) {
     return {
       restrict: 'E',
       scope: {
-        onSubmit: '@'
+        onSubmit: '=',
+        onProgress: '=?'
       },
       templateUrl: '/components/drawboard/drawboard.html',
       controller: function($scope) {
+        $scope.aspectRatio = 16 / 9;
         $scope.painting = false;
         $scope.lastFrame = true;
+        
       },
       link: function(scope, element, attr) {
         var cumulativeOffset = function(element) {
@@ -25,7 +28,7 @@ angular.module('answerAThingApp')
               top: top,
               left: left
           };
-      };
+        };
 
         var canvas = element[0].querySelector("canvas");
         var row = element[0].querySelector(".row");
@@ -34,7 +37,7 @@ angular.module('answerAThingApp')
 
         var row_style = getComputedStyle(row, null);
         canvas.width = parseInt(row_style.getPropertyValue('width').replace(/[^-\d\.]/g, ''));
-        canvas.height = parseInt(row_style.getPropertyValue('width').replace(/[^-\d\.]/g, '') * 9 / 16);
+        canvas.height = parseInt(row_style.getPropertyValue('width').replace(/[^-\d\.]/g, '') * (1/scope.aspectRatio) );
 
         scope.clear = function() {
           ctx.fillStyle="#ffffff";
@@ -69,6 +72,49 @@ angular.module('answerAThingApp')
           scope.lastFrame = true;
           canvas.removeEventListener('mousemove', onPaint, false);
         }, false);
+
+        scope.submit = function() {
+          scope.onSuccess(highQualityCopy());
+        }
+
+        function highQualityCopy() {
+          var canvasCopy = $document[0].createElement("canvas");
+          canvasCopy.height = 480;
+          canvasCopy.width = 480 * scope.aspectRatio;
+          var copyContext = canvasCopy.getContext("2d");
+          copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
+          return canvasCopy.toDataURL('image/png');
+        }
+        function lowQualityCopy() {
+          var canvasCopy = $document[0].createElement("canvas");
+          canvasCopy.height = 480;
+          canvasCopy.width = 480 * scope.aspectRatio;
+          var copyContext = canvasCopy.getContext("2d");
+          copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
+          return canvasCopy.toDataURL('image/jpeg', 0.5);
+        }
+
+        var lastFrameCounterMax = 10;
+        var lastFrameCounter = 0;
+
+        setInterval(function() {
+          if (scope.painting || scope.lastFrame) {
+            if (scope.painting || (scope.lastFrame && lastFrameCounter == 0)) {
+              lastFrameCounter = 0;
+              if (scope.onProgress)
+                scope.$apply(scope.onProgress(lowQualityCopy()));
+            }
+            if (scope.lastFrame && lastFrameCounter >= lastFrameCounterMax) {
+              lastFrameCounter = 0;
+              scope.lastFrame = false;
+              if (scope.onProgress)
+                scope.$apply(scope.onProgress(highQualityCopy()));
+            }
+            else if (scope.lastFrame) {
+              lastFrameCounter++;
+            }
+          }
+        },300);
          
         var onPaint = function() {
           ctx.lineTo(mouse.x, mouse.y);
