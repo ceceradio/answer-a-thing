@@ -74,7 +74,7 @@ angular.module('answerAThingApp')
         }, false);
 
         scope.submit = function() {
-          scope.onSuccess(highQualityCopy());
+          scope.$apply(scope.onSuccess(highQualityCopy()));
         }
 
         function highQualityCopy() {
