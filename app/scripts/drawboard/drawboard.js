@@ -8,14 +8,14 @@ angular.module('answerAThingApp')
         onSubmit: '=',
         onProgress: '=?'
       },
-      templateUrl: '/components/drawboard/drawboard.html',
+      templateUrl: '/scripts/drawboard/drawboard.html',
       controller: function($scope) {
         $scope.aspectRatio = 16 / 9;
         $scope.painting = false;
         $scope.lastFrame = true;
         
       },
-      link: function(scope, element, attr) {
+      link: function(scope, element) {
         var cumulativeOffset = function(element) {
           var top = 0, left = 0;
           do {
@@ -30,19 +30,19 @@ angular.module('answerAThingApp')
           };
         };
 
-        var canvas = element[0].querySelector("canvas");
-        var row = element[0].querySelector(".row");
+        var canvas = element[0].querySelector('canvas');
+        var row = element[0].querySelector('.row');
 
         var ctx = canvas.getContext('2d');
 
-        var row_style = getComputedStyle(row, null);
-        canvas.width = parseInt(row_style.getPropertyValue('width').replace(/[^-\d\.]/g, ''));
-        canvas.height = parseInt(row_style.getPropertyValue('width').replace(/[^-\d\.]/g, '') * (1/scope.aspectRatio) );
+        var rowStyle = getComputedStyle(row, null);
+        canvas.width = parseInt(rowStyle.getPropertyValue('width').replace(/[^-\d\.]/g, ''));
+        canvas.height = parseInt(rowStyle.getPropertyValue('width').replace(/[^-\d\.]/g, '') * (1/scope.aspectRatio) );
 
         scope.clear = function() {
-          ctx.fillStyle="#ffffff";
+          ctx.fillStyle='#ffffff';
           ctx.fillRect(0,0,canvas.width,canvas.height);
-        }
+        };
         scope.clear();
 
         var mouse = {x: 0, y: 0};
@@ -59,7 +59,7 @@ angular.module('answerAThingApp')
         ctx.lineCap = 'round';
         ctx.strokeStyle = 'blue';
          
-        canvas.addEventListener('mousedown', function(e) {
+        canvas.addEventListener('mousedown', function() {
           ctx.beginPath();
           scope.painting = true;
           ctx.moveTo(mouse.x, mouse.y);
@@ -75,21 +75,21 @@ angular.module('answerAThingApp')
 
         scope.submit = function() {
           scope.$apply(scope.onSuccess(highQualityCopy()));
-        }
+        };
 
         function highQualityCopy() {
-          var canvasCopy = $document[0].createElement("canvas");
+          var canvasCopy = $document[0].createElement('canvas');
           canvasCopy.height = 480;
           canvasCopy.width = 480 * scope.aspectRatio;
-          var copyContext = canvasCopy.getContext("2d");
+          var copyContext = canvasCopy.getContext('2d');
           copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
           return canvasCopy.toDataURL('image/png');
         }
         function lowQualityCopy() {
-          var canvasCopy = $document[0].createElement("canvas");
+          var canvasCopy = $document[0].createElement('canvas');
           canvasCopy.height = 480;
           canvasCopy.width = 480 * scope.aspectRatio;
-          var copyContext = canvasCopy.getContext("2d");
+          var copyContext = canvasCopy.getContext('2d');
           copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
           return canvasCopy.toDataURL('image/jpeg', 0.5);
         }
@@ -99,16 +99,18 @@ angular.module('answerAThingApp')
 
         setInterval(function() {
           if (scope.painting || scope.lastFrame) {
-            if (scope.painting || (scope.lastFrame && lastFrameCounter == 0)) {
+            if (scope.painting || (scope.lastFrame && lastFrameCounter === 0)) {
               lastFrameCounter = 0;
-              if (scope.onProgress)
+              if (scope.onProgress) {
                 scope.$apply(scope.onProgress(lowQualityCopy()));
+              }
             }
             if (scope.lastFrame && lastFrameCounter >= lastFrameCounterMax) {
               lastFrameCounter = 0;
               scope.lastFrame = false;
-              if (scope.onProgress)
+              if (scope.onProgress) {
                 scope.$apply(scope.onProgress(highQualityCopy()));
+              }
             }
             else if (scope.lastFrame) {
               lastFrameCounter++;
@@ -121,6 +123,5 @@ angular.module('answerAThingApp')
           ctx.stroke();
         };
       }
-
-    }
+    };
   });
