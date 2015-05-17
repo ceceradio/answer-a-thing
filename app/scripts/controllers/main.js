@@ -16,8 +16,10 @@ angular.module('answerAThingApp')
     ];
     $scope.progress = function(data) {
         $scope.imageData = data;
+        drawSocket.emit('image', {imageData: data} );
     };
     $scope.submit = function(data) {
         $scope.imageData = data;
+        drawSocket.emit('image', {imageData: data} );
     };
   });
