@@ -8,7 +8,7 @@ angular.module('answerAThingApp')
         onSubmit: '=',
         onProgress: '=?'
       },
-      templateUrl: '/scripts/drawboard/drawboard.html',
+      templateUrl: '/views/drawboard.html',
       controller: function($scope) {
         $scope.aspectRatio = 4 / 3;
         $scope.painting = false;
