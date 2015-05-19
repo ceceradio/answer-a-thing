@@ -6,10 +6,9 @@ angular.module('answerAThingApp')
       restrict: 'E',
       templateUrl: '/scripts/receiver/receiver.html',
       controller: function($scope) {
-        $scope.images = [];
+        $scope.users = [];
         drawSocket.on('users', function(data) {
-          console.log(data);
-          $scope.images = data;
+          $scope.users = data;
         });
       }
     };

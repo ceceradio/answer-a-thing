@@ -1,33 +1,17 @@
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
-</div>
-
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
-
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <drawboard on-submit="submit" on-progress="progress"></drawboard>
+<div>
+  <div class="row" ng-hide="loggedIn">
+    <form ng-submit="login()">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" ng-model="user.username">
+      </div>
+      <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
   </div>
-  <div class="col-md-6">
-    <img width="100%" src="{{imageData}}" />
+  <div class="row" ng-if="loggedIn">
+    <div class="col-md-12">
+      <drawboard on-submit="submit" on-progress="progress"></drawboard>
+    </div>
   </div>
+  <receiver ng-if="loggedIn"></receiver>
 </div>
-<receiver></receiver>

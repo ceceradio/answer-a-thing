@@ -19,38 +19,73 @@ function handler (req, res) {
 
 function User(socket) {
   this.socket = socket;
+  this.username = "";
+  this.accessToken = "";
   this.imageData = "";
 }
 
 var users = [];
 
-function allImages() {
+function allUsers() {
   return users.map(function(val) {
-    return val.imageData;
+    return { username: val.username, imageData: val.imageData };
   });
 }
 
 function broadcast() {
   for(var i in users) {
-    users[i].socket.emit('users', allImages());
+    users[i].socket.emit('users', allUsers());
   }
 }
 
 io.on('connection', function(socket){
+  socket.on('error', function (err) {
+    console.log(err);
+  });
   console.log('a user connected');
-  var user = new User(socket);
-  users.push(user);
+  var user;
 
-  socket.emit('users', allImages());
+  function onLogin() {
+    socket.emit('users', allUsers());
+    socket.emit('user', { user: { username: user.username } });
+  }
+  socket.on('login', function(data) {
+    console.log(data);
+    for(var key in users) {
+      if (users[key].username === data.username) {
+        if (users[key].accessToken === data.accessToken) {
+          console.log('existing user');
+          // log out the user that's logged in
+          users[key].socket.emit('logout', { message: "You've been logged out from another device." });
+          users[key].socket = socket;
+          user = users[key];
+          return onLogin();
+        }
+        else {
+          return socket.emit('logout', { error: "This user already exists." });
+        }
+      }
+    }
+    console.log('new user');
+    user = new User(socket);
+    user.username = data.username;
+    user.accessToken = data.accessToken;
+    users.push(user);
+    return onLogin();
+  });
 
   socket.on('image', function(data) {
-    console.log('a sent an image');
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    console.log(user.username + ' sent an image');
     user.imageData = data.imageData;
     broadcast();
-  })
+  });
 
   socket.on('disconnect', function () {
-    users.splice(users.indexOf(user),1);
+    if (user)
+      users.splice(users.indexOf(user),1);
     broadcast();
   });
 });
