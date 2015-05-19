@@ -10,16 +10,16 @@
 angular.module('answerAThingApp')
   .controller('MainCtrl', function ($scope, drawSocket) {
     $scope.loggedIn = false;
-    $scope.user = { username: '', accessToken: window.localStorage.getItem('accessToken') };
+    $scope.user = { username: window.localStorage.getItem('username'), accessToken: window.localStorage.getItem('accessToken') };
     if (!$scope.user.accessToken) {
-      $scope.user.accessToken = Math.floor(Math.random() * 10000000).toString(16);
-      console.log($scope.user.accessToken);
+      $scope.user.accessToken = CryptoJS.SHA3(CryptoJS.lib.WordArray.random(1024)).toString(CryptoJS.enc.Base64);
+      window.localStorage.setItem('accessToken', $scope.user.accessToken);
     }
     $scope.login = function() {
+      window.localStorage.setItem('username', $scope.user.username);
       drawSocket.emit('login', $scope.user);
     };
     drawSocket.on('user', function() {
-      console.log('hello');
       $scope.loggedIn = true;
     });
     drawSocket.on('logout', function(error) {
@@ -40,4 +40,8 @@ angular.module('answerAThingApp')
       $scope.imageData = data;
       drawSocket.emit('image', {imageData: data} );
     };
+
+    if ($scope.user.username) {
+      $scope.login();
+    }
   });

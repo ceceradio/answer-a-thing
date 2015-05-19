@@ -10,7 +10,7 @@ angular.module('answerAThingApp')
       },
       templateUrl: '/scripts/drawboard/drawboard.html',
       controller: function($scope) {
-        $scope.aspectRatio = 16 / 9;
+        $scope.aspectRatio = 4 / 3;
         $scope.painting = false;
         $scope.lastFrame = true;
         
@@ -31,13 +31,33 @@ angular.module('answerAThingApp')
         };
 
         var canvas = element[0].querySelector('canvas');
-        var row = element[0].querySelector('.row');
+        var row = element[0].querySelector('.drawboard');
 
         var ctx = canvas.getContext('2d');
 
-        var rowStyle = getComputedStyle(row, null);
-        canvas.width = parseInt(rowStyle.getPropertyValue('width').replace(/[^-\d\.]/g, ''));
-        canvas.height = parseInt(rowStyle.getPropertyValue('width').replace(/[^-\d\.]/g, '') * (1/scope.aspectRatio) );
+        canvas.width = parseInt($(row).innerWidth());
+        canvas.height = parseInt($(row).innerWidth() * (1/scope.aspectRatio));
+
+        var resizeTimer;
+
+        $(window).on('resize', function() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function() {
+            var newWidth = parseInt($(row).innerWidth());
+            var newHeight = parseInt($(row).innerWidth() * (1/scope.aspectRatio));
+            var data = resize(newWidth, newHeight);
+            canvas.width = newWidth;
+            canvas.height= newHeight;
+            ctx = canvas.getContext('2d');
+            initialize();
+            var img = new Image();
+            img.onload = function(){
+              ctx.drawImage(img,0,0);
+            };
+            img.src = data;
+          }, 250);
+
+        });
 
         scope.clear = function() {
           ctx.fillStyle='#ffffff';
@@ -54,11 +74,13 @@ angular.module('answerAThingApp')
         }, false);
         
         /* Drawing on Paint App */
-        ctx.lineWidth = 5;
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = 'blue';
-         
+        function initialize() {
+          ctx.lineWidth = 5;
+          ctx.lineJoin = 'round';
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = 'blue';
+        }
+        initialize();
         canvas.addEventListener('mousedown', function() {
           ctx.beginPath();
           scope.painting = true;
@@ -77,13 +99,17 @@ angular.module('answerAThingApp')
           scope.$apply(scope.onSuccess(highQualityCopy()));
         };
 
-        function highQualityCopy() {
+        function resize(width, height) {
           var canvasCopy = $document[0].createElement('canvas');
-          canvasCopy.height = 480;
-          canvasCopy.width = 480 * scope.aspectRatio;
+          canvasCopy.width = width;
+          canvasCopy.height = height;
           var copyContext = canvasCopy.getContext('2d');
           copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
           return canvasCopy.toDataURL('image/png');
+        }
+
+        function highQualityCopy() {
+          return resize(480 * scope.aspectRatio, 480);
         }
         function lowQualityCopy() {
           var canvasCopy = $document[0].createElement('canvas');
