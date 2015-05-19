@@ -12,7 +12,8 @@ angular
   .module('answerAThingApp', [
     'ngRoute',
     'ngTouch',
-    'btford.socket-io'
+    'btford.socket-io',
+    'colorpicker.module'
   ])
   .config(function ($routeProvider) {
     $routeProvider

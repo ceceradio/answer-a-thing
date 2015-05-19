@@ -9,3 +9,11 @@ body {
   margin-right:auto;
   float:none;
 }
+.color-dimple {
+  width:1.5em;
+  height:1.5em;
+  border:1px solid #fff;
+  display:inline-block;
+  margin-bottom:-0.3em;
+  margin-right:0.5em;
+}

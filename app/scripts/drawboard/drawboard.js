@@ -13,7 +13,7 @@ angular.module('answerAThingApp')
         $scope.aspectRatio = 4 / 3;
         $scope.painting = false;
         $scope.lastFrame = true;
-        
+        $scope.color='blue';
       },
       link: function(scope, element) {
         var cumulativeOffset = function(element) {
@@ -78,9 +78,13 @@ angular.module('answerAThingApp')
           ctx.lineWidth = 5;
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
-          ctx.strokeStyle = 'blue';
+          ctx.strokeStyle = scope.color;
         }
         initialize();
+
+        scope.$watch('color', function() {
+          ctx.strokeStyle = scope.color;
+        });
         canvas.addEventListener('mousedown', function() {
           ctx.beginPath();
           scope.painting = true;
