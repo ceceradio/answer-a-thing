@@ -14,6 +14,7 @@ angular.module('answerAThingApp')
         $scope.painting = false;
         $scope.lastFrame = true;
         $scope.color='blue';
+        $scope.size = 5;
       },
       link: function(scope, element) {
         var cumulativeOffset = function(element) {
@@ -75,7 +76,7 @@ angular.module('answerAThingApp')
         
         /* Drawing on Paint App */
         function initialize() {
-          ctx.lineWidth = 5;
+          ctx.lineWidth = scope.size;
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.strokeStyle = scope.color;
@@ -84,6 +85,9 @@ angular.module('answerAThingApp')
 
         scope.$watch('color', function() {
           ctx.strokeStyle = scope.color;
+        });
+        scope.$watch('size', function() {
+          ctx.lineWidth = scope.size;
         });
         canvas.addEventListener('mousedown', function() {
           ctx.beginPath();

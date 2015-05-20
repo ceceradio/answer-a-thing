@@ -17,3 +17,13 @@ body {
   margin-bottom:-0.3em;
   margin-right:0.5em;
 }
+.dimple {
+  font-size:1em;
+  width:1em;
+  height:1em;
+  border-radius:0.5em;
+  display:inline-block;
+  background:#999;
+}
+.dimple.large { font-size:1.5em; }
+.dimple.small { font-size:0.5em; }
