@@ -15,6 +15,7 @@ angular.module('answerAThingApp')
         $scope.lastFrame = true;
         $scope.color='blue';
         $scope.size = 5;
+        $scope.mode = 'paint';
       },
       link: function(scope, element) {
         var cumulativeOffset = function(element) {
@@ -66,20 +67,13 @@ angular.module('answerAThingApp')
         };
         scope.clear();
 
-        var mouse = {x: 0, y: 0};
-         
-        /* Mouse Capturing Work */
-        canvas.addEventListener('mousemove', function(e) {
-          mouse.x = e.pageX - cumulativeOffset(canvas).left;
-          mouse.y = e.pageY - cumulativeOffset(canvas).top;
-        }, false);
-        
         /* Drawing on Paint App */
         function initialize() {
           ctx.lineWidth = scope.size;
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.strokeStyle = scope.color;
+          ctx.font = '14px Arial';
         }
         initialize();
 
@@ -89,6 +83,39 @@ angular.module('answerAThingApp')
         scope.$watch('size', function() {
           ctx.lineWidth = scope.size;
         });
+
+        function onPaint() {
+          if (scope.mode === 'paint') {
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+
+        var mouse = {x: 0, y: 0};
+        var text = {x: 0, y: 0};
+        scope.savedString = '';
+        scope.click = function($event) {
+          if (scope.mode === 'text') {
+            if(scope.savedString) {
+              ctx.fillStyle = scope.color;
+              ctx.fillText(scope.savedString,text.x,text.y);
+              scope.savedString='';
+            }
+            text.x = $event.offsetX;
+            text.y = $event.offsetY;
+          }
+        };
+        scope.keypress = function(e) {
+          if (scope.mode === 'text') {
+            scope.savedString += String.fromCharCode(e.charCode);
+          }
+        };
+        /* Mouse Capturing Work */
+        canvas.addEventListener('mousemove', function(e) {
+          mouse.x = e.pageX - cumulativeOffset(canvas).left;
+          mouse.y = e.pageY - cumulativeOffset(canvas).top;
+        }, false);
+        
         canvas.addEventListener('mousedown', function() {
           ctx.beginPath();
           scope.painting = true;
@@ -151,11 +178,6 @@ angular.module('answerAThingApp')
             }
           }
         },300);
-         
-        var onPaint = function() {
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.stroke();
-        };
       }
     };
   });
