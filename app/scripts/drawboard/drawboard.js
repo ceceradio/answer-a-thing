@@ -36,7 +36,6 @@ angular.module('answerAThingApp')
         var row = element[0].querySelector('.drawboard');
 
         var ctx = canvas.getContext('2d');
-        var layers = new CanvasLayers.Container(canvas, false);
 
         canvas.width = parseInt($(row).innerWidth());
         canvas.height = parseInt($(row).innerWidth() * (1/scope.aspectRatio));
@@ -52,7 +51,6 @@ angular.module('answerAThingApp')
             canvas.width = newWidth;
             canvas.height= newHeight;
             ctx = canvas.getContext('2d');
-            layers = new CanvasLayers.Container(canvas, false);
             initialize();
             var img = new Image();
             img.onload = function(){
