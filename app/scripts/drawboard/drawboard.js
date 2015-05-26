@@ -5,6 +5,7 @@ angular.module('answerAThingApp')
     return {
       restrict: 'E',
       scope: {
+        text: '=?',
         onSubmit: '=',
         onProgress: '=?'
       },
@@ -16,6 +17,7 @@ angular.module('answerAThingApp')
         $scope.color='blue';
         $scope.size = 5;
         $scope.mode = 'paint';
+        $scope.fontColor = "#000000";
       },
       link: function(scope, element) {
         var cumulativeOffset = function(element) {
@@ -73,7 +75,6 @@ angular.module('answerAThingApp')
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.strokeStyle = scope.color;
-          ctx.font = '14px Arial';
         }
         initialize();
 

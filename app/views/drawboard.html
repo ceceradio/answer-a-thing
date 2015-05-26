@@ -12,11 +12,25 @@
         <button class="btn" ng-class="{ 'btn-primary': size==3, 'btn-default': size !== 3 }" ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></button>
         <button class="btn" ng-class="{ 'btn-primary': size==5, 'btn-default': size !== 5 }" ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></button>
         <button class="btn" ng-class="{ 'btn-primary': size==8, 'btn-default': size !== 8 }" ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></button>
-        <input type="checkbox" ng-true-value="'text'" ng-false-value="'paint'" ng-model="mode"/>
+    </div>
+    <div class="col-xs-4">
+
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-btn">
+                <button class="btn btn-primary" colorpicker ng-model="fontColor"><span ng-style="{'background': fontColor}" class="color-dimple"></span></button>
+                </span>
+                <input type="text" class="form-control" ng-model="text"/>
+            </div>
+            
+        </div>
     </div>
 </div>
 <div class="row">
     <div ng-keypress="keypress($event)" ng-click="click($event)" tabindex="0" class="col-xs-8 center-block drawboard">
+        <div ng-style="{ color: fontColor }" class="text-overlay" unselectable="on">
+            {{text}}
+        </div>
         <canvas></canvas>
     </div>
 </div>
