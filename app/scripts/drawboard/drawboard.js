@@ -17,7 +17,7 @@ angular.module('answerAThingApp')
         $scope.color='blue';
         $scope.size = 5;
         $scope.mode = 'paint';
-        $scope.fontColor = "#000000";
+        $scope.text = { content: '', color: '#000000'};
       },
       link: function(scope, element) {
         var cumulativeOffset = function(element) {

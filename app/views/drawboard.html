@@ -18,9 +18,9 @@
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-btn">
-                <button class="btn btn-primary" colorpicker ng-model="fontColor"><span ng-style="{'background': fontColor}" class="color-dimple"></span></button>
+                <button class="btn btn-primary" colorpicker ng-model="text.color"><span ng-style="{'background': text.color }" class="color-dimple"></span></button>
                 </span>
-                <input type="text" class="form-control" ng-model="text"/>
+                <input type="text" class="form-control" ng-model="text.content"/>
             </div>
             
         </div>
@@ -28,8 +28,8 @@
 </div>
 <div class="row">
     <div ng-keypress="keypress($event)" ng-click="click($event)" tabindex="0" class="col-xs-8 center-block drawboard">
-        <div ng-style="{ color: fontColor }" class="text-overlay" unselectable="on">
-            {{text}}
+        <div ng-style="{ color: text.color }" class="text-overlay" unselectable="on">
+            {{text.content}}
         </div>
         <canvas></canvas>
     </div>
