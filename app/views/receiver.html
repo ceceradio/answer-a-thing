@@ -2,6 +2,6 @@
   <p>Receiver</p>
   <div class="col-md-3" ng-repeat="user in users track by $index">
     <p>{{user.username}}</p>
-    <img width="100%" ng-src="{{user.imageData}}"/>
+    <img width="100%" ng-src="{{user.drawboard.image}}"/>
   </div>
 </div>

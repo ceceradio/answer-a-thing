@@ -155,6 +155,9 @@ angular.module('answerAThingApp')
           copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
           return canvasCopy.toDataURL('image/jpeg', 0.5);
         }
+        function createPayload(imageData) {
+          return { text: text, image: imageData };
+        }
 
         var lastFrameCounterMax = 10;
         var lastFrameCounter = 0;
@@ -164,14 +167,14 @@ angular.module('answerAThingApp')
             if (scope.painting || (scope.lastFrame && lastFrameCounter === 0)) {
               lastFrameCounter = 0;
               if (scope.onProgress) {
-                scope.$apply(scope.onProgress(lowQualityCopy()));
+                scope.$apply(scope.onProgress(createPayload(lowQualityCopy())));
               }
             }
             if (scope.lastFrame && lastFrameCounter >= lastFrameCounterMax) {
               lastFrameCounter = 0;
               scope.lastFrame = false;
               if (scope.onProgress) {
-                scope.$apply(scope.onProgress(highQualityCopy()));
+                scope.$apply(scope.onProgress(createPayload(highQualityCopy())));
               }
             }
             else if (scope.lastFrame) {

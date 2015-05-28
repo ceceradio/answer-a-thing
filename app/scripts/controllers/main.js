@@ -30,15 +30,15 @@ angular.module('answerAThingApp')
       if(!$scope.loggedIn) {
         return;
       }
-      $scope.imageData = data;
-      drawSocket.emit('image', {imageData: data} );
+      $scope.drawboard = data;
+      drawSocket.emit('drawboard', {drawboard: data} );
     };
     $scope.submit = function(data) {
       if(!$scope.loggedIn) {
         return;
       }
-      $scope.imageData = data;
-      drawSocket.emit('image', {imageData: data} );
+      $scope.drawboard = data;
+      drawSocket.emit('drawboard', {drawboard: data} );
     };
 
     if ($scope.user.username) {

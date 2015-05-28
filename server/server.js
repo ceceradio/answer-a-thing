@@ -21,14 +21,14 @@ function User(socket) {
   this.socket = socket;
   this.username = "";
   this.accessToken = "";
-  this.imageData = "";
+  this.drawboard = {};
 }
 
 var users = [];
 
 function allUsers() {
   return users.map(function(val) {
-    return { username: val.username, imageData: val.imageData };
+    return { username: val.username, drawboard: val.drawboard };
   });
 }
 
@@ -74,12 +74,12 @@ io.on('connection', function(socket){
     return onLogin();
   });
 
-  socket.on('image', function(data) {
+  socket.on('drawboard', function(data) {
     if (!user) {
       return socket.emit('logout', { error: "You are not logged in." });
     }
     console.log(user.username + ' sent an image');
-    user.imageData = data.imageData;
+    user.drawboard = data.drawboard;
     broadcast();
   });
 
