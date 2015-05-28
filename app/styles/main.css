@@ -10,6 +10,16 @@ body {
   float:none;
   position:relative;
 }
+.receiver-container {
+  position:relative;
+}
+.receiver-container img {
+  left:0;
+  right:0;
+  top:0;
+  position:absolute;
+  z-index:1;
+}
 .color-dimple {
   width:1.5em;
   height:1.5em;
@@ -32,6 +42,7 @@ body {
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+  z-index:10;
 }
 .dimple {
   font-size:1em;

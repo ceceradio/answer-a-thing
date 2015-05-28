@@ -14,7 +14,7 @@ angular.module('answerAThingApp')
         $scope.aspectRatio = 4 / 3;
         $scope.painting = false;
         $scope.lastFrame = true;
-        $scope.color='blue';
+        $scope.color='#0000FF';
         $scope.size = 5;
         $scope.mode = 'paint';
         $scope.text = { content: '', color: '#000000'};
@@ -93,24 +93,6 @@ angular.module('answerAThingApp')
         }
 
         var mouse = {x: 0, y: 0};
-        var text = {x: 0, y: 0};
-        scope.savedString = '';
-        scope.click = function($event) {
-          if (scope.mode === 'text') {
-            if(scope.savedString) {
-              ctx.fillStyle = scope.color;
-              ctx.fillText(scope.savedString,text.x,text.y);
-              scope.savedString='';
-            }
-            text.x = $event.offsetX;
-            text.y = $event.offsetY;
-          }
-        };
-        scope.keypress = function(e) {
-          if (scope.mode === 'text') {
-            scope.savedString += String.fromCharCode(e.charCode);
-          }
-        };
         /* Mouse Capturing Work */
         canvas.addEventListener('mousemove', function(e) {
           mouse.x = e.pageX - cumulativeOffset(canvas).left;
@@ -156,7 +138,7 @@ angular.module('answerAThingApp')
           return canvasCopy.toDataURL('image/jpeg', 0.5);
         }
         function createPayload(imageData) {
-          return { text: text, image: imageData };
+          return { text: scope.text, image: imageData };
         }
 
         var lastFrameCounterMax = 10;
