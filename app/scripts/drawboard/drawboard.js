@@ -164,6 +164,13 @@ angular.module('answerAThingApp')
             }
           }
         },300);
+
+        scope.$watch('text.content', _.debounce(function () {
+          // This code will be invoked after 1 second from the last time 'id' has changed.
+          scope.$apply(function(){
+            scope.onProgress(createPayload(highQualityCopy()));
+          });
+        }, 1000));
       }
     };
   });

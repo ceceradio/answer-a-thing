@@ -44,6 +44,12 @@ body {
   user-select: none;
   z-index:10;
 }
+.text-overlay.large {
+  font-size:48px;
+}
+.text-overlay.small {
+  font-size:14px;
+}
 .dimple {
   font-size:1em;
   width:1em;

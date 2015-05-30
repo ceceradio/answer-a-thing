@@ -21,6 +21,7 @@
     "angular": false,
     "io": false,
     "CryptoJS": false,
-    "$": false
+    "$": false,
+    "_": false
   }
 }
