@@ -18,6 +18,7 @@ angular.module('answerAThingApp')
         $scope.size = 5;
         $scope.mode = 'paint';
         $scope.text = { content: '', color: '#000000'};
+        $scope.cachedImageData = '';
       },
       link: function(scope, element) {
         var cumulativeOffset = function(element) {
@@ -123,7 +124,8 @@ angular.module('answerAThingApp')
           canvasCopy.height = height;
           var copyContext = canvasCopy.getContext('2d');
           copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
-          return canvasCopy.toDataURL('image/png');
+          scope.cachedImageData = canvasCopy.toDataURL('image/png');
+          return scope.cachedImageData;
         }
 
         function highQualityCopy() {
@@ -135,7 +137,8 @@ angular.module('answerAThingApp')
           canvasCopy.width = 480 * scope.aspectRatio;
           var copyContext = canvasCopy.getContext('2d');
           copyContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvasCopy.width, canvasCopy.height);
-          return canvasCopy.toDataURL('image/jpeg', 0.5);
+          scope.cachedImageData = canvasCopy.toDataURL('image/jpeg', 0.5);
+          return scope.cachedImageData;
         }
         function createPayload(imageData) {
           return { text: scope.text, image: imageData };
@@ -168,7 +171,7 @@ angular.module('answerAThingApp')
         scope.$watch('text.content', _.debounce(function () {
           // This code will be invoked after 1 second from the last time 'id' has changed.
           scope.$apply(function(){
-            scope.onProgress(createPayload(highQualityCopy()));
+            scope.onProgress(createPayload(scope.cachedImageData));
           });
         }, 1000));
       }
