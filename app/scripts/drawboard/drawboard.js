@@ -98,20 +98,47 @@ angular.module('answerAThingApp')
         canvas.addEventListener('mousemove', function(e) {
           mouse.x = e.pageX - cumulativeOffset(canvas).left;
           mouse.y = e.pageY - cumulativeOffset(canvas).top;
+          if (scope.painting) {
+            onPaint();
+          }
         }, false);
         
         canvas.addEventListener('mousedown', function() {
           ctx.beginPath();
           scope.painting = true;
           ctx.moveTo(mouse.x, mouse.y);
-       
-          canvas.addEventListener('mousemove', onPaint, false);
         }, false);
          
         canvas.addEventListener('mouseup', function() {
           scope.painting = false;
           scope.lastFrame = true;
-          canvas.removeEventListener('mousemove', onPaint, false);
+        }, false);
+
+        /* Touch Capturing Work */
+        canvas.addEventListener('touchmove', function(e) {
+          e.preventDefault();
+          mouse.x = e.touches[0].pageX - cumulativeOffset(canvas).left;
+          mouse.y = e.touches[0].pageY - cumulativeOffset(canvas).top;
+          console.log(mouse);
+          if (scope.painting) {
+            onPaint();
+          }
+        }, false);
+        
+        canvas.addEventListener('touchstart', function(e) {
+          ctx.beginPath();
+          scope.painting = true;
+          mouse.x = e.touches[0].pageX - cumulativeOffset(canvas).left;
+          mouse.y = e.touches[0].pageY - cumulativeOffset(canvas).top;
+          ctx.moveTo(mouse.x-0.5, mouse.y-0.5);
+          if (scope.painting) {
+            onPaint();
+          }
+        }, false);
+         
+        canvas.addEventListener('touchend', function() {
+          scope.painting = false;
+          scope.lastFrame = true;
         }, false);
 
         scope.submit = function() {
