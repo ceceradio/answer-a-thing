@@ -22,9 +22,32 @@ function User(socket) {
   this.username = "";
   this.accessToken = "";
   this.drawboard = {};
+  this.room = false;
 }
+User.prototype.joinRoom = function(roomName) {
+  if (typeof rooms[roomName] === "undefined") {
+    return "This room does not exist.";
+  }
+  if (this.room !== false)
+    return "You must leave your current room.";
+  this.room = roomName;
+  if (rooms[roomName].users.indexOf(this) === -1)
+    rooms[roomName].users.push(this);
+  return true;
+};
+User.prototype.leaveRoom = function() {
+  if (this.room === false)
+    return "You are not in a room";
+  if (rooms[roomName]) {
+    rooms[roomName].users.splice(rooms[roomName].users.indexOf(this), 1);
+  }
+  this.room = false;
+  return true;
+};
 
 var users = [];
+var rooms = {};
+
 
 function allUsers() {
   return users.map(function(val) {
