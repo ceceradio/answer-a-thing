@@ -24,6 +24,14 @@ function User(socket) {
   this.drawboard = {};
   this.room = false;
 }
+User.prototype.serialize = function() {
+  var ret = {};
+  for(var key in Object.keys(this)) {
+    if (key != 'socket' && key != 'accessToken')
+      ret[key] = this[key];
+  }
+  return ret;
+};
 User.prototype.joinRoom = function(roomName) {
   if (typeof rooms[roomName] === "undefined") {
     return "This room does not exist.";
@@ -70,8 +78,24 @@ io.on('connection', function(socket){
 
   function onLogin() {
     socket.emit('users', allUsers());
-    socket.emit('user', { user: { username: user.username } });
+    socket.emit('user', { user: this.serialize() });
   }
+  socket.on('joinRoom', function(data) {
+    if ( (var result = this.joinRoom(data.name) !== true ) {
+      socket.emit('error', { user: this, error: result } );
+    }
+    else {
+      socket.emit('user', { user: this.serialize() });
+    }
+  });
+  socket.on('leaveRoom', function(data) {
+    if ( (var result = this.leaveRoom() !== true ) {
+      socket.emit('error', { user: this, error: result } );
+    }
+    else {
+      socket.emit('user', { user: this.serialize() });
+    }
+  });
   socket.on('login', function(data) {
     console.log(data);
     for(var key in users) {
