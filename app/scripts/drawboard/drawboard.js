@@ -135,6 +135,15 @@ angular.module('answerAThingApp')
             onPaint();
           }
         }, false);
+
+        canvas.addEventListener('click', function(e) {
+          ctx.beginPath();
+          mouse.x = e.pageX - cumulativeOffset(canvas).left;
+          mouse.y = e.pageY - cumulativeOffset(canvas).top;
+          ctx.moveTo(mouse.x-0.5, mouse.y-0.5);
+          onPaint();
+          scope.lastFrame = true;
+        });
          
         canvas.addEventListener('touchend', function() {
           scope.painting = false;
