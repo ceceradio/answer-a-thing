@@ -26,6 +26,12 @@ angular.module('answerAThingApp')
       console.log(error);
       $scope.loggedIn = false;
     });
+    $scope.joinRoom = function(room) {
+      drawSocket.emit('joinRoom', room);
+    };
+    $scope.leaveRoom = function() {
+      drawSocket.emit('leaveRoom', {});
+    };
     $scope.progress = function(data) {
       if(!$scope.loggedIn) {
         return;
