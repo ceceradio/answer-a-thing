@@ -16,7 +16,10 @@ function handler (req, res) {
     res.end(data);
   });
 }
-
+function Room(name) {
+  this.name = name;
+  this.users = [];
+}
 function User(socket) {
   this.socket = socket;
   this.username = "";
