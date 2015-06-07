@@ -8,7 +8,14 @@
       <button type="submit" class="btn btn-primary">Log In</button>
     </form>
   </div>
-  <div class="row" ng-if="loggedIn">
+  <div class="row" ng-hide="loggedIn">
+    <div ng-repeat="room in rooms">
+      <h2>{{room.name}}</h2>
+      <button ng-click="joinRoom(room)">Join Room</button>
+    </div>
+    <button ng-click="createRoom()">Create Room</button>
+  </div>
+  <div class="row" ng-if="loggedIn && inRoom">
     <div class="col-md-12">
       <drawboard on-submit="submit" on-progress="progress"></drawboard>
     </div>
