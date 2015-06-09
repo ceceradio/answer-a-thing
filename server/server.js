@@ -20,6 +20,18 @@ function Room(name) {
   this.name = name;
   this.users = [];
 }
+Room.prototype.addUser = function(user) {
+  if (this.users.indexOf(user) > -1)
+    return true;
+  this.users.push(user);
+  return true;
+};
+Room.prototype.removeUser = function(user) {
+  if (this.users.indexOf(user) > -1)
+    return true;
+  this.users.splice(this.users.indexOf(user), 1);
+  return true;
+}
 function User(socket) {
   this.socket = socket;
   this.username = "";
@@ -35,13 +47,27 @@ User.prototype.serialize = function() {
   }
   return ret;
 };
+User.prototype.createRoom = function(roomName) {
+  if (typeof rooms[roomName] !== "undefined") {
+    return "A room with this name already exists.";
+  }
+  if (this.room !== false)
+    return "You must leave your current room.";
+  rooms[roomName] = new Room(roomName);
+  rooms[roomName].addUser(this);
+  this.room = rooms[roomName];
+  if (rooms[roomName].users.indexOf(this) === -1)
+    rooms[roomName].users.push(this);
+  return true;
+};
 User.prototype.joinRoom = function(roomName) {
   if (typeof rooms[roomName] === "undefined") {
     return "This room does not exist.";
   }
   if (this.room !== false)
     return "You must leave your current room.";
-  this.room = roomName;
+  rooms[roomName].addUser(this);
+  this.room = rooms[roomName];
   if (rooms[roomName].users.indexOf(this) === -1)
     rooms[roomName].users.push(this);
   return true;
@@ -50,7 +76,7 @@ User.prototype.leaveRoom = function() {
   if (this.room === false)
     return "You are not in a room";
   if (rooms[roomName]) {
-    rooms[roomName].users.splice(rooms[roomName].users.indexOf(this), 1);
+    rooms[roomName].removeUser(this);
   }
   this.room = false;
   return true;
@@ -83,6 +109,14 @@ io.on('connection', function(socket){
     socket.emit('users', allUsers());
     socket.emit('user', { user: this.serialize() });
   }
+  socket.on('createRoom', function(data) {
+    if ( (var result = this.createRoom(data.name) !== true ) {
+      socket.emit('error', { user: this, error: result } );
+    }
+    else {
+      socket.emit('user', { user: this.serialize() });
+    }
+  });
   socket.on('joinRoom', function(data) {
     if ( (var result = this.joinRoom(data.name) !== true ) {
       socket.emit('error', { user: this, error: result } );
