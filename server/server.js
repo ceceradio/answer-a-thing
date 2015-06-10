@@ -1,6 +1,7 @@
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
+var md5 = require('MD5');
 
 app.listen(40001);
 
@@ -18,7 +19,16 @@ function handler (req, res) {
 }
 function Room(name) {
   this.name = name;
+  this.password = false;
   this.users = [];
+}
+Room.prototype.setPassword = function(password) {
+  this.password = md5(password);
+}
+Room.prototype.verifyPassword = function(passwordTest) {
+  if (this.password === false)
+    return true;
+  return md5(passwordTest) === this.password;
 }
 Room.prototype.addUser = function(user) {
   if (this.users.indexOf(user) > -1)
