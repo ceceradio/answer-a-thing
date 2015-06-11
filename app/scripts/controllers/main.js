@@ -19,12 +19,17 @@ angular.module('answerAThingApp')
       window.localStorage.setItem('username', $scope.user.username);
       drawSocket.emit('login', $scope.user);
     };
-    drawSocket.on('user', function() {
-      $scope.loggedIn = true;
+    drawSocket.on('user', function(user) {
+      if (user.room !== false) {
+        $scope.activePage = 'room';
+      }
+      else {
+        $scope.activePage = 'lobby';
+      }
     });
     drawSocket.on('logout', function(error) {
       console.log(error);
-      $scope.loggedIn = false;
+      $scope.activePage = 'login';
     });
     $scope.joinRoom = function(room) {
       drawSocket.emit('joinRoom', room);
@@ -33,20 +38,13 @@ angular.module('answerAThingApp')
       drawSocket.emit('leaveRoom', {});
     };
     $scope.progress = function(data) {
-      if(!$scope.loggedIn) {
-        return;
-      }
       $scope.drawboard = data;
       drawSocket.emit('drawboard', {drawboard: data} );
     };
     $scope.submit = function(data) {
-      if(!$scope.loggedIn) {
-        return;
-      }
       $scope.drawboard = data;
       drawSocket.emit('drawboard', {drawboard: data} );
     };
-
     if ($scope.user.username) {
       $scope.login();
     }
