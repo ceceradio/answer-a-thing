@@ -11,16 +11,22 @@
   <div class="row" ng-hide="activePage == 'lobby'">
     <div ng-repeat="room in rooms">
       <h2>{{room.name}}</h2>
-      <button ng-click="joinRoom(room)">Join Rooma</button>
+      <button ng-click="joinRoom(room)">Join Room</button>
     </div>
     <button ng-click="setActivePage('createRoom')">Create Room</button>
   </div>
   <div class="row" ng-hide="activePage == 'createRoom'">
-    <div ng-repeat="room in rooms">
-      <h2>{{room.name}}</h2>
-      <button ng-click="joinRoom(room)">Join Room</button>
-    </div>
-    <button ng-click="activePage='createRoom'">Create Room</button>
+    <form ng-submit="createRoom(room)">
+      <div class="form-group">
+        <label>Room Name</label>
+        <input type="text" class="form-control" ng-model="room.name"/>
+      </div>
+      <div class="form-group">
+        <label>Password (optional)</label>
+        <input type="text" class="form-control" ng-model="room.password"/>
+      </div>
+      <button type="submit" class="btn btn-primary">Create Room</button>
+    </form>
   </div>
   <div class="row" ng-if="activePage == 'room'">
     <div class="col-md-12">
