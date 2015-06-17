@@ -1,0 +1,7 @@
+<div class="row">
+  <div ng-repeat="room in rooms">
+    <h2>{{room.name}}</h2>
+    <button ng-click="joinRoom(room)">Join Room</button>
+  </div>
+  <button ng-click="setActivePage('createRoom')">Create Room</button>
+</div>
