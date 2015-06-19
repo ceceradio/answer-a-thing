@@ -1,0 +1,28 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name answerAThingApp.controller:RoomController
+ * @description
+ * # RoomController
+ * Controller of the answerAThingApp
+ */
+angular.module('answerAThingApp')
+  .controller('RoomController', function ($scope, drawSocket, gameState) {
+    $scope.user = gameState.user;
+    $scope.error = false;
+    $scope.leaveRoom = function() {
+      drawSocket.emit('leaveRoom', {});
+    };
+    $scope.progress = function(data) {
+      $scope.drawboard = data;
+      drawSocket.emit('drawboard', {drawboard: data} );
+    };
+    $scope.submit = function(data) {
+      $scope.drawboard = data;
+      drawSocket.emit('drawboard', {drawboard: data} );
+    };
+    drawSocket.on('error', function(error) {
+      $scope.error = error;
+    });
+  });
