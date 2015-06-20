@@ -117,30 +117,33 @@ io.on('connection', function(socket){
 
   function onLogin() {
     socket.emit('users', allUsers());
-    socket.emit('user', { user: this.serialize() });
+    socket.emit('user', { user: user.serialize() });
   }
   socket.on('createRoom', function(data) {
-    if ( (var result = this.createRoom(data.name) !== true ) {
-      socket.emit('error', { user: this, error: result } );
+    var result;
+    if ( (result = this.createRoom(data.name)) !== true ) {
+      socket.emit('error', { user: user, error: result } );
     }
     else {
-      socket.emit('user', { user: this.serialize() });
+      socket.emit('user', { user: user.serialize() });
     }
   });
   socket.on('joinRoom', function(data) {
-    if ( (var result = this.joinRoom(data.name) !== true ) {
+    var result;
+    if ( (result = this.joinRoom(data.name)) !== true ) {
       socket.emit('error', { user: this, error: result } );
     }
     else {
-      socket.emit('user', { user: this.serialize() });
+      socket.emit('user', { user: user.serialize() });
     }
   });
   socket.on('leaveRoom', function(data) {
-    if ( (var result = this.leaveRoom() !== true ) {
+    var result;
+    if ( (result = this.leaveRoom()) !== true ) {
       socket.emit('error', { user: this, error: result } );
     }
     else {
-      socket.emit('user', { user: this.serialize() });
+      socket.emit('user', { user: user.serialize() });
     }
   });
   socket.on('login', function(data) {
