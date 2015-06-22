@@ -8,7 +8,9 @@
  * Controller of the answerAThingApp
  */
 angular.module('answerAThingApp')
-  .controller('LobbyController', function ($scope, drawSocket, gameState) {
+  .controller('LobbyController', function ($scope, drawSocket, gameState, $location) {
+    $scope.$location = $location;
+    $scope.rooms = gameState.rooms;
     $scope.user = gameState.user;
     $scope.error = false;
     $scope.joinRoom = function(room) {

@@ -22,6 +22,16 @@ function Room(name) {
   this.password = false;
   this.users = [];
 }
+Room.prototype.serialize = function() {
+  var ret = {};
+  var keys = Object.keys(this);
+  for(var i in keys) {
+    var key = keys[i];
+    if (key != 'users' && key != 'password')
+      ret[key] = this[key];
+  }
+  return ret;
+};
 Room.prototype.setPassword = function(password) {
   this.password = md5(password);
 }
@@ -51,9 +61,19 @@ function User(socket) {
 }
 User.prototype.serialize = function() {
   var ret = {};
-  for(var key in Object.keys(this)) {
-    if (key != 'socket' && key != 'accessToken')
+  var keys = Object.keys(this);
+  for(var i in keys) {
+    var key = keys[i];
+    if (key != 'socket' && key != 'accessToken' && key != 'room')
       ret[key] = this[key];
+    if (key === 'room') {
+      if (this[key]) {
+        ret[key] = this[key].serialize();
+      }
+      else {
+        ret[key] = this[key];
+      }
+    }
   }
   return ret;
 };
@@ -66,8 +86,6 @@ User.prototype.createRoom = function(roomName) {
   rooms[roomName] = new Room(roomName);
   rooms[roomName].addUser(this);
   this.room = rooms[roomName];
-  if (rooms[roomName].users.indexOf(this) === -1)
-    rooms[roomName].users.push(this);
   return true;
 };
 User.prototype.joinRoom = function(roomName) {
@@ -78,8 +96,6 @@ User.prototype.joinRoom = function(roomName) {
     return "You must leave your current room.";
   rooms[roomName].addUser(this);
   this.room = rooms[roomName];
-  if (rooms[roomName].users.indexOf(this) === -1)
-    rooms[roomName].users.push(this);
   return true;
 };
 User.prototype.leaveRoom = function() {
@@ -102,10 +118,24 @@ function allUsers() {
   });
 }
 
+function allRooms() {
+  var ret = [];
+  var keys = Object.keys(rooms);
+  for(var i in keys) {
+    var key = keys[i];
+    ret.push(rooms[key].serialize());
+  }
+  return ret;
+}
+
 function broadcast() {
   for(var i in users) {
     users[i].socket.emit('users', allUsers());
   }
+}
+
+function sendRooms(user) {
+  user.socket.emit('rooms', allRooms());
 }
 
 io.on('connection', function(socket){
@@ -117,37 +147,37 @@ io.on('connection', function(socket){
 
   function onLogin() {
     socket.emit('users', allUsers());
-    socket.emit('user', { user: user.serialize() });
+    socket.emit('user', user.serialize() );
+    sendRooms(user);
   }
   socket.on('createRoom', function(data) {
     var result;
-    if ( (result = this.createRoom(data.name)) !== true ) {
-      socket.emit('error', { user: user, error: result } );
+    if ( (result = user.createRoom(data.name)) !== true ) {
+      socket.emit('errorMessage', { user: user.serialize(), error: result } );
     }
     else {
-      socket.emit('user', { user: user.serialize() });
+      socket.emit('user', user.serialize() );
     }
   });
   socket.on('joinRoom', function(data) {
     var result;
-    if ( (result = this.joinRoom(data.name)) !== true ) {
-      socket.emit('error', { user: this, error: result } );
+    if ( (result = user.joinRoom(data.name)) !== true ) {
+      socket.emit('errorMessage', { user: user.serialize(), error: result } );
     }
     else {
-      socket.emit('user', { user: user.serialize() });
+      socket.emit('user', user.serialize() );
     }
   });
   socket.on('leaveRoom', function(data) {
     var result;
-    if ( (result = this.leaveRoom()) !== true ) {
-      socket.emit('error', { user: this, error: result } );
+    if ( (result = user.leaveRoom()) !== true ) {
+      socket.emit('errorMessage', { user: user.serialize(), error: result } );
     }
     else {
-      socket.emit('user', { user: user.serialize() });
+      socket.emit('user', user.serialize() );
     }
   });
   socket.on('login', function(data) {
-    console.log(data);
     for(var key in users) {
       if (users[key].username === data.username) {
         if (users[key].accessToken === data.accessToken) {
