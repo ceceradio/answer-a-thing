@@ -18,7 +18,7 @@ angular.module('answerAThingApp')
     drawSocket.on('logout', function(error) {
       $scope.error = error;
     });
-    if ($scope.user.username) {
+    if ($scope.user.username && !gamestate.errorMessage) {
       $scope.login();
     }
   });

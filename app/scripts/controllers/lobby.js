@@ -10,7 +10,7 @@
 angular.module('answerAThingApp')
   .controller('LobbyController', function ($scope, drawSocket, gameState, $location) {
     $scope.$location = $location;
-    $scope.rooms = gameState.rooms;
+    $scope.gameState = gameState;
     $scope.user = gameState.user;
     $scope.error = false;
     $scope.joinRoom = function(room) {
