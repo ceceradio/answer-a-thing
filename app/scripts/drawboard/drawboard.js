@@ -67,6 +67,7 @@ angular.module('answerAThingApp')
         scope.clear = function() {
           ctx.fillStyle='#ffffff';
           ctx.fillRect(0,0,canvas.width,canvas.height);
+          scope.onProgress(createPayload(lowQualityCopy()));
         };
         scope.clear();
 
