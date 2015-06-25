@@ -101,8 +101,8 @@ User.prototype.joinRoom = function(roomName) {
 User.prototype.leaveRoom = function() {
   if (this.room === false)
     return "You are not in a room";
-  if (rooms[roomName]) {
-    rooms[roomName].removeUser(this);
+  if (this.room) {
+    this.room.removeUser(this);
   }
   this.room = false;
   return true;
