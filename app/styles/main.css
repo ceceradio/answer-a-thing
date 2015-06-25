@@ -5,10 +5,12 @@ body {
 .drawboard {
   border:2px solid #ccc;
   padding:0;
+  /*
   margin-left:auto;
   margin-right:auto;
   float:none;
   position:relative;
+  */
 }
 .receiver-container {
   position:relative;
