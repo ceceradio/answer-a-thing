@@ -1,7 +1,7 @@
-<div class="row">
-  <div ng-repeat="room in gameState.rooms">
-    <h2>{{room.name}}</h2>
-    <button ng-click="joinRoom(room)">Join Room</button>
+<div class="rooms">
+  <div class="row well" ng-repeat="room in gameState.rooms">
+    <h4 class="col-xs-10 col-md-8 col-md-offset-1">{{room.name}}</h4>
+    <button class="col-xs-2  col-md-2 btn btn-primary" ng-click="joinRoom(room)">Join Room</button>
   </div>
-  <button ng-click="$location.url('createroom')">Create Room</button>
 </div>
+<button class="btn btn-primary col-xs-12" ng-click="$location.url('createroom')"><h1>Create Room</h1></button>
