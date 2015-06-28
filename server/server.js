@@ -130,7 +130,9 @@ function allRooms() {
 
 function broadcast() {
   for(var i in users) {
-    users[i].socket.emit('users', allUsers());
+    if (users[i].socket) {
+      users[i].socket.emit('users', allUsers());
+    }
   }
 }
 
@@ -178,19 +180,19 @@ io.on('connection', function(socket){
     }
   });
   socket.on('login', function(data) {
-    for(var key in users) {
+    for (var key = 0; key < users.length; key++) {
       if (users[key].username === data.username) {
-        if (users[key].accessToken === data.accessToken) {
-          console.log('existing user');
-          // log out the user that's logged in
-          users[key].socket.emit('logout', { message: "You've been logged out from another device." });
-          users[key].socket = socket;
-          user = users[key];
-          return onLogin();
-        }
-        else {
+        if (users[key].accessToken !== data.accessToken) {
           return socket.emit('logout', { error: "This user already exists." });
         }
+        console.log('existing user');
+        // log out the user that's logged in
+        if (users[key].socket) {
+          users[key].socket.emit('logout', { message: "You've been logged out from another device." });
+        }
+        users[key].socket = socket;
+        user = users[key];
+        return onLogin();
       }
     }
     console.log('new user');
@@ -211,8 +213,9 @@ io.on('connection', function(socket){
   });
 
   socket.on('disconnect', function () {
-    if (user)
-      users.splice(users.indexOf(user),1);
+    if (user) {
+      users[users.indexOf(user)].socket = false;
+    }
     broadcast();
   });
 });
