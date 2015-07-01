@@ -9,7 +9,7 @@
  */
 angular.module('answerAThingApp')
   .controller('RoomController', function ($scope, drawSocket, gameState) {
-    $scope.user = gameState.user;
+    $scope.gameState = gameState;
     $scope.error = false;
     $scope.leaveRoom = function() {
       drawSocket.emit('leaveRoom', {});

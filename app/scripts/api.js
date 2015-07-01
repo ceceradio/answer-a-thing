@@ -6,7 +6,6 @@ angular.module('answerAThingApp').
   })
   .factory('gameState', function(drawSocket, $location, $window) {
     var gameState = {
-      room: { name: '', password: '' },
       rooms: [],
       user: { username: '', accessToken: '' },
       state: 'loggedout',
@@ -25,6 +24,7 @@ angular.module('answerAThingApp').
       console.log(data);
     });
     drawSocket.on('user', function(user) {
+      gameState.user = user;
       if (user.room !== false) {
         gameState.state = 'inroom';
         $location.url('/room/'+user.room.name);
