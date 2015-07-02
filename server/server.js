@@ -20,6 +20,7 @@ function handler (req, res) {
 function Room(name) {
   this.name = name;
   this.password = false;
+  this.callerText = "";
   this.users = [];
 }
 Room.prototype.serialize = function() {
