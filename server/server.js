@@ -25,8 +25,11 @@ function Room(name) {
   this.users = [];
 }
 Room.prototype.setCaller = function(user) {
-  if (user in this.users) {
-    this.caller = user;
+  for(var i = 0; i < this.users.length; i++) {
+    if (user.name == this.users[i].name) {
+      this.caller = this.users[i];
+      return;
+    }
   }
 }
 Room.prototype.isCaller = function(user) {
