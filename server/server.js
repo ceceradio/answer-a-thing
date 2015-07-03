@@ -21,7 +21,16 @@ function Room(name) {
   this.name = name;
   this.password = false;
   this.callerText = "";
+  this.caller = null;
   this.users = [];
+}
+Room.prototype.setCaller = function(user) {
+  if (user in this.users) {
+    this.caller = user;
+  }
+}
+Room.prototype.isCaller = function(user) {
+  return (this.caller == user)
 }
 Room.prototype.serialize = function() {
   var ret = {};
