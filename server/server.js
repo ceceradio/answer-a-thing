@@ -26,14 +26,14 @@ function Room(name) {
 }
 Room.prototype.setCaller = function(user) {
   for(var i = 0; i < this.users.length; i++) {
-    if (user.name == this.users[i].name) {
+    if (user.username == this.users[i].username) {
       this.caller = this.users[i];
       return;
     }
   }
 }
 Room.prototype.isCaller = function(user) {
-  return (this.caller == user)
+  return (this.caller.username == user.username)
 }
 Room.prototype.serialize = function() {
   var ret = {};
