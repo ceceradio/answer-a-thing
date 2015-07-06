@@ -29,6 +29,20 @@ function Room(name) {
   };
   this.users = [];
 }
+Room.prototype.setState = function(state) {
+  this.state.status = state;
+  if (this.state.timerHandle) {
+    clearTimeout(this.state.timerHandle);
+  }
+  if (state == 'waiting') {
+    this.state.timerHandle = null;
+    this.state.timerEnd = null;
+  }
+  else if (state == 'callerSelectQuestion') {
+    this.state.timerHandle = setTimeout(this.selectRandomQuestion, 30 * 1000);
+    this.state.timerEnd = Date.now() + 30 * 1000;
+  }
+}
 Room.prototype.setCaller = function(user) {
   for(var i = 0; i < this.users.length; i++) {
     if (user.username == this.users[i].username) {
