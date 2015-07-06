@@ -22,6 +22,11 @@ function Room(name) {
   this.password = false;
   this.callerText = "";
   this.caller = null;
+  this.state = {
+    status: 'waiting',
+    timerHandle: null,
+    timerEnd: null
+  };
   this.users = [];
 }
 Room.prototype.setCaller = function(user) {
