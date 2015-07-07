@@ -42,6 +42,22 @@ Room.prototype.setState = function(state) {
     this.state.timerHandle = setTimeout(this.selectRandomQuestion, 30 * 1000);
     this.state.timerEnd = Date.now() + 30 * 1000;
   }
+  else if (state == 'playersAnswerQuestion') {
+    this.state.timerHandle = setTimeout(this.submitAllAnswers, 120 * 1000);
+    this.state.timerEnd = Date.now() + 120 * 1000;
+  }
+  else if (state == 'callerSelectAnswer') {
+    this.state.timerHandle = setTimeout(this.selectRandomAnswer, 60 * 1000);
+    this.state.timerEnd = Date.now() + 60 * 1000;
+  }
+  else if (state == 'playersBet') {
+    this.state.timerHandle = setTimeout(this.submitAllBets, 60 * 1000);
+    this.state.timerEnd = Date.now() + 60 * 1000;
+  }
+  else if (state == 'results') {
+    this.state.timerHandle = setTimeout(this.selectNewCaller, 30 * 1000);
+    this.state.timerEnd = Date.now() + 30 * 1000;
+  }
 }
 Room.prototype.setCaller = function(user) {
   for(var i = 0; i < this.users.length; i++) {
