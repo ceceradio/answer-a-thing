@@ -27,7 +27,27 @@ function Room(name) {
     timerHandle: null,
     timerEnd: null
   };
+  this.question = null;
   this.users = [];
+}
+Room.prototype.selectNewCaller = function() {
+  if (this.users.length < 1) {
+    this.caller = null;
+    return;
+  }
+  if (this.users.length == 1) {
+    this.caller = this.users[0];
+    return;
+  }
+  var oldCaller = this.caller;
+  this.caller = null;
+  while(this.caller == null) {
+    var i = Math.floor(Math.rand() * this.users.length);
+    if (this.users[i] != oldCaller) {
+      this.caller = this.users[i];
+      return;
+    }
+  }
 }
 Room.prototype.setState = function(state) {
   this.state.status = state;
