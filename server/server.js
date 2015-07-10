@@ -5,6 +5,12 @@ var md5 = require('MD5');
 
 app.listen(40001);
 
+var questions = [
+  "What do you think?",
+  "Where do you want to be?",
+  "Nice dog"
+];
+
 function handler (req, res) {
   fs.readFile(__dirname + '/index.html',
   function (err, data) {
