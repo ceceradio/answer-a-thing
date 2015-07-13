@@ -54,6 +54,21 @@ Room.prototype.selectNewCaller = function() {
       return;
     }
   }
+  // give questions 
+  this.question = [];
+  var usedIndices = [];
+  for(var n = 0; n < 4; n++) {
+    if (usedIndices.length >= questions.length)
+      break;
+    var index;
+    while(true) {
+      index = Math.random() * questions.length;
+      if (usedIndices.indexOf(index) == -1) {
+        break; // found an index not being used
+      }
+    }
+    this.question.push(questions[index]);
+  }
 }
 Room.prototype.setState = function(state) {
   this.state.status = state;
