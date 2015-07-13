@@ -48,7 +48,7 @@ Room.prototype.selectNewCaller = function() {
   var oldCaller = this.caller;
   this.caller = null;
   while(this.caller == null) {
-    var i = Math.floor(Math.rand() * this.users.length);
+    var i = Math.floor(Math.random() * this.users.length);
     if (this.users[i] != oldCaller) {
       this.caller = this.users[i];
       return;
@@ -62,13 +62,21 @@ Room.prototype.selectNewCaller = function() {
       break;
     var index;
     while(true) {
-      index = Math.random() * questions.length;
+      index = Math.floor(Math.random() * questions.length);
       if (usedIndices.indexOf(index) == -1) {
         break; // found an index not being used
       }
     }
     this.question.push(questions[index]);
   }
+  this.setState('callerSelectQuestion');
+}
+Room.prototype.selectRandomQuestion = function() {
+  this.selectQuestion(Math.floor(Math.random() * this.question.length));
+}
+Room.prototype.selectQuestion = function(index) {
+  this.question = this.question[Math.floor(Math.random() * this.question.length)];
+  this.setState('playersAnswerQuestion');
 }
 Room.prototype.setState = function(state) {
   this.state.status = state;
@@ -116,8 +124,10 @@ Room.prototype.serialize = function() {
   var keys = Object.keys(this);
   for(var i in keys) {
     var key = keys[i];
-    if (key != 'users' && key != 'password')
+    if (key != 'users' && key != 'password' && key != 'caller')
       ret[key] = this[key];
+    if (key == 'caller')
+      ret[key] = this.caller.username;
   }
   return ret;
 };
