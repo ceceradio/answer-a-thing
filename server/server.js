@@ -78,6 +78,9 @@ Room.prototype.selectQuestion = function(index) {
   this.question = this.question[Math.floor(Math.random() * this.question.length)];
   this.setState('playersAnswerQuestion');
 }
+Room.prototype.submitAllAnswers = function() {
+  this.setState('callerSelectAnswer');
+}
 Room.prototype.setState = function(state) {
   this.state.status = state;
   if (this.state.timerHandle) {
