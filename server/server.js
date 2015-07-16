@@ -33,6 +33,7 @@ function Room(name) {
     timerHandle: null,
     timerEnd: null
   };
+  this.winningUserIndex = null;
   this.question = null;
   this.users = [];
 }
@@ -81,6 +82,19 @@ Room.prototype.selectQuestion = function(index) {
 Room.prototype.submitAllAnswers = function() {
   this.setState('callerSelectAnswer');
 }
+Room.prototype.selectRandomAnswer = function() {
+  var selectedIndex = 0;
+  for(var n = 0; n < 100; n+++) {
+    selectedIndex = Math.random()*(this.users.length-1);
+    if (this.caller != this.users[selectedIndex])
+      break;
+  }
+  this.selectAnswer(selectedIndex);
+}
+Room.prototype.selectAnswer = function(index) {
+  this.winningUserIndex = index;
+  this.setState('playersBet');
+}
 Room.prototype.setState = function(state) {
   this.state.status = state;
   if (this.state.timerHandle) {
@@ -127,7 +141,7 @@ Room.prototype.serialize = function() {
   var keys = Object.keys(this);
   for(var i in keys) {
     var key = keys[i];
-    if (key != 'users' && key != 'password' && key != 'caller')
+    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUserIndex')
       ret[key] = this[key];
     if (key == 'caller')
       ret[key] = this.caller.username;
