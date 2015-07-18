@@ -33,11 +33,14 @@ function Room(name) {
     timerHandle: null,
     timerEnd: null
   };
+  this.coinMax = 2;
+  this.bets = [];
   this.winningUserIndex = null;
   this.question = null;
   this.users = [];
 }
 Room.prototype.selectNewCaller = function() {
+  this.bets = [];
   if (this.users.length < 1) {
     this.caller = null;
     return;
@@ -94,6 +97,24 @@ Room.prototype.selectRandomAnswer = function() {
 Room.prototype.selectAnswer = function(index) {
   this.winningUserIndex = index;
   this.setState('playersBet');
+}
+Room.prototype.betOnUser = function(bettor, target) {
+  var bettorIndex = this.users.indexOf(bettor);
+  if (bettorIndex < 0 || bettor == this.caller)
+    return false;
+  var targetIndex = this.users.indexOf(target);
+  if (targetIndex < 0 || target == this.caller)
+    return false;
+  if (typeof this.bets[bettor.username] === "undefined") {
+    this.bets[bettor.username] = [];
+  }
+  if (this.bets[bettor.username].length >= this.coinMax)
+    return false;
+  this.bets[bettor.username].push(target.username);
+}
+Room.prototype.submitAllBets = function(index) {
+  // calculate results
+  this.setState('results');
 }
 Room.prototype.setState = function(state) {
   this.state.status = state;
