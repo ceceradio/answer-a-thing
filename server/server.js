@@ -39,6 +39,13 @@ function Room(name) {
   this.question = null;
   this.users = [];
 }
+Room.prototype.broadcast = function(event, data) {
+  for(var i = 0; i < this.users.length; i++) {
+    if (this.users[i].socket) {
+      this.users[i].socket.emit(event, data);
+    }
+  }
+}
 Room.prototype.selectNewCaller = function() {
   this.bets = [];
   if (this.users.length < 1) {
