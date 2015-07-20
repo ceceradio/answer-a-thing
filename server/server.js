@@ -152,6 +152,7 @@ Room.prototype.setState = function(state) {
     this.state.timerHandle = setTimeout(this.selectNewCaller, 30 * 1000);
     this.state.timerEnd = Date.now() + 30 * 1000;
   }
+  this.broadcast('room', this.serialize());
 }
 Room.prototype.setCaller = function(user) {
   for(var i = 0; i < this.users.length; i++) {
@@ -173,6 +174,11 @@ Room.prototype.serialize = function() {
       ret[key] = this[key];
     if (key == 'caller')
       ret[key] = this.caller.username;
+    if (key == "users") {
+      ret[key] = this.users.map(function(currentValue, index, users) {
+        return currentValue.username;
+      });
+    }
   }
   return ret;
 };
