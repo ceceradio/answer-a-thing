@@ -86,8 +86,11 @@ Room.prototype.selectRandomQuestion = function() {
   this.selectQuestion(Math.floor(Math.random() * this.question.length));
 }
 Room.prototype.selectQuestion = function(index) {
+  if (this.state.status !== "callerSelectQuestion")
+    return false;
   this.question = this.question[Math.floor(Math.random() * this.question.length)];
   this.setState('playersAnswerQuestion');
+  return true;
 }
 Room.prototype.submitAllAnswers = function() {
   this.setState('callerSelectAnswer');
@@ -257,6 +260,12 @@ User.prototype.leaveRoom = function() {
   this.room = false;
   return true;
 };
+User.prototype.isInRoom = function() {
+  return (this.room !== false);
+}
+User.prototype.isCaller = function() {
+  return this.isInRoom() && (this.room.caller === this);
+}
 
 var users = [];
 var rooms = {};
