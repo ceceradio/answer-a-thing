@@ -360,6 +360,18 @@ io.on('connection', function(socket){
     return onLogin();
   });
 
+  // room functions
+
+  socket.on('room.selectQuestion', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    if (!user.isInRoom() || !user.isCaller()) { 
+      return socket.emit('error', { error: "Your cannot select a question." });
+    }
+    user.room.selectQuestion(data.questionIndex);
+  });
+
   socket.on('drawboard', function(data) {
     if (!user) {
       return socket.emit('logout', { error: "You are not logged in." });
