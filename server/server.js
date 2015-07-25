@@ -109,11 +109,9 @@ Room.prototype.selectAnswer = function(index) {
   this.setState('playersBet');
 }
 Room.prototype.betOnUser = function(bettor, target) {
-  var bettorIndex = this.users.indexOf(bettor);
-  if (bettorIndex < 0 || bettor == this.caller)
+  if (this.users.indexOf(bettor) < 0 || bettor == this.caller)
     return false;
-  var targetIndex = this.users.indexOf(target);
-  if (targetIndex < 0 || target == this.caller)
+  if (this.users.indexOf(target) < 0 || target == this.caller)
     return false;
   if (typeof this.bets[bettor.username] === "undefined") {
     this.bets[bettor.username] = [];
