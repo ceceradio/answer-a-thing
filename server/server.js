@@ -119,6 +119,7 @@ Room.prototype.betOnUser = function(bettor, target) {
   if (this.bets[bettor.username].length >= this.coinMax)
     return false;
   this.bets[bettor.username].push(target.username);
+  return true;
 }
 Room.prototype.submitAllBets = function(index) {
   // calculate results
@@ -370,6 +371,18 @@ io.on('connection', function(socket){
       return socket.emit('error', { error: "Your cannot select a question." });
     }
     user.room.selectQuestion(data.questionIndex);
+  });
+
+  socket.on('room.betOnUser', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    if (!user.isInRoom()) { 
+      return socket.emit('error', { error: "Your cannot bet." });
+    }
+    if (!user.room.betOnUser(user, user.room.users[data.userIndex])) {
+      return socket.emit('error', { error: "Your cannot bet on this user." });
+    }
   });
 
   socket.on('drawboard', function(data) {
