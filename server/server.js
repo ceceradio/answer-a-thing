@@ -119,9 +119,23 @@ Room.prototype.betOnUser = function(bettor, target) {
   if (this.bets[bettor.username].length >= this.coinMax)
     return false;
   this.bets[bettor.username].push(target.username);
+  // check if all bets are submitted
+  if (this.areAllBetsSubmitted()) {
+    this.submitAllBets();
+  }
   return true;
 }
-Room.prototype.submitAllBets = function(index) {
+Room.prototype.areAllBetsSubmitted = function() {
+  for(var i =0; i < this.users.length; i++) {
+    if (this.users[i] == this.caller)
+      continue;
+    var user = this.users[i];
+    if (this.bets[user.username].length < this.coinMax)
+      return false;
+  }
+  return true;
+}
+Room.prototype.submitAllBets = function() {
   // calculate results
   this.setState('results');
 }
