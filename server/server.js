@@ -391,12 +391,21 @@ io.on('connection', function(socket){
     if (!user) {
       return socket.emit('logout', { error: "You are not logged in." });
     }
-    if (!user.isInRoom()) { 
+    if (!user.isInRoom() || user.isCaller()) { 
       return socket.emit('error', { error: "Your cannot bet." });
     }
     if (!user.room.betOnUser(user, user.room.users[data.userIndex])) {
       return socket.emit('error', { error: "Your cannot bet on this user." });
     }
+  });
+  socket.on('room.selectAnswer', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    if (!user.isInRoom() || !user.isCaller()) { 
+      return socket.emit('error', { error: "Your cannot select a question." });
+    }
+    user.room.selectAnswer(data.userIndex);
   });
 
   socket.on('drawboard', function(data) {
