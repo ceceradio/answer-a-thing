@@ -46,8 +46,13 @@ Room.prototype.broadcast = function(event, data) {
     }
   }
 }
+Room.prototype.resetBets = function() {
+  for(var i = 0; i < this.users.length; i++) {
+    this.users[i].bets = false;
+  }
+}
 Room.prototype.selectNewCaller = function() {
-  this.bets = [];
+  this.resetBets();
   if (this.users.length < 1) {
     this.caller = null;
     return;
@@ -113,12 +118,12 @@ Room.prototype.betOnUser = function(bettor, target) {
     return false;
   if (this.users.indexOf(target) < 0 || target == this.caller)
     return false;
-  if (typeof this.bets[bettor.username] === "undefined") {
-    this.bets[bettor.username] = [];
+  if (bettor.bets === false) {
+    bettor.bets = [];
   }
-  if (this.bets[bettor.username].length >= this.coinMax)
+  if (bettor.bets.length >= this.coinMax)
     return false;
-  this.bets[bettor.username].push(target.username);
+  bettor.username.bets.push(target.username);
   // check if all bets are submitted
   if (this.areAllBetsSubmitted()) {
     this.submitAllBets();
@@ -130,7 +135,7 @@ Room.prototype.areAllBetsSubmitted = function() {
     if (this.users[i] == this.caller)
       continue;
     var user = this.users[i];
-    if (this.bets[user.username].length < this.coinMax)
+    if (user.bets.length < this.coinMax)
       return false;
   }
   return true;
@@ -222,6 +227,7 @@ function User(socket) {
   this.socket = socket;
   this.username = "";
   this.accessToken = "";
+  this.bets = false;
   this.drawboard = {};
   this.room = false;
 }
