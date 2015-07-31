@@ -67,7 +67,7 @@ Room.prototype.selectNewCaller = function() {
     var i = Math.floor(Math.random() * this.users.length);
     if (this.users[i] != oldCaller) {
       this.caller = this.users[i];
-      return;
+      break;
     }
   }
   // give questions 
@@ -186,7 +186,7 @@ Room.prototype.setCaller = function(user) {
 Room.prototype.isCaller = function(user) {
   return (this.caller.username == user.username)
 }
-Room.prototype.serialize = function() {
+Room.prototype.serialize = function(notRecursive) {
   var ret = {};
   var keys = Object.keys(this);
   for(var i in keys) {
@@ -197,7 +197,12 @@ Room.prototype.serialize = function() {
       ret[key] = this.caller.username;
     if (key == "users") {
       ret[key] = this.users.map(function(currentValue, index, users) {
-        return currentValue.username;
+        if (notRecursive) {
+          return currentValue.username;
+        }
+        else {
+          return currentValue.serialize(true);
+        }
       });
     }
   }
@@ -231,7 +236,7 @@ function User(socket) {
   this.drawboard = {};
   this.room = false;
 }
-User.prototype.serialize = function() {
+User.prototype.serialize = function(notRecursive) {
   var ret = {};
   var keys = Object.keys(this);
   for(var i in keys) {
@@ -240,7 +245,12 @@ User.prototype.serialize = function() {
       ret[key] = this[key];
     if (key === 'room') {
       if (this[key]) {
-        ret[key] = this[key].serialize();
+        if (notRecursive) {
+          ret[key] = this[key].name;
+        }
+        else {
+          ret[key] = this[key].serialize(true);
+        }
       }
       else {
         ret[key] = this[key];
