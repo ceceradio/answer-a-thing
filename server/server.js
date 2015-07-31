@@ -130,6 +130,16 @@ Room.prototype.betOnUser = function(bettor, target) {
   }
   return true;
 }
+Room.prototype.areAllAnswersSubmitted = function() {
+  for(var i =0; i < this.users.length; i++) {
+    if (this.users[i] == this.caller)
+      continue;
+    var user = this.users[i];
+    if (!user.answerSubmitted)
+      return false;
+  }
+  return true;
+}
 Room.prototype.areAllBetsSubmitted = function() {
   for(var i =0; i < this.users.length; i++) {
     if (this.users[i] == this.caller)
@@ -158,6 +168,10 @@ Room.prototype.setState = function(state) {
     this.state.timerEnd = Date.now() + 30 * 1000;
   }
   else if (state == 'playersAnswerQuestion') {
+    // reset user answer state
+    for(var i = 0; i < this.users.length; i++) {
+      this.users[i].answerSubmitted = false;
+    }
     this.state.timerHandle = setTimeout(this.submitAllAnswers, 120 * 1000);
     this.state.timerEnd = Date.now() + 120 * 1000;
   }
@@ -235,6 +249,7 @@ function User(socket) {
   this.bets = false;
   this.drawboard = {};
   this.room = false;
+  this.answerSubmitted = false;
 }
 User.prototype.serialize = function(notRecursive) {
   var ret = {};
@@ -268,6 +283,7 @@ User.prototype.createRoom = function(roomName) {
   rooms[roomName] = new Room(roomName);
   rooms[roomName].addUser(this);
   this.room = rooms[roomName];
+  this.answerSubmitted = false;
   return true;
 };
 User.prototype.joinRoom = function(roomName) {
@@ -278,6 +294,7 @@ User.prototype.joinRoom = function(roomName) {
     return "You must leave your current room.";
   rooms[roomName].addUser(this);
   this.room = rooms[roomName];
+  this.answerSubmitted = false;
   return true;
 };
 User.prototype.leaveRoom = function() {
@@ -287,6 +304,7 @@ User.prototype.leaveRoom = function() {
     this.room.removeUser(this);
   }
   this.room = false;
+  this.answerSubmitted = false;
   return true;
 };
 User.prototype.isInRoom = function() {
@@ -413,6 +431,15 @@ io.on('connection', function(socket){
     if (!user.room.betOnUser(user, user.room.users[data.userIndex])) {
       return socket.emit('error', { error: "Your cannot bet on this user." });
     }
+  });
+  socket.on('room.submitAnswer', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    if (!user.isInRoom() || user.isCaller()) { 
+      return socket.emit('error', { error: "Your cannot submit an answer." });
+    }
+    user.answerSubmitted = true;
   });
   socket.on('room.selectAnswer', function(data) {
     if (!user) {
