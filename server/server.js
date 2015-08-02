@@ -440,6 +440,7 @@ io.on('connection', function(socket){
       return socket.emit('error', { error: "Your cannot submit an answer." });
     }
     user.answerSubmitted = true;
+    user.room.broadcast('room', user.room.serialize());
   });
   socket.on('room.selectAnswer', function(data) {
     if (!user) {
