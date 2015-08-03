@@ -98,6 +98,11 @@ Room.prototype.selectQuestion = function(index) {
   return true;
 }
 Room.prototype.submitAllAnswers = function() {
+  for(var i = 0; i < this.users.length; i++) {
+    if (this.users[i] == this.caller)
+      continue;
+    this.users[i].answerSubmitted = true;
+  }
   this.setState('callerSelectAnswer');
 }
 Room.prototype.selectRandomAnswer = function() {
@@ -440,7 +445,12 @@ io.on('connection', function(socket){
       return socket.emit('error', { error: "Your cannot submit an answer." });
     }
     user.answerSubmitted = true;
-    user.room.broadcast('room', user.room.serialize());
+    if (user.room.areAllAnswersSubmitted()) {
+      user.room.submitAllAnswers();
+    }
+    else {
+      user.room.broadcast('room', user.room.serialize());
+    }
   });
   socket.on('room.selectAnswer', function(data) {
     if (!user) {
