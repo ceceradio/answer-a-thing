@@ -77,11 +77,13 @@ Room.prototype.selectNewCaller = function() {
     if (usedIndices.length >= questions.length)
       break;
     var index;
-    while(true) {
+    var tries = 0;
+    while(tries < 10) {
       index = Math.floor(Math.random() * questions.length);
       if (usedIndices.indexOf(index) == -1) {
         break; // found an index not being used
       }
+      tries++;
     }
     this.question.push(questions[index]);
   }
