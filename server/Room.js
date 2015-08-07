@@ -1,4 +1,4 @@
-module.exports = function Room(name) {
+function Room(name) {
   this.name = name;
   this.password = false;
   this.callerText = "";
@@ -84,7 +84,7 @@ Room.prototype.submitAllAnswers = function() {
 }
 Room.prototype.selectRandomAnswer = function() {
   var selectedIndex = 0;
-  for(var n = 0; n < 100; n+++) {
+  for(var n = 0; n < 100; n++) {
     selectedIndex = Math.random()*(this.users.length-1);
     if (this.caller != this.users[selectedIndex])
       break;
@@ -224,3 +224,5 @@ Room.prototype.removeUser = function(user) {
   this.users.splice(this.users.indexOf(user), 1);
   return true;
 }
+
+module.exports = Room;

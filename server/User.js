@@ -1,5 +1,5 @@
-var Room = require('Room.js');
-module.exports = function User(socket) {
+var Room = require('./Room.js');
+function User(socket) {
   this.socket = socket;
   this.username = "";
   this.accessToken = "";
@@ -70,3 +70,5 @@ User.prototype.isInRoom = function() {
 User.prototype.isCaller = function() {
   return this.isInRoom() && (this.room.caller === this);
 }
+
+module.exports = User;
