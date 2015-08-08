@@ -1,5 +1,5 @@
 var User = require('../User.js');
-describe("Player", function() {
+describe("User", function() {
   var user;
   var song;
 
@@ -33,6 +33,13 @@ describe("Player", function() {
       expect(output.room).toEqual(false);
       expect(output.drawboard).toEqual(user.drawboard);
       expect(output.bets).toEqual(user.bets);
+    });
+
+    it("should call user.room.serialize() if Room is defined and notRecursive is undefined", function() {
+      user.room = { serialize: function() {} };
+      spyOn(user.room, 'serialize');
+      var output = user.serialize();
+      expect(user.room.serialize).toHaveBeenCalled();
     });
 
   });
