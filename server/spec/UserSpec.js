@@ -42,5 +42,15 @@ describe("User", function() {
       expect(user.room.serialize).toHaveBeenCalled();
     });
 
+    it("should not include user.room or call user.room.serialize() if notRecursive is true", function() {
+      user.room = { serialize: function() {} };
+      spyOn(user.room, 'serialize');
+      var output = user.serialize(true);
+      expect(user.room.serialize).not.toHaveBeenCalled();
+      expect(output.room).not.toBeDefined();
+    });
+  });
+  describe('createRoom()', function() {
+
   });
 });
