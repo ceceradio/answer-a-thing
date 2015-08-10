@@ -32,6 +32,7 @@ User.prototype.serialize = function(notRecursive) {
   return ret;
 };
 User.prototype.createRoom = function(roomName) {
+  var rooms = Room.getRooms();
   if (typeof rooms[roomName] !== "undefined") {
     return "A room with this name already exists.";
   }
@@ -44,6 +45,7 @@ User.prototype.createRoom = function(roomName) {
   return true;
 };
 User.prototype.joinRoom = function(roomName) {
+  var rooms = Room.getRooms();
   if (typeof rooms[roomName] === "undefined") {
     return "This room does not exist.";
   }

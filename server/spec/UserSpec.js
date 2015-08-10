@@ -1,10 +1,14 @@
 var User = require('../User.js');
+var Room = require('../Room.js');
+var rooms;
 describe("User", function() {
   var user;
-  var song;
 
   beforeEach(function() {
     user = new User();
+    // clear the rooms
+    rooms = Room.getRooms();
+    rooms.splice(0,rooms.length);
   });
 
   it("should initialize important game data to false or empty objects", function() {
@@ -50,7 +54,18 @@ describe("User", function() {
       expect(output.room).not.toBeDefined();
     });
   });
-  describe('createRoom()', function() {
+  describe('createRoom(roomName)', function() {
+    var roomName = 'testroom';
 
+    it('should not create a room if it already exists in the rooms global', function() {
+      rooms[roomName] = "test";
+      user.room = false;
+      expect(user.createRoom(roomName)).toEqual("A room with this name already exists.");
+    });
+    it('should not create a room if the user is already in a room', function() {
+      user.room = 'test';
+      delete rooms[roomName];
+      expect(user.createRoom(roomName)).toEqual("You must leave your current room.");
+    });
   });
 });

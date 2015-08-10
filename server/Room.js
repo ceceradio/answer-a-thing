@@ -14,6 +14,10 @@ function Room(name) {
   this.question = null;
   this.users = [];
 }
+var rooms = {};
+Room.getRooms = function() {
+  return rooms;
+}
 Room.prototype.broadcast = function(event, data) {
   for(var i = 0; i < this.users.length; i++) {
     if (this.users[i].socket) {

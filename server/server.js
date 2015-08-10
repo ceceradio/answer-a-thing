@@ -27,7 +27,7 @@ function handler (req, res) {
 }
 
 var users = [];
-var rooms = {};
+var rooms = Room.getRooms();
 
 
 function allUsers() {
