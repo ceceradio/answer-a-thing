@@ -8,7 +8,6 @@ describe("User", function() {
     user = new User();
     // clear the rooms
     rooms = Room.getRooms();
-    rooms.splice(0,rooms.length);
   });
 
   it("should initialize important game data to false or empty objects", function() {
@@ -57,15 +56,32 @@ describe("User", function() {
   describe('createRoom(roomName)', function() {
     var roomName = 'testroom';
 
-    it('should not create a room if it already exists in the rooms global', function() {
+    it('should not create a room if it already exists', function() {
       rooms[roomName] = "test";
       user.room = false;
       expect(user.createRoom(roomName)).toEqual("A room with this name already exists.");
+      expect(user.room).toEqual(false);
     });
     it('should not create a room if the user is already in a room', function() {
       user.room = 'test';
       delete rooms[roomName];
       expect(user.createRoom(roomName)).toEqual("You must leave your current room.");
+      expect(user.room).toEqual('test');
+    });
+  });
+  describe('joinRoom(roomName)', function() {
+    var roomName = 'testroom';
+    it("should fail if the room doesn't exist", function() {
+      user.room = false;
+      delete rooms[roomName];
+      expect(user.joinRoom(roomName)).toEqual("This room does not exist.");
+      expect(user.room).toEqual(false);
+    });
+    it("should not create a room if the user is already in a room", function() {
+      user.room = 'test';
+      rooms[roomName] = 'occupied';
+      expect(user.joinRoom(roomName)).toEqual("You must leave your current room.");
+      expect(user.room).toEqual('test');
     });
   });
 });
