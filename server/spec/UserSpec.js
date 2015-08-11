@@ -68,6 +68,14 @@ describe("User", function() {
       expect(user.createRoom(roomName)).toEqual("You must leave your current room.");
       expect(user.room).toEqual('test');
     });
+    it('should create a room and put the user in it if the room and user', function() {
+      user.room = false;
+      delete rooms[roomName];
+      expect(user.createRoom(roomName)).toEqual(true);
+      expect(user.room).toBeDefined();
+      expect(user.room.name).toEqual(roomName);
+      expect(user.room.users).toContain(user);
+    });
   });
   describe('joinRoom(roomName)', function() {
     var roomName = 'testroom';
