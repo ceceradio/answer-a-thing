@@ -55,22 +55,22 @@ describe("User", function() {
   });
   describe('createRoom(roomName)', function() {
     var roomName = 'testroom';
-
+    beforeEach(function() {
+      // reset the state
+      user.room = false;
+      delete rooms[roomName];
+    });
     it('should not create a room if it already exists', function() {
       rooms[roomName] = "test";
-      user.room = false;
       expect(user.createRoom(roomName)).toEqual("A room with this name already exists.");
       expect(user.room).toEqual(false);
     });
     it('should not create a room if the user is already in a room', function() {
       user.room = 'test';
-      delete rooms[roomName];
       expect(user.createRoom(roomName)).toEqual("You must leave your current room.");
       expect(user.room).toEqual('test');
     });
     it('should create a room and put the user in it if the room and user', function() {
-      user.room = false;
-      delete rooms[roomName];
       expect(user.createRoom(roomName)).toEqual(true);
       expect(user.room).toBeDefined();
       expect(user.room.name).toEqual(roomName);
