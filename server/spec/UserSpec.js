@@ -79,9 +79,12 @@ describe("User", function() {
   });
   describe('joinRoom(roomName)', function() {
     var roomName = 'testroom';
-    it("should fail if the room doesn't exist", function() {
+    beforeEach(function() {
+      // reset the state
       user.room = false;
       delete rooms[roomName];
+    });
+    it("should fail if the room doesn't exist", function() {
       expect(user.joinRoom(roomName)).toEqual("This room does not exist.");
       expect(user.room).toEqual(false);
     });
@@ -90,6 +93,12 @@ describe("User", function() {
       rooms[roomName] = 'occupied';
       expect(user.joinRoom(roomName)).toEqual("You must leave your current room.");
       expect(user.room).toEqual('test');
+    });
+    it('should put the user in an existing room', function() {
+      rooms[roomName] = new Room(roomName);
+      expect(user.joinRoom(roomName)).toEqual(true);
+      expect(user.room.name).toEqual(roomName);
+      expect(user.room.users).toContain(user);
     });
   });
 });
