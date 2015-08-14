@@ -101,4 +101,11 @@ describe("User", function() {
       expect(user.room.users).toContain(user);
     });
   });
+  describe('isInRoom', function() {
+    it('should return true if room is not false, returns false otherwise', function() {
+      expect(user.isInRoom()).toEqual(false);
+      user.room = {};
+      expect(user.isInRoom()).toEqual(true);
+    });
+  });
 });
