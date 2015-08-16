@@ -108,4 +108,18 @@ describe("User", function() {
       expect(user.isInRoom()).toEqual(true);
     });
   });
+  describe('isCaller', function() {
+    it('should return false if the user is not in a room', function() {
+      expect(user.isCaller()).toEqual(false);
+    });
+    it('should return false if the user is not the caller', function() {
+      user.room = {};
+      expect(user.isCaller()).toEqual(false);
+    });
+    it('should return false if the user is the caller', function() {
+      user.room = {};
+      user.room.caller = user;
+      expect(user.isCaller()).toEqual(true);
+    });
+  });
 });
