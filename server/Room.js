@@ -42,13 +42,13 @@ Room.prototype.selectNewCaller = function() {
   }
   var oldCaller = this.caller;
   this.caller = null;
-  while(this.caller == null) {
-    var i = Math.floor(Math.random() * this.users.length);
-    if (this.users[i] != oldCaller) {
-      this.caller = this.users[i];
-      break;
-    }
+
+  var i = (this.users.indexOf(oldCaller) + 1) % this.users.length);
+  if (this.users[i] != oldCaller) {
+    this.caller = this.users[i];
+    break;
   }
+
   // give questions 
   this.question = [];
   var usedIndices = [];

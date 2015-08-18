@@ -18,4 +18,18 @@ describe("Room", function() {
         }
       });
     });
+    describe('.selectNewCaller()', function() {
+      it("should call resetBets()", function() {
+
+      });
+      it("should select a new caller from the users in the room sequentially, starting with user 0", function() {
+
+      });
+      it("should populate the questions", function() {
+
+      });
+      it("should setState('callerSelectQuestion')", function() {
+
+      });
+    });
 });
