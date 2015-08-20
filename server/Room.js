@@ -1,3 +1,8 @@
+var questions = [
+  "What do you think?",
+  "Where do you want to be?",
+  "Nice dog"
+];
 function Room(name) {
   this.name = name;
   this.password = false;
@@ -43,10 +48,13 @@ Room.prototype.selectNewCaller = function() {
   var oldCaller = this.caller;
   this.caller = null;
 
-  var i = (this.users.indexOf(oldCaller) + 1) % this.users.length);
+  var i = (this.users.indexOf(oldCaller) + 1) % this.users.length;
   if (this.users[i] != oldCaller) {
     this.caller = this.users[i];
-    break;
+  }
+  else {
+    // somehow we ended up at the same caller?
+    this.caller = this.users[i];
   }
 
   // give questions 

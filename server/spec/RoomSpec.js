@@ -19,11 +19,21 @@ describe("Room", function() {
       });
     });
     describe('.selectNewCaller()', function() {
+      var firstUser;
+      beforeEach(function() {
+        firstUser = new User();
+        firstUser.name = "1";
+        room.users.push( firstUser );
+        room.users.push( new User() );
+      });
       it("should call resetBets()", function() {
-
+        spyOn(room, 'resetBets').and.callThrough();
+        room.selectNewCaller();
+        expect(room.resetBets).toHaveBeenCalled();
       });
       it("should select a new caller from the users in the room sequentially, starting with user 0", function() {
-
+        room.selectNewCaller();
+        expect(room.caller).toEqual(firstUser);
       });
       it("should populate the questions", function() {
 
