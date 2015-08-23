@@ -22,7 +22,7 @@ describe("Room", function() {
       var firstUser;
       beforeEach(function() {
         firstUser = new User();
-        firstUser.name = "1";
+        firstUser.username = "1";
         room.users.push( firstUser );
         room.users.push( new User() );
       });
@@ -36,10 +36,24 @@ describe("Room", function() {
         expect(room.caller).toEqual(firstUser);
       });
       it("should populate the questions", function() {
-
+        room.selectNewCaller();
+        expect(room.question.length).toEqual(4);
       });
       it("should setState('callerSelectQuestion')", function() {
-
+        spyOn(room,'setState');
+        room.selectNewCaller();
+        expect(room.setState).toHaveBeenCalledWith('callerSelectQuestion');
+      });
+    });
+    describe('.selectQuestion(index)', function() {
+      beforeEach(function() {
+        spyOn(room,'setState');
+      });
+      it('should assign to .question the value in question[index]', function() {
+        room.question = [ "test"  ]; 
+        room.state.status = "callerSelectQuestion";
+        room.selectRandomQuestion();
+        expect(room.question).toEqual('test');
       });
     });
 });
