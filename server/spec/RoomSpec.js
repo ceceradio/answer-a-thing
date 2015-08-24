@@ -48,12 +48,16 @@ describe("Room", function() {
     describe('.selectQuestion(index)', function() {
       beforeEach(function() {
         spyOn(room,'setState');
+        room.question = [ "test" ]; 
+        room.state.status = "callerSelectQuestion";
       });
       it('should assign to .question the value in question[index]', function() {
-        room.question = [ "test"  ]; 
-        room.state.status = "callerSelectQuestion";
         room.selectRandomQuestion();
         expect(room.question).toEqual('test');
+      });
+      it('should call setState("playersAnswerQuestion")', function() {
+        room.selectRandomQuestion();
+        expect(room.setState).toHaveBeenCalledWith('playersAnswerQuestion');
       });
     });
 });
