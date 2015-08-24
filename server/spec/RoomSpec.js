@@ -51,12 +51,16 @@ describe("Room", function() {
         room.question = [ "test" ]; 
         room.state.status = "callerSelectQuestion";
       });
+      it('should fail if the status is not callerSelectQuestion', function() {
+        room.state.status = "badstate";
+        expect(room.selectQuestion(0)).toEqual(false);
+      });
       it('should assign to .question the value in question[index]', function() {
-        room.selectRandomQuestion();
+        expect(room.selectQuestion(0)).toEqual(true);
         expect(room.question).toEqual('test');
       });
       it('should call setState("playersAnswerQuestion")', function() {
-        room.selectRandomQuestion();
+        expect(room.selectQuestion(0)).toEqual(true);
         expect(room.setState).toHaveBeenCalledWith('playersAnswerQuestion');
       });
     });
