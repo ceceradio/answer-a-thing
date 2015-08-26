@@ -64,4 +64,12 @@ describe("Room", function() {
         expect(room.setState).toHaveBeenCalledWith('playersAnswerQuestion');
       });
     });
+    describe(".submitAllAnswers()", function() {
+      it("should set all users' property .answerSubmitted to true except the caller", function() {
+
+      });
+      it("should setState('callerSelectAnswer')", function() {
+        
+      });
+    });
 });
