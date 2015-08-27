@@ -65,11 +65,21 @@ describe("Room", function() {
       });
     });
     describe(".submitAllAnswers()", function() {
+      beforeEach(function() {
+        spyOn(room,'setState');
+        room.caller = { answerSubmitted: false };
+        room.users = [ { answerSubmitted: false }, { answerSubmitted: false }, room.caller ];
+      });
       it("should set all users' property .answerSubmitted to true except the caller", function() {
-
+        room.submitAllAnswers();
+        expect(room.users[0].answerSubmitted).toEqual(true);
+        expect(room.users[1].answerSubmitted).toEqual(true);
+        expect(room.users[2].answerSubmitted).toEqual(false);
+        expect(room.caller.answerSubmitted).toEqual(false);
       });
       it("should setState('callerSelectAnswer')", function() {
-        
+        room.submitAllAnswers();
+        expect(room.setState).toHaveBeenCalledWith('callerSelectAnswer');
       });
     });
 });
