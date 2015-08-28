@@ -104,8 +104,13 @@ Room.prototype.selectRandomAnswer = function() {
   this.selectAnswer(selectedIndex);
 }
 Room.prototype.selectAnswer = function(index) {
+  if (this.caller == this.users[index])
+    return false;
+  if (this.state !== 'callerSelectAnswer')
+    return false;
   this.winningUser = this.users[index];
   this.setState('playersBet');
+  return true;
 }
 Room.prototype.betOnUser = function(bettor, target) {
   if (this.users.indexOf(bettor) < 0 || bettor == this.caller)

@@ -87,12 +87,17 @@ describe("Room", function() {
         spyOn(room,'setState');
         room.caller = { answerSubmitted: false };
         room.users = [ { answerSubmitted: false }, { answerSubmitted: false }, room.caller ];
+        room.state = 'callerSelectAnswer';
       });
       it("should not let you select the caller for the answer", function() {
-
+        expect(room.selectAnswer(2)).toEqual(false);
+      });
+      it("should not let you select an answer if the state is not 'callerSelectAnswer'", function() {
+        room.state = 'playersBet';
+        expect(room.selectAnswer(0)).toEqual(false);
       });
       it("should revert back to 'lobby' if there are no remaining players", function() {
-
+        
       });
       it("should set room.winningUser to the user at the given index", function() {
         room.selectAnswer(0);
