@@ -15,7 +15,7 @@ function Room(name) {
   };
   this.coinMax = 2;
   this.bets = [];
-  this.winningUserIndex = null;
+  this.winningUser = null;
   this.question = null;
   this.users = [];
 }
@@ -104,7 +104,7 @@ Room.prototype.selectRandomAnswer = function() {
   this.selectAnswer(selectedIndex);
 }
 Room.prototype.selectAnswer = function(index) {
-  this.winningUserIndex = index;
+  this.winningUser = this.users[index];
   this.setState('playersBet');
 }
 Room.prototype.betOnUser = function(bettor, target) {
@@ -199,7 +199,7 @@ Room.prototype.serialize = function(notRecursive) {
   var keys = Object.keys(this);
   for(var i in keys) {
     var key = keys[i];
-    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUserIndex')
+    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUser')
       ret[key] = this[key];
     if (key == 'caller')
       ret[key] = this.caller.username;

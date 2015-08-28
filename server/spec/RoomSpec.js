@@ -82,4 +82,26 @@ describe("Room", function() {
         expect(room.setState).toHaveBeenCalledWith('callerSelectAnswer');
       });
     });
+    describe(".selectAnswer(index)", function() {
+      beforeEach(function() {
+        spyOn(room,'setState');
+        room.caller = { answerSubmitted: false };
+        room.users = [ { answerSubmitted: false }, { answerSubmitted: false }, room.caller ];
+      });
+      it("should not let you select the caller for the answer", function() {
+
+      });
+      it("should revert back to 'lobby' if there are no remaining players", function() {
+
+      });
+      it("should set room.winningUser to the user at the given index", function() {
+        room.selectAnswer(0);
+        expect(room.users[0]).toEqual(room.winningUser);
+        expect(room.winningUser).not.toEqual(null);
+      });
+      it("should setState('playersBet')", function() {
+        room.selectAnswer(0);
+        expect(room.setState).toHaveBeenCalledWith('playersBet');
+      });
+    });
 });
