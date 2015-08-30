@@ -109,4 +109,18 @@ describe("Room", function() {
       expect(room.setState).toHaveBeenCalledWith('playersBet');
     });
   });
+  describe(".betOnUser(bettor, target)", function() {
+    it('should not allow a bettor to bet on the caller', function() {
+    });
+    it('should not allow a callor to be a bettor', function() {
+    });
+    it('should not allow a user not in the room to bet', function() {
+    });
+    it('should not allow a user to bet more than the maximum amount', function() {
+    });
+    it('should add the user to the bets', function() {
+    });
+    it('should execute function to set state to submit all bets if all bets are submitted', function() {
+    });
+  })
 });
