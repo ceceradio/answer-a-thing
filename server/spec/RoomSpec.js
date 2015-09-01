@@ -110,6 +110,19 @@ describe("Room", function() {
     });
   });
   describe(".betOnUser(bettor, target)", function() {
+    var player;
+    var caller;
+    var bettor;
+    beforeEach(function() {
+      spyOn(room,'setState');
+      room.caller = caller = { username: 'caller' };
+      player = { username: 'player' };
+      bettor = { username: 'bettor' };
+      room.users = [ bettor, player, room.caller ];
+      room.state = 'playersBet';
+    });
+    it('should not allow a user to bet if the room state is not playersBet'. function() {
+    });
     it('should not allow a bettor to bet on the caller', function() {
     });
     it('should not allow a callor to be a bettor', function() {
