@@ -113,6 +113,8 @@ Room.prototype.selectAnswer = function(index) {
   return true;
 }
 Room.prototype.betOnUser = function(bettor, target) {
+  if (this.state !== 'playersBet')
+    return false;
   if (this.users.indexOf(bettor) < 0 || bettor == this.caller)
     return false;
   if (this.users.indexOf(target) < 0 || target == this.caller)
