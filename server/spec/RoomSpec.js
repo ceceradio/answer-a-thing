@@ -121,13 +121,18 @@ describe("Room", function() {
       room.users = [ bettor, player, room.caller ];
       room.state = 'playersBet';
     });
-    it('should not allow a user to bet if the room state is not playersBet'. function() {
+    it('should not allow a user to bet if the room state is not playersBet', function() {
+      room.state = 'test';
+      expect(room.betOnUser(bettor, player)).toEqual(false);
     });
     it('should not allow a bettor to bet on the caller', function() {
+      expect(room.betOnUser(bettor, caller)).toEqual(false);
     });
     it('should not allow a callor to be a bettor', function() {
+      expect(room.betOnUser(caller, player)).toEqual(false);
     });
     it('should not allow a user not in the room to bet', function() {
+      expect(room.betOnUser({ username: 'who?' }, player)).toEqual(false);
     });
     it('should not allow a user to bet more than the maximum amount', function() {
     });
