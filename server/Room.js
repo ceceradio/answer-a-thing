@@ -119,12 +119,12 @@ Room.prototype.betOnUser = function(bettor, target) {
     return false;
   if (this.users.indexOf(target) < 0 || target == this.caller)
     return false;
-  if (bettor.bets === false) {
+  if (bettor.bets === false || typeof bettor.bets === "undefined") {
     bettor.bets = [];
   }
   if (bettor.bets.length >= this.coinMax)
     return false;
-  bettor.username.bets.push(target.username);
+  bettor.bets.push(target.username);
   // check if all bets are submitted
   if (this.areAllBetsSubmitted()) {
     this.submitAllBets();

@@ -135,8 +135,16 @@ describe("Room", function() {
       expect(room.betOnUser({ username: 'who?' }, player)).toEqual(false);
     });
     it('should not allow a user to bet more than the maximum amount', function() {
+      bettor.bets = [];
+      for(var i=0;i<=room.coinMax;i++) {
+        bettor.bets.push("test");
+      }
+      expect(room.betOnUser(bettor, player)).toEqual(false);
     });
     it('should add the user to the bets', function() {
+      expect(room.betOnUser(bettor, player)).toEqual(true);
+      expect(bettor.bets.length).toEqual(1);
+      expect(bettor.bets[0]).toEqual(player.username);
     });
     it('should execute function to set state to submit all bets if all bets are submitted', function() {
     });
