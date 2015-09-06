@@ -147,6 +147,10 @@ describe("Room", function() {
       expect(bettor.bets[0]).toEqual(player.username);
     });
     it('should execute function to set state to submit all bets if all bets are submitted', function() {
+      spyOn(room,'areAllBetsSubmitted').and.returnValue(true);
+      spyOn(room, 'submitAllBets');
+      expect(room.betOnUser(bettor,player)).toEqual(true);
+      expect(room.submitAllBets).toHaveBeenCalled();
     });
   })
 });
