@@ -152,5 +152,23 @@ describe("Room", function() {
       expect(room.betOnUser(bettor,player)).toEqual(true);
       expect(room.submitAllBets).toHaveBeenCalled();
     });
-  })
+  });
+  describe(".areAllAnswersSubmitted()", function() {
+    var player1, player2, caller;
+    beforeEach(function() {
+      room.caller = caller = { username: 'caller' };
+      player1 = { username: 'player1', answerSubmitted: false };
+      player2 = { username: 'player2', answerSubmitted: false };
+      room.users = [ player1, player1, room.caller ];
+      room.state = 'playersAnswerQuestion';
+    });
+    it("should return false if not in the correct state", function() {
+    });
+    it("should return false if any user has not submitted an answer", function() {
+      expect(room.areAllAnswersSubmitted()).toEqual(false);
+      player1.answerSubmitted = true;
+      player2.answerSubmitted = true;
+      expect(room.areAllAnswersSubmitted()).toEqual(true);
+    });
+  });
 });
