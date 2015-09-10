@@ -159,16 +159,37 @@ describe("Room", function() {
       room.caller = caller = { username: 'caller' };
       player1 = { username: 'player1', answerSubmitted: false };
       player2 = { username: 'player2', answerSubmitted: false };
-      room.users = [ player1, player1, room.caller ];
+      room.users = [ player1, player2, room.caller ];
       room.state = 'playersAnswerQuestion';
     });
     it("should return false if not in the correct state", function() {
+      room.state = 'playersdoingnothing';
+      expect(room.areAllAnswersSubmitted()).toEqual(false);
     });
     it("should return false if any user has not submitted an answer", function() {
       expect(room.areAllAnswersSubmitted()).toEqual(false);
       player1.answerSubmitted = true;
       player2.answerSubmitted = true;
       expect(room.areAllAnswersSubmitted()).toEqual(true);
+    });
+  });
+  describe(".areAllBetsSubmitted()", function() {
+    var player1, player2, caller;
+    beforeEach(function() {
+      room.caller = caller = { username: 'caller' };
+      player1 = { username: 'player1', bets: [1] };
+      player2 = { username: 'player2', bets: [1,2] };
+      room.users = [ player1, player2, room.caller ];
+      room.state = 'playersBet';
+    });
+    it("should return false if not in the correct state", function() {
+      room.state = 'playersdoingnothing';
+      expect(room.areAllBetsSubmitted()).toEqual(false);
+    });
+    it("should return false if any user has not submitted an answer", function() {
+      expect(room.areAllAnswersSubmitted()).toEqual(false);
+      player1.bets.push(2);
+      expect(room.areAllBetsSubmitted()).toEqual(true);
     });
   });
 });

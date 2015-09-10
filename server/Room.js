@@ -132,6 +132,9 @@ Room.prototype.betOnUser = function(bettor, target) {
   return true;
 }
 Room.prototype.areAllAnswersSubmitted = function() {
+  if (this.state !== 'playersAnswerQuestion') {
+    return false;
+  }
   for(var i =0; i < this.users.length; i++) {
     if (this.users[i] == this.caller)
       continue;
@@ -142,6 +145,9 @@ Room.prototype.areAllAnswersSubmitted = function() {
   return true;
 }
 Room.prototype.areAllBetsSubmitted = function() {
+  if (this.state !== 'playersBet') {
+    return false;
+  }
   for(var i =0; i < this.users.length; i++) {
     if (this.users[i] == this.caller)
       continue;
