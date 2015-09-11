@@ -192,4 +192,14 @@ describe("Room", function() {
       expect(room.areAllBetsSubmitted()).toEqual(true);
     });
   });
+  describe('.submitAllBets()', function() {
+    it('should calculate the results from bets and assign points', function() {
+      // TODO verify results
+    });
+    it('should set the state to results', function() {
+      spyOn(room,'setState');
+      room.submitAllBets();
+      expect(room.setState).toHaveBeenCalledWith('results');
+    });
+  });
 });

@@ -158,7 +158,7 @@ Room.prototype.areAllBetsSubmitted = function() {
   return true;
 }
 Room.prototype.submitAllBets = function() {
-  // calculate results
+  // TODO calculate results
   this.setState('results');
 }
 Room.prototype.setState = function(state) {
