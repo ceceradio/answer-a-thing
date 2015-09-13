@@ -202,4 +202,21 @@ describe("Room", function() {
       expect(room.setState).toHaveBeenCalledWith('results');
     });
   });
+  describe('.setCaller(user)', function() {
+    var player1, player2, caller;
+    beforeEach(function() {
+      room.caller = caller = { username: 'caller' };
+      player1 = { username: 'player1' };
+      player2 = { username: 'player2' };
+      room.users = [ player1, player2, room.caller ];
+      room.state = 'playersBet';
+    });
+    it('should set room.caller to the user specified if the username in the given user object matches a user in the room', function() {
+      expect(room.setCaller({ username: 'player1' })).toEqual(true);
+      expect(room.caller).toEqual(player1);
+      // should not change the caller
+      expect(room.setCaller({ username: 'noone' })).toEqual(false);
+      expect(room.caller).toEqual(player1);
+    });
+  });
 });

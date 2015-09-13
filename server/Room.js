@@ -200,9 +200,10 @@ Room.prototype.setCaller = function(user) {
   for(var i = 0; i < this.users.length; i++) {
     if (user.username == this.users[i].username) {
       this.caller = this.users[i];
-      return;
+      return true;
     }
   }
+  return false;
 }
 Room.prototype.isCaller = function(user) {
   return (this.caller.username == user.username)
