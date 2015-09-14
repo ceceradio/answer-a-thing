@@ -219,4 +219,18 @@ describe("Room", function() {
       expect(room.caller).toEqual(player1);
     });
   });
+  describe('.isCaller(user)', function() {
+    var player1, player2, caller;
+    beforeEach(function() {
+      room.caller = caller = { username: 'caller' };
+      player1 = { username: 'player1' };
+      player2 = { username: 'player2' };
+      room.users = [ player1, player2, room.caller ];
+    });
+    it('should return if the username of the given user object and the caller are the same', function() {
+      expect(room.isCaller(caller)).toEqual(true);
+      expect(room.isCaller({ username: 'caller' })).toEqual(true);
+      expect(room.isCaller({ username: 'noone' })).toEqual(false);
+    });
+  });
 });
