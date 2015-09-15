@@ -233,4 +233,16 @@ describe("Room", function() {
       expect(room.isCaller({ username: 'noone' })).toEqual(false);
     });
   });
+  describe('.serialize(notRecursive)', function() {
+    it('should not call .serialize() on users if notRecursive==true', function() {
+    });
+    it('should call .serialize(true) on users if notRecursive is false-y', function() {
+    });
+    it('should serialize the caller as only a username', function() {
+    });
+    it('should never send the winningUser', function() {
+    });
+    it('should serialize all properties other than winningUser, password, caller, and users as given', function() {
+    });
+  });
 });
