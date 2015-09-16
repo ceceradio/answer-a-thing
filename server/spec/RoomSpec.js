@@ -234,9 +234,22 @@ describe("Room", function() {
     });
   });
   describe('.serialize(notRecursive)', function() {
+    var user;
+    beforeEach(function() {
+      user = { serialize: function() { return this; }, username: 'test' };
+      room.users = [user];
+      room.caller = user;
+      spyOn(user, 'serialize').and.callThrough();
+    });
     it('should not call .serialize() on users if notRecursive==true', function() {
+      var result = room.serialize(true);
+      expect(user.serialize).not.toHaveBeenCalled();
+      expect(result.users[0]).toEqual(user.username);
     });
     it('should call .serialize(true) on users if notRecursive is false-y', function() {
+      var result = room.serialize();
+      expect(user.serialize).toHaveBeenCalledWith(true);
+      expect(result.users[0]).toEqual(user);
     });
     it('should serialize the caller as only a username', function() {
     });
