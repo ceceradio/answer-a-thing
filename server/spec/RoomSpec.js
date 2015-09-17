@@ -252,6 +252,11 @@ describe("Room", function() {
       expect(result.users[0]).toEqual(user);
     });
     it('should serialize the caller as only a username', function() {
+      room.caller = { serialize: function() { return this; }, username: 'testerr' };
+      spyOn(room.caller, 'serialize').and.callThrough();
+      var result = room.serialize();
+      expect(room.caller.serialize).not.toHaveBeenCalled();
+      expect(result.caller).toEqual(room.caller.username);
     });
     it('should never send the winningUser', function() {
     });
