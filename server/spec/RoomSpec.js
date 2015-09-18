@@ -239,6 +239,7 @@ describe("Room", function() {
       user = { serialize: function() { return this; }, username: 'test' };
       room.users = [user];
       room.caller = user;
+      room.winningUser = "test";
       spyOn(user, 'serialize').and.callThrough();
     });
     it('should not call .serialize() on users if notRecursive==true', function() {
@@ -259,6 +260,7 @@ describe("Room", function() {
       expect(result.caller).toEqual(room.caller.username);
     });
     it('should never send the winningUser', function() {
+      expect(room.serialize().winningUser).not.toBeDefined();
     });
     it('should serialize all properties other than winningUser, password, caller, and users as given', function() {
     });
