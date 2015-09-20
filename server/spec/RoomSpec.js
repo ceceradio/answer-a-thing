@@ -268,4 +268,24 @@ describe("Room", function() {
       expect(result.winningUser).not.toBeDefined();
     });
   });
+  describe('.addUser(user)', function() {
+    it('should add the user object to the .users array', function() {
+      var user = { username: "hehe" };
+      room.addUser(user);
+      expect(room.users.length).toEqual(1);
+      expect(room.users[0]).toEqual(user);
+    });
+    it('should not add a user to the room if it already exists in the room', function() {
+      var user = { username: "hehe" };
+      var user2 = { username: "hehe2" };
+      room.addUser(user);
+      room.addUser(user2);
+      expect(room.users[0]).toEqual(user);
+      expect(room.users[1]).toEqual(user2);
+      expect(room.users.length).toEqual(2);
+      room.addUser(user);
+      expect(room.users[0]).toEqual(user);
+      expect(room.users.length).toEqual(2);
+    });
+  });
 });
