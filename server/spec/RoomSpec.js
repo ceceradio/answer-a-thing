@@ -288,4 +288,15 @@ describe("Room", function() {
       expect(room.users.length).toEqual(2);
     });
   });
+  describe('.removeUser(user)', function() {
+    it('should remove the user from the .users array', function() {
+      var user = { username: "hehe" };
+      var user2 = { username: "hehe2" };
+      room.users = [ user, user2 ];
+      expect(room.users.length).toEqual(2);
+      room.removeUser(user);
+      expect(room.users.length).toEqual(1);
+      expect(room.users[0]).toEqual(user2);
+    });
+  });
 });

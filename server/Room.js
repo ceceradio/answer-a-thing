@@ -245,7 +245,7 @@ Room.prototype.addUser = function(user) {
   return true;
 };
 Room.prototype.removeUser = function(user) {
-  if (this.users.indexOf(user) > -1)
+  if (this.users.indexOf(user) == -1)
     return true;
   this.users.splice(this.users.indexOf(user), 1);
   return true;
