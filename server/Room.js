@@ -35,15 +35,15 @@ Room.prototype.resetBets = function() {
     this.users[i].bets = false;
   }
 }
-Room.prototype.selectNewCaller = function() {
-  this.resetBets();
+Room.prototype.resetCaller = function() {
   if (this.users.length < 1) {
     this.caller = null;
-    return;
+    return false;
   }
+  // we can't start a game with just 1 player
   if (this.users.length == 1) {
     this.caller = this.users[0];
-    return;
+    return false;
   }
   var oldCaller = this.caller;
   this.caller = null;
@@ -56,6 +56,11 @@ Room.prototype.selectNewCaller = function() {
     // somehow we ended up at the same caller?
     this.caller = this.users[i];
   }
+  return true;
+}
+Room.prototype.selectNewCaller = function() {
+  this.resetBets();
+  this.resetCaller();
 
   // give questions 
   this.question = [];
@@ -166,6 +171,10 @@ Room.prototype.setState = function(state) {
   if (this.state.timerHandle) {
     clearTimeout(this.state.timerHandle);
   }
+  if (this.users.length <= 1) {
+    state = 'waiting';
+    this.state.status = 'waiting';
+  }
   if (state == 'waiting') {
     this.state.timerHandle = null;
     this.state.timerEnd = null;
@@ -215,8 +224,12 @@ Room.prototype.serialize = function(notRecursive) {
     var key = keys[i];
     if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUser')
       ret[key] = this[key];
-    if (key == 'caller')
-      ret[key] = this.caller.username;
+    if (key == 'caller') {
+      if (this.caller)
+        ret[key] = this.caller.username;
+      else
+        ret[key] = null;
+    }
     if (key == "users") {
       ret[key] = this.users.map(function(currentValue, index, users) {
         if (notRecursive) {
@@ -248,6 +261,15 @@ Room.prototype.removeUser = function(user) {
   if (this.users.indexOf(user) == -1)
     return true;
   this.users.splice(this.users.indexOf(user), 1);
+  if (this.caller && user.username === this.caller.username) {
+    if (this.resetCaller() === false) {
+      this.setState('waiting');
+      return true;
+    }
+  }
+  if (this.users.length <= 1) {
+    this.setState('waiting');
+  }
   return true;
 }
 

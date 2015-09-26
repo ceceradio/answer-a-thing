@@ -97,7 +97,7 @@ describe("Room", function() {
       expect(room.selectAnswer(0)).toEqual(false);
     });
     it("should revert back to 'lobby' if there are no remaining players", function() {
-      
+      // TO DO, IMPLEMENT SPEC
     });
     it("should set room.winningUser to the user at the given index", function() {
       room.selectAnswer(0);
@@ -293,10 +293,42 @@ describe("Room", function() {
       var user = { username: "hehe" };
       var user2 = { username: "hehe2" };
       room.users = [ user, user2 ];
+      spyOn(room, 'setState');
       expect(room.users.length).toEqual(2);
       room.removeUser(user);
       expect(room.users.length).toEqual(1);
       expect(room.users[0]).toEqual(user2);
+    });
+    it('should not call resetCaller if the user is not the caller', function() {
+      var user = { username: "hehe" };
+      var user2 = { username: "hehe2" };
+      room.users = [ user, user2 ];
+      spyOn(room, 'setState');
+      spyOn(room, 'resetCaller').and.callThrough();
+      room.removeUser(user);
+      expect(room.resetCaller).not.toHaveBeenCalled();
+    });
+    it('should call resetCaller if the user is the caller', function() {
+      var user = { username: "hehe" };
+      var user2 = { username: "hehe2" };
+      room.users = [ user, user2, { username: '3'} ];
+      room.caller = user;
+      spyOn(room, 'setState');
+      spyOn(room, 'resetCaller').and.callThrough();
+      room.removeUser(user);
+      expect(room.resetCaller).toHaveBeenCalled();
+      expect(room.setState).not.toHaveBeenCalled();
+    });
+    it('should set the state to waiting if the user is the caller and there are not enough users', function() {
+      var user = { username: "hehe" };
+      var user2 = { username: "hehe2" };
+      room.users = [ user, user2 ];
+      room.caller = user;
+      spyOn(room, 'setState');
+      spyOn(room, 'resetCaller').and.callThrough();
+      room.removeUser(user);
+      expect(room.resetCaller).toHaveBeenCalled();
+      expect(room.setState).toHaveBeenCalled();
     });
   });
 });
