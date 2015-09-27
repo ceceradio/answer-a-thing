@@ -292,12 +292,13 @@ describe("Room", function() {
     it('should remove the user from the .users array', function() {
       var user = { username: "hehe" };
       var user2 = { username: "hehe2" };
-      room.users = [ user, user2 ];
+      room.users = [ user, user2, {}, {} ];
       spyOn(room, 'setState');
-      expect(room.users.length).toEqual(2);
+      expect(room.users.length).toEqual(4);
       room.removeUser(user);
-      expect(room.users.length).toEqual(1);
+      expect(room.users.length).toEqual(3);
       expect(room.users[0]).toEqual(user2);
+      expect(room.setState).not.toHaveBeenCalled();
     });
     it('should not call resetCaller if the user is not the caller', function() {
       var user = { username: "hehe" };
@@ -328,7 +329,17 @@ describe("Room", function() {
       spyOn(room, 'resetCaller').and.callThrough();
       room.removeUser(user);
       expect(room.resetCaller).toHaveBeenCalled();
-      expect(room.setState).toHaveBeenCalled();
+      expect(room.setState).toHaveBeenCalledWith('waiting');
     });
+    it('should set the state to waiting if there arent enough users', function() {
+      var user = { username: "hehe" };
+      var user2 = { username: "hehe2" };
+      room.users = [ user, user2 ];
+      spyOn(room, 'setState');
+      spyOn(room, 'resetCaller');
+      room.removeUser(user);
+      expect(room.resetCaller).not.toHaveBeenCalled();
+      expect(room.setState).toHaveBeenCalledWith('waiting');
+    })
   });
 });
