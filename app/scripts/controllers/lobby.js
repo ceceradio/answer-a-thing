@@ -14,7 +14,7 @@ angular.module('answerAThingApp')
     $scope.user = gameState.user;
     $scope.error = false;
     $scope.joinRoom = function(room) {
-      drawSocket.emit('joinRoom', room);
+      drawSocket.emit('user.joinRoom', room);
     };
     drawSocket.on('error', function(error) {
       $scope.error = error;

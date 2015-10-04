@@ -39,6 +39,6 @@ angular.module('answerAThingApp').
       gameState.state = 'loggedout';
       $location.url ('/login');
     });
-    drawSocket.emit('login', gameState.user);
+    drawSocket.emit('user.login', gameState.user);
     return gameState;
   });

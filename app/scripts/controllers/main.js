@@ -32,18 +32,18 @@ angular.module('answerAThingApp')
       $scope.activePage = 'login';
     });
     $scope.joinRoom = function(room) {
-      drawSocket.emit('joinRoom', room);
+      drawSocket.emit('user.joinRoom', room);
     };
     $scope.leaveRoom = function() {
-      drawSocket.emit('leaveRoom', {});
+      drawSocket.emit('user.leaveRoom', {});
     };
     $scope.progress = function(data) {
       $scope.drawboard = data;
-      drawSocket.emit('drawboard', {drawboard: data} );
+      drawSocket.emit('user.drawboard', {drawboard: data} );
     };
     $scope.submit = function(data) {
       $scope.drawboard = data;
-      drawSocket.emit('drawboard', {drawboard: data} );
+      drawSocket.emit('user.drawboard', {drawboard: data} );
     };
     if ($scope.user.username) {
       $scope.login();

@@ -13,7 +13,7 @@ angular.module('answerAThingApp')
     $scope.error = false;
     $scope.login = function() {
       window.localStorage.setItem('username', $scope.user.username);
-      drawSocket.emit('login', $scope.user);
+      drawSocket.emit('user.login', $scope.user);
     };
     drawSocket.on('logout', function(error) {
       $scope.error = error;
