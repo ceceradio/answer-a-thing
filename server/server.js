@@ -64,7 +64,7 @@ io.on('connection', function(socket){
     socket.emit('user', user.serialize() );
     sendRooms(user);
   }
-  socket.on('createRoom', function(data) {
+  socket.on('user.createRoom', function(data) {
     var result;
     if ( (result = user.createRoom(data.name)) !== true ) {
       socket.emit('errorMessage', { user: user.serialize(), error: result } );
@@ -73,7 +73,7 @@ io.on('connection', function(socket){
       socket.emit('user', user.serialize() );
     }
   });
-  socket.on('joinRoom', function(data) {
+  socket.on('user.joinRoom', function(data) {
     var result;
     if ( (result = user.joinRoom(data.name)) !== true ) {
       socket.emit('errorMessage', { user: user.serialize(), error: result } );
@@ -82,7 +82,7 @@ io.on('connection', function(socket){
       socket.emit('user', user.serialize() );
     }
   });
-  socket.on('leaveRoom', function(data) {
+  socket.on('user.leaveRoom', function(data) {
     var result;
     if ( (result = user.leaveRoom()) !== true ) {
       socket.emit('errorMessage', { user: user.serialize(), error: result } );
@@ -91,7 +91,7 @@ io.on('connection', function(socket){
       socket.emit('user', user.serialize() );
     }
   });
-  socket.on('login', function(data) {
+  socket.on('user.login', function(data) {
     for (var key = 0; key < users.length; key++) {
       if (users[key].username === data.username) {
         if (users[key].accessToken !== data.accessToken) {
@@ -163,7 +163,7 @@ io.on('connection', function(socket){
     user.room.selectAnswer(data.userIndex);
   });
 
-  socket.on('drawboard', function(data) {
+  socket.on('user.drawboard', function(data) {
     if (!user) {
       return socket.emit('logout', { error: "You are not logged in." });
     }
