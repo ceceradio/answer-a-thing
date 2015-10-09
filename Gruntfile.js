@@ -380,6 +380,11 @@ module.exports = function (grunt) {
       ]
     },
 
+    // lobby server runner
+    exec: {
+      lobby: 'node server/server.js'
+    },
+
     // Test settings
     karma: {
       unit: {
