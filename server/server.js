@@ -2,10 +2,11 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 var md5 = require('MD5');
-var User = require('User.js');
-var Room = require('Room.js');
+var User = require('./User.js');
+var Room = require('./Room.js');
 
 app.listen(40001);
+console.log("Lobby Server started on 40001");
 
 function handler (req, res) {
   fs.readFile(__dirname + '/index.html',
