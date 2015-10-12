@@ -1,6 +1,10 @@
 {
   "name": "answerathing",
   "version": "0.0.0",
+  "uris": {
+    "test": ["http://localhost:40001"],
+    "production": ["https://aat.devfluid.com:9090"]
+  },
   "dependencies": {
     "MD5": "^1.2.2",
     "grunt-exec": "^0.4.6",

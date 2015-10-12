@@ -21,6 +21,8 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+  var pkg = grunt.file.readJSON('package.json');
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
@@ -413,6 +415,15 @@ module.exports = function (grunt) {
     ]);
   });
 
+  grunt.registerTask('modifyGeneratedConcat', 'Modifies the generated concat from grunt-usemin to replace uris', function() {
+    grunt.config.set('concat.options.process', function(content, srcpath) {
+      for(var i = 0; i < pkg.uris.test.length; i++) {
+        content = content.replace(pkg.uris.test[i], pkg.uris.production[i]);
+      }
+      return content;
+    });
+  });
+
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve:' + target]);
@@ -431,6 +442,7 @@ module.exports = function (grunt) {
     'clean:dist',
     'wiredep',
     'useminPrepare',
+    'modifyGeneratedConcat',
     'concurrent:dist',
     'autoprefixer',
     'concat',
