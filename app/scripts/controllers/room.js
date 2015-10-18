@@ -14,6 +14,9 @@ angular.module('answerAThingApp')
     $scope.leaveRoom = function() {
       drawSocket.emit('user.leaveRoom', {});
     };
+    $scope.startGame = function() {
+      drawSocket.emit('room.startGame', {});
+    };
     $scope.progress = function(data) {
       $scope.drawboard = data;
       drawSocket.emit('user.drawboard', {drawboard: data} );

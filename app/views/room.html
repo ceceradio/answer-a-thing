@@ -2,13 +2,13 @@
   <div class="row">
     <div class="col-xs-10">
       <h3>{{gameState.user.room.name}}</h3>
+      <code>{{gameState.user.room}}</code>
     </div>
-    <code>
-      {{gameState.user.room}}
-    </code>
     <div class="col-xs-2 text-right">
       <button class="btn btn-default" ng-click="leaveRoom()"><span class="glyphicon glyphicon-remove"></span></button>
+      <button class="btn btn-primary" ng-click="startGame()" ng-show="gameState.user.room.state.status=='waiting'">Start Game</button>
     </div>
+
   </div>
   <div class="col-md-12">
     <drawboard on-submit="submit" on-progress="progress"></drawboard>
