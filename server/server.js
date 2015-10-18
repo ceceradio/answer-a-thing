@@ -117,7 +117,15 @@ io.on('connection', function(socket){
   });
 
   // room functions
-
+  socket.on('room.startGame', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    if (!user.isInRoom() || user.room.users.length < 3) { 
+      return socket.emit('error', { error: "Your cannot start the game yet." });
+    }
+    user.room.selectNewCaller();
+  });
   socket.on('room.selectQuestion', function(data) {
     if (!user) {
       return socket.emit('logout', { error: "You are not logged in." });
