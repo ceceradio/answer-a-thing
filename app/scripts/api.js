@@ -20,6 +20,9 @@ angular.module('answerAThingApp').
     drawSocket.on('rooms', function(rooms) {
       gameState.rooms = rooms;
     });
+    drawSocket.on('room', function(room) {
+      gameState.user.room = room;
+    });
     drawSocket.on('errorMessage', function(data) {
       console.log(data);
       alert(data.error);

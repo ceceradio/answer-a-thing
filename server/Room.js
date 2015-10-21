@@ -23,10 +23,10 @@ var rooms = {};
 Room.getRooms = function() {
   return rooms;
 }
-Room.prototype.broadcast = function(event, data) {
+Room.prototype.broadcast = function(eventType, data) {
   for(var i = 0; i < this.users.length; i++) {
     if (this.users[i].socket) {
-      this.users[i].socket.emit(event, data);
+      this.users[i].socket.emit(eventType, data);
     }
   }
 }
@@ -167,6 +167,7 @@ Room.prototype.submitAllBets = function() {
   this.setState('results');
 }
 Room.prototype.setState = function(state) {
+  var self = this;
   this.state.status = state;
   if (this.state.timerHandle) {
     clearTimeout(this.state.timerHandle);
@@ -180,7 +181,7 @@ Room.prototype.setState = function(state) {
     this.state.timerEnd = null;
   }
   else if (state == 'callerSelectQuestion') {
-    this.state.timerHandle = setTimeout(this.selectRandomQuestion, 30 * 1000);
+    this.state.timerHandle = setTimeout(function() { self.selectRandomQuestion() }, 30 * 1000);
     this.state.timerEnd = Date.now() + 30 * 1000;
   }
   else if (state == 'playersAnswerQuestion') {
@@ -188,22 +189,22 @@ Room.prototype.setState = function(state) {
     for(var i = 0; i < this.users.length; i++) {
       this.users[i].answerSubmitted = false;
     }
-    this.state.timerHandle = setTimeout(this.submitAllAnswers, 120 * 1000);
+    this.state.timerHandle = setTimeout(function() { self.submitAllAnswers() }, 120 * 1000);
     this.state.timerEnd = Date.now() + 120 * 1000;
   }
   else if (state == 'callerSelectAnswer') {
-    this.state.timerHandle = setTimeout(this.selectRandomAnswer, 60 * 1000);
+    this.state.timerHandle = setTimeout(function() { self.selectRandomAnswer() }, 60 * 1000);
     this.state.timerEnd = Date.now() + 60 * 1000;
   }
   else if (state == 'playersBet') {
-    this.state.timerHandle = setTimeout(this.submitAllBets, 60 * 1000);
+    this.state.timerHandle = setTimeout(function() { self.submitAllBets() }, 60 * 1000);
     this.state.timerEnd = Date.now() + 60 * 1000;
   }
   else if (state == 'results') {
-    this.state.timerHandle = setTimeout(this.selectNewCaller, 30 * 1000);
+    this.state.timerHandle = setTimeout(function() { self.selectNewCaller() }, 30 * 1000);
     this.state.timerEnd = Date.now() + 30 * 1000;
   }
-  this.broadcast('room', this.serialize());
+  this.broadcast('room', this.serialize(true));
 }
 Room.prototype.setCaller = function(user) {
   for(var i = 0; i < this.users.length; i++) {
@@ -218,11 +219,20 @@ Room.prototype.isCaller = function(user) {
   return (this.caller.username == user.username)
 }
 Room.prototype.serialize = function(notRecursive) {
+  function serializeUsers(self) {
+    var ret = [];
+    if (typeof self.users !== "undefined" && typeof self.users.length !== "undefined") {
+      for(var i = 0; i < self.users.length; i++) {
+        ret.push(self.users[i].username);
+      }
+    }
+    return ret;
+  }
   var ret = {};
   var keys = Object.keys(this);
   for(var i in keys) {
     var key = keys[i];
-    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUser')
+    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUser' && key != 'state')
       ret[key] = this[key];
     if (key == 'caller') {
       if (this.caller)
@@ -230,15 +240,11 @@ Room.prototype.serialize = function(notRecursive) {
       else
         ret[key] = null;
     }
+    if (key == "state" ) {
+      ret[key] = { status: this.state.status };
+    }
     if (key == "users") {
-      ret[key] = this.users.map(function(currentValue, index, users) {
-        if (notRecursive) {
-          return currentValue.username;
-        }
-        else {
-          return currentValue.serialize(true);
-        }
-      });
+      ret[key] = serializeUsers(this);
     }
   }
   return ret;
