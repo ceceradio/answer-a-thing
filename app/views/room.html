@@ -2,6 +2,8 @@
   <div class="row">
     <div class="col-xs-10">
       <h3>{{gameState.user.room.name}}</h3>
+      <p ng-show="gameState.user.username == gameState.user.room.caller">You are the caller</p>
+      <p ng-show="typeof gameState.user.room.question.length === 'undefined' && gameState.user.room.question">{{gameState.user.room.question}}</p>
       <code>{{gameState.user.room}}</code>
     </div>
     <div class="col-xs-2 text-right">
