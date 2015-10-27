@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('answerAThingApp')
-  .directive('receiver', function (drawSocket) {
+  .directive('receiver', function (drawSocket, gameState) {
     return {
       restrict: 'E',
       templateUrl: '/views/receiver.html',
@@ -10,6 +10,7 @@ angular.module('answerAThingApp')
         drawSocket.on('users', function(data) {
           $scope.users = data;
         });
+        $scope.room = gameState.user.room;
       }
     };
   });

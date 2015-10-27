@@ -1,6 +1,6 @@
 <div class="row">
   <p>Receiver</p>
-  <div class="col-md-3" ng-repeat="user in users track by $index">
+  <div class="col-md-3" ng-repeat="user in users track by $index" ng-hide="user.username == room.caller">
     <p>{{user.username}}</p>
     <div class="receiver-container">
         <div ng-style="{ color: text.color }" class="text-overlay small" unselectable="on">
