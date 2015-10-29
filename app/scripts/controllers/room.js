@@ -25,6 +25,9 @@ angular.module('answerAThingApp')
       $scope.drawboard = data;
       drawSocket.emit('user.drawboard', {drawboard: data} );
     };
+    $scope.selectQuestion = function(questionIndex) {
+      drawSocket.emit('room.selectQuestion', {questionIndex: questionIndex} );
+    }
     drawSocket.on('error', function(error) {
       $scope.error = error;
     });
