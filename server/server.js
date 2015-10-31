@@ -125,7 +125,7 @@ io.on('connection', function(socket){
       return socket.emit('logout', { error: "You are not logged in." });
     }
     if (!user.isInRoom() || user.room.users.length < 3) { 
-      return socket.emit('errorMessage', { error: "Your cannot start the game yet." });
+      return socket.emit('errorMessage', { error: "You cannot start the game yet." });
     }
     user.room.selectNewCaller();
   });
@@ -134,7 +134,7 @@ io.on('connection', function(socket){
       return socket.emit('logout', { error: "You are not logged in." });
     }
     if (!user.isInRoom() || !user.isCaller()) { 
-      return socket.emit('errorMessage', { error: "Your cannot select a question." });
+      return socket.emit('errorMessage', { error: "You cannot select a question." });
     }
     user.room.selectQuestion(data.questionIndex);
   });
@@ -147,7 +147,7 @@ io.on('connection', function(socket){
       return socket.emit('errorMessage', { error: "Your cannot bet." });
     }
     if (!user.room.betOnUser(user, user.room.users[data.userIndex])) {
-      return socket.emit('errorMessage', { error: "Your cannot bet on this user." });
+      return socket.emit('errorMessage', { error: "You cannot bet on this user." });
     }
   });
   socket.on('room.submitAnswer', function(data) {
@@ -155,7 +155,7 @@ io.on('connection', function(socket){
       return socket.emit('logout', { error: "You are not logged in." });
     }
     if (!user.isInRoom() || user.isCaller()) { 
-      return socket.emit('errorMessage', { error: "Your cannot submit an answer." });
+      return socket.emit('errorMessage', { error: "You cannot submit an answer." });
     }
     user.answerSubmitted = true;
     if (user.room.areAllAnswersSubmitted()) {
@@ -170,9 +170,11 @@ io.on('connection', function(socket){
       return socket.emit('logout', { error: "You are not logged in." });
     }
     if (!user.isInRoom() || !user.isCaller()) { 
-      return socket.emit('errorMessage', { error: "Your cannot select a question." });
+      return socket.emit('errorMessage', { error: "You cannot select a question." });
     }
-    user.room.selectAnswer(data.userIndex);
+    if (!user.room.selectAnswer(data.userIndex)) {
+      return socket.emit('errorMessage', { error: "You cannot select this answer." });
+    }
   });
 
   socket.on('user.drawboard', function(data) {

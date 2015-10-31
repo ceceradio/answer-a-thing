@@ -27,7 +27,10 @@ angular.module('answerAThingApp')
     };
     $scope.selectQuestion = function(questionIndex) {
       drawSocket.emit('room.selectQuestion', {questionIndex: questionIndex} );
-    }
+    };
+    $scope.selectAnswer = function(userIndex) {
+      drawSocket.emit('room.selectAnswer', {userIndex: userIndex});
+    };
     drawSocket.on('error', function(error) {
       $scope.error = error;
     });

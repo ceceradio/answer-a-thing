@@ -111,14 +111,14 @@ Room.prototype.selectRandomAnswer = function() {
 Room.prototype.selectAnswer = function(index) {
   if (this.caller == this.users[index])
     return false;
-  if (this.state !== 'callerSelectAnswer')
+  if (this.state.status !== 'callerSelectAnswer')
     return false;
   this.winningUser = this.users[index];
   this.setState('playersBet');
   return true;
 }
 Room.prototype.betOnUser = function(bettor, target) {
-  if (this.state !== 'playersBet')
+  if (this.state.status !== 'playersBet')
     return false;
   if (this.users.indexOf(bettor) < 0 || bettor == this.caller)
     return false;
@@ -137,7 +137,7 @@ Room.prototype.betOnUser = function(bettor, target) {
   return true;
 }
 Room.prototype.areAllAnswersSubmitted = function() {
-  if (this.state !== 'playersAnswerQuestion') {
+  if (this.state.status !== 'playersAnswerQuestion') {
     return false;
   }
   for(var i =0; i < this.users.length; i++) {
@@ -150,7 +150,7 @@ Room.prototype.areAllAnswersSubmitted = function() {
   return true;
 }
 Room.prototype.areAllBetsSubmitted = function() {
-  if (this.state !== 'playersBet') {
+  if (this.state.status !== 'playersBet') {
     return false;
   }
   for(var i =0; i < this.users.length; i++) {
