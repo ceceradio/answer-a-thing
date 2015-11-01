@@ -31,6 +31,10 @@ angular.module('answerAThingApp')
     $scope.selectAnswer = function(userIndex) {
       drawSocket.emit('room.selectAnswer', {userIndex: userIndex});
     };
+    $scope.isCaller = function() {
+      return gameState.user.username == gameState.user.room.caller;
+    };
+    $scope.isArray = angular.isArray;
     drawSocket.on('error', function(error) {
       $scope.error = error;
     });
