@@ -10,7 +10,7 @@ angular.module('answerAThingApp')
         drawSocket.on('users', function(data) {
           $scope.users = data;
         });
-        $scope.room = gameState.user.room;
+        $scope.gameState = gameState;
       }
     };
   });

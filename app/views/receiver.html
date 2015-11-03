@@ -1,7 +1,7 @@
 <p>Receiver</p>
 <div>
-  <div class="col-xs-3" ng-repeat="user in users track by $index">
-    <div ng-hide="user.username == room.caller">
+  <div class="col-xs-3" ng-repeat="user in users track by $index" ng-hide="user.username == gameState.user.room.caller">
+    <div>
       <p>{{user.username}}</p>
       <div class="receiver-container">
         <div ng-style="{ color: text.color }" class="text-overlay small" unselectable="on">

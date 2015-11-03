@@ -5,10 +5,10 @@
       <p ng-show="isCaller()">You are the caller</p>
       <p ng-show="!isArray(gameState.user.room.question) && gameState.user.room.question">{{gameState.user.room.question}}</p>
       <p ng-show="isArray(gameState.user.room.question) && isCaller()">
-        <button ng-repeat="question in gameState.user.room.question track by $index" ng-click="selectQuestion($index)">Question: {{question}}</button>
+        <button class="btn btn-primary col-xs-12" ng-repeat="question in gameState.user.room.question track by $index" ng-click="selectQuestion($index)">Question: {{question}}</button>
       </p>
       <div ng-show="gameState.user.room.status == 'callerSelectAnswer' && isCaller()">
-        <button ng-repeat="user in gameState.user.room.users track by $index" ng-click="selectAnswer($index)">Answer: {{user}}</button>
+        <button class="btn btn-primary col-xs-12" ng-repeat="user in gameState.user.room.users track by $index" ng-click="selectAnswer($index)">Answer: {{user}}</button>
       </div>
       <code>{{gameState.user.room}}</code>
     </div>
