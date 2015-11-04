@@ -18,7 +18,7 @@
     </div>
 
   </div>
-  <div class="col-md-12" ng-hide="gameState.user.username == gameState.user.room.caller">
+  <div class="col-md-12" ng-hide="isCaller() || cantDraw()">
     <drawboard on-submit="submit" on-progress="progress"></drawboard>
   </div>
   <receiver clickHandler="clickHandler"></receiver>

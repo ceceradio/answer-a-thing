@@ -32,7 +32,11 @@ angular.module('answerAThingApp')
       drawSocket.emit('room.selectAnswer', {userIndex: userIndex});
     };
     $scope.isCaller = function() {
-      return gameState.user.username == gameState.user.room.caller;
+      return gameState.user.username === gameState.user.room.caller;
+    };
+    $scope.cantDraw = function() {
+      var cantDrawStates = ['playersBet', 'callerSelectAnswer', 'results'];
+      return cantDrawStates.indexOf(gameState.user.room.state.status) > -1;
     };
     $scope.isArray = angular.isArray;
     drawSocket.on('error', function(error) {

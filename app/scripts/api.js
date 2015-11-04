@@ -25,7 +25,6 @@ angular.module('answerAThingApp').
     });
     drawSocket.on('errorMessage', function(data) {
       console.log(data);
-      alert(data.error);
     });
     drawSocket.on('user', function(user) {
       gameState.user = user;
