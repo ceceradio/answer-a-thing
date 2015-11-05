@@ -24,6 +24,7 @@ angular.module('answerAThingApp')
     $scope.submit = function(data) {
       $scope.drawboard = data;
       drawSocket.emit('user.drawboard', {drawboard: data} );
+      drawSocket.emit('room.submitAnswer', {});
     };
     $scope.selectQuestion = function(questionIndex) {
       drawSocket.emit('room.selectQuestion', {questionIndex: questionIndex} );
@@ -37,6 +38,17 @@ angular.module('answerAThingApp')
     $scope.cantDraw = function() {
       var cantDrawStates = ['playersBet', 'callerSelectAnswer', 'results'];
       return cantDrawStates.indexOf(gameState.user.room.state.status) > -1;
+    };
+    $scope.betOnUser = function(userIndex) {
+      drawSocket.emit('room.betOnUser', {userIndex: userIndex});
+    };
+    $scope.clickHandler = function(userIndex) {
+      if ($scope.isCaller()) {
+        $scope.selectAnswer(userIndex);
+      }
+      else {
+        $scope.betOnUser(userIndex);
+      }
     };
     $scope.isArray = angular.isArray;
     drawSocket.on('error', function(error) {

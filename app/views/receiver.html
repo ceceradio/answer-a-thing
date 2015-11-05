@@ -1,13 +1,13 @@
 <p>Receiver</p>
 <div>
-  <div class="col-xs-3" ng-repeat="user in users track by $index" ng-hide="user.username == gameState.user.room.caller">
-    <div>
-      <p>{{user.username}}</p>
+  <div class="col-xs-3" ng-repeat="username in gameState.user.room.users track by $index" ng-hide="username == gameState.user.room.caller">
+    <div ng-click="clickHandler($index)">
+      <p>{{username}}</p>
       <div class="receiver-container">
-        <div ng-style="{ color: text.color }" class="text-overlay small" unselectable="on">
-            {{user.drawboard.text.content}}
+        <div ng-style="{ color: getDrawboard(username).text.color }" class="text-overlay small" unselectable="on">
+            {{getDrawboard(username).text.content}}
         </div>
-        <img width="100%" ng-src="{{user.drawboard.image}}"/>
+        <img width="100%" ng-src="{{getDrawboard(username).image}}"/>
       </div>
     </div>
   </div>

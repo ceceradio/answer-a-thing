@@ -14,7 +14,6 @@ function Room(name) {
     timerEnd: null
   };
   this.coinMax = 2;
-  this.bets = [];
   this.winningUser = null;
   this.question = null;
   this.users = [];
@@ -135,6 +134,9 @@ Room.prototype.betOnUser = function(bettor, target) {
   if (this.areAllBetsSubmitted()) {
     this.submitAllBets();
   }
+  else {
+    this.broadcast('room', this.serialize(true));
+  }
   return true;
 }
 Room.prototype.areAllAnswersSubmitted = function() {
@@ -151,6 +153,7 @@ Room.prototype.areAllAnswersSubmitted = function() {
   return true;
 }
 Room.prototype.areAllBetsSubmitted = function() {
+  return false;
   if (this.state.status !== 'playersBet') {
     return false;
   }
@@ -233,7 +236,7 @@ Room.prototype.serialize = function(notRecursive) {
   var keys = Object.keys(this);
   for(var i in keys) {
     var key = keys[i];
-    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUser' && key != 'state')
+    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUser' && key != 'state' && key != 'bets')
       ret[key] = this[key];
     if (key == 'caller') {
       if (this.caller)
@@ -246,6 +249,18 @@ Room.prototype.serialize = function(notRecursive) {
     }
     if (key == "users") {
       ret[key] = serializeUsers(this);
+    }
+  }
+  ret.bets = {};
+  for(var i = 0; i < this.users.length; i++) {
+    ret.bets[this.users[i].username] = [];
+  }
+  for(var i = 0; i < this.users.length; i++) {
+    if (Array.isArray(this.users[i].bets)) {
+      for(var j = 0; j < this.users[i].bets.length; j++) {
+        console.log(this.users[i].bets[j] + " <- " + this.users[i].username);
+        ret.bets[this.users[i].bets[j]].push(this.users[i].username);
+      }
     }
   }
   return ret;
