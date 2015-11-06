@@ -9,17 +9,26 @@ angular.module('answerAThingApp')
       },
       templateUrl: '/views/receiver.html',
       controller: function($scope) {
-        $scope.users = [];
-        drawSocket.on('users', function(data) {
-          $scope.users = data;
-        });
-        $scope.getDrawboard = function(username) {
-          for(var i = 0; i < $scope.users.length; i++) {
-            if ($scope.users[i].username == username)
-              return $scope.users[i].drawboard; 
+        $scope.data = { users: {} };
+        drawSocket.on('drawboard', function(data) {
+          if ($scope.data.users.hasOwnProperty(data.username)) {
+            $scope.data.users[data.username].drawboard = data.drawboard;
           }
-          return "";
-        };
+        });
+        $scope.$watch('gameState.user.room.users', function(users) {
+          for (var i = 0; i < users.length; i++) {
+            if (!$scope.data.users.hasOwnProperty(users[i])) {
+              $scope.data.users[users[i]] = {};
+              $scope.data.users[users[i]].userIndex = i;
+              $scope.data.users[users[i]].drawboard = { image: "", text: {content: "", color: "#000000"} };
+            } 
+          }
+          for(var i in $scope.data.users) {
+            if (users.indexOf($scope.users[i].username) < 0) {
+              delete $scope.data.users[i];
+            }
+          }
+        });
         $scope.gameState = gameState;
       }
     };

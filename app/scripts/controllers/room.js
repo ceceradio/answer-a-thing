@@ -54,4 +54,5 @@ angular.module('answerAThingApp')
     drawSocket.on('error', function(error) {
       $scope.error = error;
     });
+    drawSocket.emit('room.getDrawboards', {});
   });

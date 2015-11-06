@@ -153,16 +153,19 @@ Room.prototype.areAllAnswersSubmitted = function() {
   return true;
 }
 Room.prototype.areAllBetsSubmitted = function() {
-  return false;
   if (this.state.status !== 'playersBet') {
     return false;
   }
   for(var i =0; i < this.users.length; i++) {
-    if (this.users[i] == this.caller)
+    if (this.users[i] === this.caller)
       continue;
     var user = this.users[i];
-    if (user.bets.length < this.coinMax)
+    if (!Array.isArray(user.bets)) {
       return false;
+    }
+    if (user.bets.length < this.coinMax) {
+      return false;
+    }
   }
   return true;
 }
@@ -197,11 +200,11 @@ Room.prototype.setState = function(state) {
     this.state.timerEnd = Date.now() + 120 * 1000;
   }
   else if (state == 'callerSelectAnswer') {
-    this.state.timerHandle = setTimeout(function() { self.selectRandomAnswer() }, 60 * 1000);
+    this.state.timerHandle = setTimeout(function() { self.selectRandomAnswer() }, 120 * 1000);
     this.state.timerEnd = Date.now() + 60 * 1000;
   }
   else if (state == 'playersBet') {
-    this.state.timerHandle = setTimeout(function() { self.submitAllBets() }, 60 * 1000);
+    this.state.timerHandle = setTimeout(function() { self.submitAllBets() }, 120 * 1000);
     this.state.timerEnd = Date.now() + 60 * 1000;
   }
   else if (state == 'results') {
@@ -258,7 +261,6 @@ Room.prototype.serialize = function(notRecursive) {
   for(var i = 0; i < this.users.length; i++) {
     if (Array.isArray(this.users[i].bets)) {
       for(var j = 0; j < this.users[i].bets.length; j++) {
-        console.log(this.users[i].bets[j] + " <- " + this.users[i].username);
         ret.bets[this.users[i].bets[j]].push(this.users[i].username);
       }
     }

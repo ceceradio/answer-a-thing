@@ -41,6 +41,14 @@ function allRooms() {
   return ret;
 }
 
+function broadcastDrawboardToRoom(user) {
+  for(var i in user.room.users) {
+    if (users[i].socket) {
+      users[i].socket.emit('drawboard', { username: user.username, drawboard: user.drawboard });
+    }
+  }
+}
+
 function broadcast() {
   for(var i in users) {
     if (users[i].socket) {
@@ -120,6 +128,17 @@ io.on('connection', function(socket){
   });
 
   // room functions
+  socket.on('room.getDrawboards', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    if (!user.isInRoom()) { 
+      return socket.emit('errorMessage', { error: "You are not in a room." });
+    }
+    for (var i = 0; i < user.room.users.length; i++) {
+      socket.emit('drawboard', { username: user.room.users[i].username, drawboard: user.room.users[i].drawboard });
+    }
+  });
   socket.on('room.startGame', function(data) {
     if (!user) {
       return socket.emit('logout', { error: "You are not logged in." });
@@ -183,7 +202,7 @@ io.on('connection', function(socket){
     }
     console.log(user.username + ' sent an image');
     user.drawboard = data.drawboard;
-    broadcast();
+    broadcastDrawboardToRoom(user);
   });
 
   socket.on('disconnect', function () {
