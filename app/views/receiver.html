@@ -8,6 +8,9 @@
             {{user.drawboard.text.content}}
         </div>
         <img width="100%" ng-src="{{user.drawboard.image}}"/>
+        <div class="bets">
+          <p ng-repeat="username in user.bets track by $index">{{username}}</p>
+        </div>
       </div>
     </div>
   </div>

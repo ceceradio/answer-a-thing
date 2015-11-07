@@ -22,6 +22,12 @@ body {
   position:absolute;
   z-index:1;
 }
+.receiver-container .bets {
+  z-index:10;
+  position:absolute;
+  top:150px;
+  left:0;
+}
 .color-dimple {
   width:1.5em;
   height:1.5em;

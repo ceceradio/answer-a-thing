@@ -21,11 +21,18 @@ angular.module('answerAThingApp')
               $scope.data.users[users[i]] = {};
               $scope.data.users[users[i]].userIndex = i;
               $scope.data.users[users[i]].drawboard = { image: "", text: {content: "", color: "#000000"} };
-            } 
+            }
           }
           for(var i in $scope.data.users) {
-            if (users.indexOf($scope.users[i].username) < 0) {
-              delete $scope.data.users[i];
+            if (users.indexOf($scope.data.users[i].username) < 0) {
+              //delete $scope.data.users[i];
+            }
+          }
+        });
+        $scope.$watch('gameState.user.room.bets', function(bets) {
+          for (var username in bets) {
+            if ($scope.data.users.hasOwnProperty(username)) {
+              $scope.data.users[username].bets = bets[username];
             }
           }
         });
