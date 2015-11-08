@@ -1,6 +1,6 @@
 <p>Receiver</p>
-<div>
-  <div class="col-xs-3" ng-repeat="(username, user) in data.users" ng-hide="username == gameState.user.room.caller">
+<div class="receivers">
+  <div class="receiver" ng-repeat="(username, user) in data.users" ng-hide="username == gameState.user.room.caller">
     <div ng-click="clickHandler(user.userIndex)">
       <p>{{username}}</p>
       <div class="receiver-container">

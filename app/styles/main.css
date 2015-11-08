@@ -1,38 +1,56 @@
 body {
   padding: 0;
 }
-
+.drawboard-container {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
 .drawboard {
   width:90vw;
   height:60vw;
   margin-left:auto;
   margin-right:auto;
+  border:1px solid #ccc;
+  position:relative;
 }
 .tools {
+  width:90vw;
+}
+@media (min-width: 768px) {
+  .drawboard {
+    width:70vw;
+    height:46.67vw;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .tools {
+    width:25vw;
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
+.receivers {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.receiver {
+  width:50%;
 }
 .receiver-container {
   position:relative;
 }
 .receiver-container img {
-  left:0;
-  right:0;
-  top:0;
-  position:absolute;
   z-index:1;
-}
-.receiver-container .bets {
-  z-index:10;
-  position:absolute;
-  top:150px;
-  left:0;
-}
-.color-dimple {
-  width:1.5em;
-  height:1.5em;
-  border:1px solid #fff;
-  display:inline-block;
-  margin-bottom:-0.3em;
-  margin-right:0.5em;
 }
 .text-overlay {
   position:absolute;
@@ -49,6 +67,20 @@ body {
   -o-user-select: none;
   user-select: none;
   z-index:10;
+}
+.receiver-container .bets {
+  z-index:10;
+  position:absolute;
+  top:150px;
+  left:0;
+}
+.color-dimple {
+  width:1.5em;
+  height:1.5em;
+  border:1px solid #fff;
+  display:inline-block;
+  margin-bottom:-0.3em;
+  margin-right:0.5em;
 }
 .text-overlay.large {
   font-size:48px;
