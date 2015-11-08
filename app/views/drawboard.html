@@ -1,11 +1,11 @@
-<div class="row">
-    <div ng-keypress="keypress($event)" ng-click="click($event)" tabindex="0" class="col-xs-8 drawboard">
+<div class="drawboard-container row">
+    <div ng-keypress="keypress($event)" ng-click="click($event)" tabindex="0" class="drawboard">
         <div ng-style="{ color: text.color }" class="text-overlay large" unselectable="on">
             {{text.content}}
         </div>
         <canvas></canvas>
     </div>
-    <div class="col-xs-4">
+    <div class="tools">
         <div>
             <p>Brush</p>
             <button class="btn btn-primary" colorpicker ng-model="color"><span ng-style="{'background': color}" class="color-dimple"></span></button>

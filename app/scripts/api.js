@@ -2,7 +2,7 @@
 
 angular.module('answerAThingApp').
   factory('drawSocket', function (socketFactory) {
-    return socketFactory({ ioSocket: io('http://localhost:40001') });
+    return socketFactory({ ioSocket: io('http://192.168.0.17:40001') });
   })
   .factory('gameState', function(drawSocket, $location, $window) {
     var gameState = {

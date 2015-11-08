@@ -3,14 +3,12 @@ body {
 }
 
 .drawboard {
-  border:2px solid #ccc;
-  padding:0;
-  /*
+  width:90vw;
+  height:60vw;
   margin-left:auto;
   margin-right:auto;
-  float:none;
-  position:relative;
-  */
+}
+.tools {
 }
 .receiver-container {
   position:relative;

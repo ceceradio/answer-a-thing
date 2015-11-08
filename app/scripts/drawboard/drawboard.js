@@ -11,7 +11,7 @@ angular.module('answerAThingApp')
       },
       templateUrl: '/views/drawboard.html',
       controller: function($scope) {
-        $scope.aspectRatio = 4 / 3;
+        $scope.aspectRatio = 3/2;
         $scope.painting = false;
         $scope.lastFrame = true;
         $scope.color='#0000FF';
@@ -41,15 +41,15 @@ angular.module('answerAThingApp')
         var ctx = canvas.getContext('2d');
 
         canvas.width = parseInt($(row).innerWidth());
-        canvas.height = parseInt($(row).innerWidth() * (1/scope.aspectRatio));
+        canvas.height = parseInt($(row).innerHeight());
 
         var resizeTimer;
-
+        
         $(window).on('resize', function() {
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(function() {
             var newWidth = parseInt($(row).innerWidth());
-            var newHeight = parseInt($(row).innerWidth() * (1/scope.aspectRatio));
+            var newHeight = parseInt($(row).innerHeight());
             var data = resize(newWidth, newHeight);
             canvas.width = newWidth;
             canvas.height= newHeight;
@@ -63,7 +63,7 @@ angular.module('answerAThingApp')
           }, 250);
 
         });
-
+        
         scope.clear = function() {
           ctx.fillStyle='#ffffff';
           ctx.fillRect(0,0,canvas.width,canvas.height);
