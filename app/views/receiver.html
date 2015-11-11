@@ -2,7 +2,7 @@
 <div class="receivers">
   <div class="receiver" ng-repeat="(username, user) in data.users" ng-hide="username == gameState.user.room.caller">
     <div ng-click="clickHandler(user.userIndex)">
-      <p>{{username}}</p>
+      <p class="text-center">{{username}}</p>
       <div class="receiver-container">
         <div ng-style="{ color: user.drawboard.text.color }" class="text-overlay small" unselectable="on">
             {{user.drawboard.text.content}}

@@ -21,19 +21,6 @@ body {
 .tools {
   width:90vw;
 }
-@media (min-width: 768px) {
-  .drawboard {
-    width:70vw;
-    height:46.67vw;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  .tools {
-    width:25vw;
-    margin-left:auto;
-    margin-right:auto;
-  }
-}
 .receivers {
   display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
   display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
@@ -57,9 +44,9 @@ body {
   right:0;
   left:0;
   top:0;
-  padding:20px;
+  padding:3vw;
   text-align:center;
-  font-size:20px;
+  font-size:3vw;
   pointer-events: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -83,10 +70,11 @@ body {
   margin-right:0.5em;
 }
 .text-overlay.large {
-  font-size:48px;
+  font-size: 8vw;
 }
 .text-overlay.small {
-  font-size:14px;
+  font-size: 4vw;
+  padding:2vw;
 }
 .dimple {
   font-size:1em;
@@ -98,3 +86,22 @@ body {
 }
 .dimple.large { font-size:1.5em; }
 .dimple.small { font-size:0.5em; }
+
+@media (min-width: 768px) {
+  .drawboard {
+    width:70vw;
+    height:46.67vw;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .tools {
+    width:25vw;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .text-overlay.large {
+    font-size:6vw;
+  }
+  .text-overlay.small {
+  }
+}
