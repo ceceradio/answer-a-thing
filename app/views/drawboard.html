@@ -8,10 +8,10 @@
     <div class="tools">
         <div>
             <p>Brush</p>
-            <button class="btn btn-primary" colorpicker ng-model="color"><span ng-style="{'background': color}" class="color-dimple"></span></button>
-            <button class="btn" ng-class="{ 'btn-primary': size==3, 'btn-default': size !== 3 }" ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></button>
-            <button class="btn" ng-class="{ 'btn-primary': size==5, 'btn-default': size !== 5 }" ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></button>
-            <button class="btn" ng-class="{ 'btn-primary': size==8, 'btn-default': size !== 8 }" ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></button>
+            <button class="btn btn-primary btn-dimple" colorpicker ng-model="color"><span ng-style="{'background': color}" class="color-dimple"></span></button>
+            <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==3, 'btn-default': size !== 3 }" ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></button>
+            <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==5, 'btn-default': size !== 5 }" ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></button>
+            <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==8, 'btn-default': size !== 8 }" ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></button>
         </div>
         <div class="form-group">
             <div class="input-group">
