@@ -103,6 +103,7 @@ body {
 }
 .dimple.large { font-size:1.5em; }
 .dimple.small { font-size:0.5em; }
+.clear-and-submit { margin-top:2vw;}
 
 @media (min-width: 768px) {
   .drawboard {
