@@ -9,7 +9,8 @@ angular.module('answerAThingApp').
       rooms: [],
       user: { username: '', accessToken: '' },
       state: 'loggedout',
-      errorMessage: ''
+      errorMessage: '',
+      alerts: []
     };
     gameState.user.username = $window.localStorage.getItem('username');
     gameState.user.accessToken = $window.localStorage.getItem('accessToken');
@@ -24,7 +25,7 @@ angular.module('answerAThingApp').
       gameState.user.room = room;
     });
     drawSocket.on('errorMessage', function(data) {
-      console.log(data);
+      gameState.alerts.push(data);
     });
     drawSocket.on('user', function(user) {
       gameState.user = user;

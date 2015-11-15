@@ -31,7 +31,11 @@ body {
   flex-wrap: wrap;
 }
 .receiver {
-  width:50%;
+  width:48%;
+  border: 1px solid #ccc;
+  border-radius:4px;
+  padding:8px;
+  margin:1%;
 }
 .receiver-container {
   position:relative;
@@ -104,6 +108,17 @@ body {
 .dimple.large { font-size:1.5em; }
 .dimple.small { font-size:0.5em; }
 .clear-and-submit { margin-top:2vw;}
+
+.floating-alert {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.floating-alert .alert {
+  margin-bottom:0;
+}
 
 @media (min-width: 768px) {
   .drawboard {
