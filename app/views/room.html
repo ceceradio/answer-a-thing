@@ -1,19 +1,36 @@
 <h3 class="row">
   <div class="col-xs-10">
-    {{gameState.user.room.name}}
+    {{gameState.user.room.name}} {{gameState.user.room.state.status}}
   </div>
   <div class="col-xs-2 text-right">
     <button class="btn btn-default" ng-click="leaveRoom()"><span class="glyphicon glyphicon-remove"></span></button>
   </div>
 </h3>
-<p ng-show="isCaller()">You are the caller</p>
-<p ng-show="!isArray(gameState.user.room.question) && gameState.user.room.question">QUESTION: {{gameState.user.room.question}}</p>
-<p ng-show="isArray(gameState.user.room.question) && isCaller()">
+<h4 ng-show="isCaller()">You are the caller</h4>
+<p class="well well-sm" ng-show="!isArray(gameState.user.room.question) && gameState.user.room.question">QUESTION: {{gameState.user.room.question}}</p>
+<div class="row question-row" ng-show="isArray(gameState.user.room.question) && isCaller()">
   <button class="btn btn-primary col-xs-12" ng-repeat="question in gameState.user.room.question track by $index" ng-click="selectQuestion($index)">Question: {{question}}</button>
-</p>
-<div ng-show="gameState.user.room.status == 'callerSelectAnswer' && isCaller()">
-  <button class="btn btn-primary col-xs-12" ng-repeat="user in gameState.user.room.users track by $index" ng-click="selectAnswer($index)">Answer: {{user}}</button>
 </div>
-<button class="btn btn-primary" ng-click="startGame()" ng-show="gameState.user.room.state.status=='waiting'">Start Game</button>
+<p class="well well-sm" ng-show="gameState.user.room.state.status == 'playersAnswerQuestion' && isCaller()">
+  Players are answering
+</p>
+<p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectAnswer' && isCaller()">
+  Select an answer by clicking below.
+</p>
+<p class="well well-sm" ng-show="gameState.user.room.state.status == 'playersBet' && isCaller()">
+  Players are betting.
+</p>
+<p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectQuestion' && !isCaller()">
+  Caller is selecting a question.
+</p>
+<p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectAnswer' && !isCaller()">
+  Caller is selecting an answer.
+</p>
+<p class="well well-sm" ng-show="gameState.user.room.state.status == 'playersBet' && !isCaller()">
+  Bet by clicking an answer below.
+</p>
+<div class="row question-row" ng-show="gameState.user.room.state.status=='waiting'">
+  <button class="btn btn-primary col-xs-12" ng-click="startGame()">Start Game</button>
+</div>
 <drawboard on-submit="submit" on-progress="progress" ng-hide="isCaller() || cantDraw()"></drawboard>
 <receiver click-handler="clickHandler"></receiver>
