@@ -1,8 +1,4 @@
-var questions = [
-  "What do you think?",
-  "Where do you want to be?",
-  "Nice dog"
-];
+var questions = require('../questions.json');
 function Room(name) {
   this.name = name;
   this.password = false;
