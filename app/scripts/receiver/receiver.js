@@ -27,7 +27,7 @@ angular.module('answerAThingApp')
           }
           for(var username in $scope.data.users) {
             if (users.indexOf(username) < 0) {
-              delete $scope.data.users[i];
+              delete $scope.data.users[username];
             }
           }
         });
