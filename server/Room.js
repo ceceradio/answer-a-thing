@@ -87,7 +87,9 @@ Room.prototype.selectRandomQuestion = function() {
 Room.prototype.selectQuestion = function(index) {
   if (this.state.status !== "callerSelectQuestion")
     return false;
-  this.question = this.question[Math.floor(Math.random() * this.question.length)];
+  if (index < 0 || index >= this.question.length)
+    return false;
+  this.question = this.question[index];
   this.setState('playersAnswerQuestion');
   return true;
 }
@@ -247,8 +249,14 @@ Room.prototype.serialize = function(notRecursive) {
       else
         ret[key] = null;
     }
+    if (key == 'winningUser') {
+      if (this.winningUser && this.state.status == 'results')
+        ret[key] = this.winningUser.username;
+      else
+        ret[key] = null;
+    }
     if (key == "state" ) {
-      ret[key] = { status: this.state.status };
+      ret[key] = { status: this.state.status, timerEnd: this.state.timerEnd };
     }
     if (key == "users") {
       ret[key] = serializeUsers(this);

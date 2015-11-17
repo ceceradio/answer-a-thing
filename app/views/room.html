@@ -1,8 +1,9 @@
 <h3 class="row">
   <div class="col-xs-10">
-    {{gameState.user.room.name}} {{gameState.user.room.state.status}}
+    {{gameState.user.room.name}}
   </div>
   <div class="col-xs-2 text-right">
+    
     <button class="btn btn-default" ng-click="leaveRoom()"><span class="glyphicon glyphicon-remove"></span></button>
   </div>
 </h3>
@@ -12,22 +13,25 @@
   <button class="btn btn-primary col-xs-12" ng-repeat="question in gameState.user.room.question track by $index" ng-click="selectQuestion($index)">Question: {{question}}</button>
 </div>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'playersAnswerQuestion' && isCaller()">
-  Players are answering
+  Players are answering <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectAnswer' && isCaller()">
-  Select an answer by clicking below.
+  Select an answer by clicking below. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'playersBet' && isCaller()">
-  Players are betting.
+  Players are betting. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectQuestion' && !isCaller()">
-  Caller is selecting a question.
+  Caller is selecting a question. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectAnswer' && !isCaller()">
-  Caller is selecting an answer.
+  Caller is selecting an answer. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'playersBet' && !isCaller()">
-  Bet by clicking an answer below.
+  Bet by clicking an answer below. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
+</p>
+<p class="well well-sm" ng-show="gameState.user.room.state.status == 'results'">
+  The round is over, the selected answer was: {{gameState.user.room.winningUser}}  <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <div class="row question-row" ng-show="gameState.user.room.state.status=='waiting'">
   <button class="btn btn-primary col-xs-12" ng-click="startGame()">Start Game</button>

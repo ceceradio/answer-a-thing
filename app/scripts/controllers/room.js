@@ -8,7 +8,7 @@
  * Controller of the answerAThingApp
  */
 angular.module('answerAThingApp')
-  .controller('RoomController', function ($scope, drawSocket, gameState) {
+  .controller('RoomController', function ($scope, drawSocket, gameState, $interval) {
     $scope.gameState = gameState;
     $scope.error = false;
     $scope.leaveRoom = function() {
@@ -50,6 +50,18 @@ angular.module('answerAThingApp')
         $scope.betOnUser(userIndex);
       }
     };
+    var stop;
+    $interval(function() {
+      if (gameState.user.room.state.timerEnd)
+        $scope.timeLeft = Math.floor((gameState.user.room.state.timerEnd - Date.now()) / 1000);
+      else
+        $scope.timeLeft = 0
+    }, 1000);
+    $scope.$on('$destroy', function() {
+      if (angular.isDefined(stop)) {
+        $interval.cancel(stop);
+      }
+    });
     $scope.isArray = angular.isArray;
     drawSocket.on('error', function(error) {
       $scope.error = error;
