@@ -1,7 +1,7 @@
 var fs = require('fs');
 var serverType = 'http';
 if (process.argv.length >= 3 && process.argv[2] == 'https') {
-  serverType = https;
+  serverType = 'https';
 }
 
 var app;
