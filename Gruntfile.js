@@ -150,33 +150,6 @@ module.exports = function (grunt) {
       },
       server: '.tmp'
     },
-
-    // Add vendor prefixed styles
-    autoprefixer: {
-      options: {
-        browsers: ['last 1 version']
-      },
-      server: {
-        options: {
-          map: true,
-        },
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
-        }]
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
-        }]
-      }
-    },
-
     // Automatically inject Bower components into the app
     wiredep: {
       app: {
@@ -201,136 +174,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Renames files for browser caching purposes
-    filerev: {
-      dist: {
-        src: [
-          '<%= yeoman.dist %>/scripts/{,*/}*.js',
-          '<%= yeoman.dist %>/styles/{,*/}*.css',
-          '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.dist %>/styles/fonts/*'
-        ]
-      }
-    },
-
-    // Reads HTML for usemin blocks to enable smart builds that automatically
-    // concat, minify and revision files. Creates configurations in memory so
-    // additional tasks can operate on them
-    useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
-      options: {
-        dest: '<%= yeoman.dist %>',
-        flow: {
-          html: {
-            steps: {
-              js: ['concat', 'uglifyjs'],
-              css: ['cssmin']
-            },
-            post: {}
-          }
-        }
-      }
-    },
-
-    // Performs rewrites based on filerev and the useminPrepare configuration
-    usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
-      options: {
-        assetsDirs: [
-          '<%= yeoman.dist %>',
-          '<%= yeoman.dist %>/images',
-          '<%= yeoman.dist %>/styles'
-        ]
-      }
-    },
-
-    // The following *-min tasks will produce minified files in the dist folder
-    // By default, your `index.html`'s <!-- Usemin block --> will take care of
-    // minification. These next options are pre-configured if you do not wish
-    // to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/styles/main.css': [
-    //         '.tmp/styles/{,*/}*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
-
-    imagemin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.{png,jpg,jpeg,gif}',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
-
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.svg',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
-
-    htmlmin: {
-      dist: {
-        options: {
-          collapseWhitespace: true,
-          conservativeCollapse: true,
-          collapseBooleanAttributes: true,
-          removeCommentsFromCDATA: true,
-          removeOptionalTags: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.dist %>',
-          src: ['*.html', 'views/{,*/}*.html'],
-          dest: '<%= yeoman.dist %>'
-        }]
-      }
-    },
-
-    // ng-annotate tries to make the code safe for minification automatically
-    // by using the Angular long form for dependency injection.
-    ngAnnotate: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/concat/scripts',
-          src: '*.js',
-          dest: '.tmp/concat/scripts'
-        }]
-      }
-    },
-
-    // Replace Google CDN references
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
-    },
-
     // Copies remaining files to places other tasks can use
     copy: {
       dist: {
@@ -340,46 +183,14 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            '*.{ico,png,txt}',
-            '.htaccess',
-            '*.html',
-            'views/{,*/}*.html',
-            'images/{,*/}*.{webp}',
-            'styles/fonts/{,*/}*.*'
+            '*'
           ]
         }, {
           expand: true,
-          cwd: '.tmp/images',
-          dest: '<%= yeoman.dist %>/images',
-          src: ['generated/*']
-        }, {
-          expand: true,
-          cwd: 'bower_components/bootstrap/dist',
-          src: 'fonts/*',
+          src: 'bower_components/*',
           dest: '<%= yeoman.dist %>'
         }]
-      },
-      styles: {
-        expand: true,
-        cwd: '<%= yeoman.app %>/styles',
-        dest: '.tmp/styles/',
-        src: '{,*/}*.css'
       }
-    },
-
-    // Run some tasks in parallel to speed up the build process
-    concurrent: {
-      server: [
-        'copy:styles'
-      ],
-      test: [
-        'copy:styles'
-      ],
-      dist: [
-        'copy:styles',
-        'imagemin',
-        'svgmin'
-      ]
     },
 
     // lobby server runner
@@ -408,20 +219,9 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
-      'concurrent:server',
-      'autoprefixer:server',
       'connect:livereload',
       'watch'
     ]);
-  });
-
-  grunt.registerTask('modifyGeneratedConcat', 'Modifies the generated concat from grunt-usemin to replace uris', function() {
-    grunt.config.set('concat.options.process', function(content, srcpath) {
-      for(var i = 0; i < pkg.uris.test.length; i++) {
-        content = content.replace(pkg.uris.test[i], pkg.uris.production[i]);
-      }
-      return content;
-    });
   });
 
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
@@ -432,8 +232,6 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'clean:server',
     'wiredep',
-    'concurrent:test',
-    'autoprefixer',
     'connect:test',
     'karma'
   ]);
@@ -441,19 +239,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
-    'useminPrepare',
-    'modifyGeneratedConcat',
-    'concurrent:dist',
-    'autoprefixer',
-    'concat',
-    'ngAnnotate',
-    'copy:dist',
-    'cdnify',
-    'cssmin',
-    'uglify',
-    'filerev',
-    'usemin',
-    'htmlmin'
+    'copy:dist'
   ]);
 
   grunt.registerTask('default', [
