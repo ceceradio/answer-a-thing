@@ -1,8 +1,4 @@
-var options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/cert.pem')
-};
-
+var fs = require('fs');
 var serverType = 'http';
 if (process.argv.length >= 3 && process.argv[2] == 'https') {
   serverType = https;
@@ -13,10 +9,13 @@ if (serverType=='http') {
   var app = require(serverType).createServer(handler)
 }
 else {
+  var options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/cert.pem')
+  };
   var app = require(serverType).createServer(options,handler)
 }
 var io = require('socket.io')(app);
-var fs = require('fs');
 var md5 = require('MD5');
 var User = require('./User.js');
 var Room = require('./Room.js');
