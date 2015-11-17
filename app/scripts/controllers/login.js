@@ -15,10 +15,7 @@ angular.module('answerAThingApp')
       window.localStorage.setItem('username', $scope.user.username);
       drawSocket.emit('user.login', $scope.user);
     };
-    drawSocket.on('logout', function(error) {
-      $scope.error = error;
-    });
-    if ($scope.user.username && !gameState.errorMessage) {
+    if ($scope.user.username) {
       $scope.login();
     }
   });

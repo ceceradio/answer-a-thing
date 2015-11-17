@@ -64,11 +64,14 @@ function allRooms() {
 }
 
 function broadcastDrawboardToRoom(user) {
-  for(var i in user.room.users) {
-    if (users[i].socket) {
-      users[i].socket.emit('drawboard', { username: user.username, drawboard: user.drawboard });
+  if (user.room && Array.isArray(user.room.users)) {
+    for(var i = 0; i < user.room.users.length; i++) {
+      if (users[i].socket) {
+        users[i].socket.emit('drawboard', { username: user.username, drawboard: user.drawboard });
+      }
     }
   }
+  
 }
 
 function broadcast() {
@@ -96,6 +99,9 @@ io.on('connection', function(socket){
     sendRooms(user);
   }
   socket.on('user.createRoom', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
     var result;
     if ( (result = user.createRoom(data.name)) !== true ) {
       socket.emit('errorMessage', { user: user.serialize(), error: result } );
@@ -106,6 +112,9 @@ io.on('connection', function(socket){
     user.room.broadcast('room', user.room.serialize());
   });
   socket.on('user.joinRoom', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
     var result;
     if ( (result = user.joinRoom(data.name)) !== true ) {
       socket.emit('errorMessage', { user: user.serialize(), error: result } );
@@ -116,6 +125,9 @@ io.on('connection', function(socket){
     user.room.broadcast('room', user.room.serialize());
   });
   socket.on('user.leaveRoom', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
     var result;
     var room = user.room;
     if ( (result = user.leaveRoom()) !== true ) {
@@ -232,7 +244,19 @@ io.on('connection', function(socket){
     user.drawboard = data.drawboard;
     broadcastDrawboardToRoom(user);
   });
-
+  socket.on('user.logout', function(data) {
+    if (!user) {
+      return socket.emit('logout', { error: "You are not logged in." });
+    }
+    var room = user.room;
+    if (room) {
+      user.leaveRoom()
+      room.broadcast('room', room.serialize());
+    }
+    delete users[user.username];
+    user=false;
+    socket.emit('logout', { error: "You are now logged out!" });
+  });
   socket.on('disconnect', function () {
     if (user) {
       users[users.indexOf(user)].socket = false;

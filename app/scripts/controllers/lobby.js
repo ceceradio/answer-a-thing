@@ -12,11 +12,10 @@ angular.module('answerAThingApp')
     $scope.$location = $location;
     $scope.gameState = gameState;
     $scope.user = gameState.user;
-    $scope.error = false;
+    $scope.logout = function() {
+      drawSocket.emit('user.logout', {});
+    }
     $scope.joinRoom = function(room) {
       drawSocket.emit('user.joinRoom', room);
     };
-    drawSocket.on('error', function(error) {
-      $scope.error = error;
-    });
   });

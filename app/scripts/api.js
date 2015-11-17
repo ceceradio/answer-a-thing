@@ -28,7 +28,7 @@ angular.module('answerAThingApp').
       gameState.alerts.push(data);
     });
     drawSocket.on('user', function(user) {
-      gameState.user = user;
+      angular.extend(gameState.user, user);
       if (user.room !== false) {
         gameState.state = 'inroom';
         $location.url('/room/'+user.room.name);
@@ -39,9 +39,11 @@ angular.module('answerAThingApp').
       }
     });
     drawSocket.on('logout', function(error) {
+      gameState.user.username = '';
+      $window.localStorage.setItem('username', '');
       gameState.errorMessage = error.message;
       gameState.state = 'loggedout';
-      $location.url ('/login');
+      $location.url('/login');
     });
     drawSocket.emit('user.login', gameState.user);
     return gameState;

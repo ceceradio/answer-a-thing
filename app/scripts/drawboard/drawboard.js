@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('answerAThingApp')
-  .directive('drawboard', function ($document) {
+  .directive('drawboard', function ($document, $window) {
     return {
       restrict: 'E',
       scope: {
@@ -14,7 +14,11 @@ angular.module('answerAThingApp')
         $scope.aspectRatio = 3/2;
         $scope.painting = false;
         $scope.lastFrame = true;
-        $scope.color='#0000FF';
+        $scope.color=$window.localStorage.getItem('color');
+        if (!$scope.color) {
+          $scope.color= '#'+Math.floor(Math.random()*16777215).toString(16);
+          $window.localStorage.setItem('color', $scope.color);
+        }
         $scope.size = 5;
         $scope.mode = 'paint';
         $scope.text = { content: '', color: '#000000'};
@@ -82,6 +86,7 @@ angular.module('answerAThingApp')
 
         scope.$watch('color', function() {
           ctx.strokeStyle = scope.color;
+          $window.localStorage.setItem('color', scope.color);
         });
         scope.$watch('size', function() {
           ctx.lineWidth = scope.size;
