@@ -81,6 +81,7 @@ io.on('connection', function(socket){
     else {
       socket.emit('user', user.serialize() );
     }
+    user.room.broadcast('room', user.room.serialize());
   });
   socket.on('user.joinRoom', function(data) {
     var result;
@@ -90,14 +91,19 @@ io.on('connection', function(socket){
     else {
       socket.emit('user', user.serialize() );
     }
+    user.room.broadcast('room', user.room.serialize());
   });
   socket.on('user.leaveRoom', function(data) {
     var result;
+    var room = user.room;
     if ( (result = user.leaveRoom()) !== true ) {
       socket.emit('errorMessage', { user: user.serialize(), error: result } );
     }
     else {
       socket.emit('user', user.serialize() );
+    }
+    if (room) {
+      room.broadcast('room', room.serialize());
     }
   });
   socket.on('user.login', function(data) {

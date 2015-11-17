@@ -25,9 +25,9 @@ angular.module('answerAThingApp')
               $scope.data.users[users[i]].drawboard = { image: "", text: {content: "", color: "#000000"} };
             }
           }
-          for(var i in $scope.data.users) {
-            if (users.indexOf($scope.data.users[i].username) < 0) {
-              //delete $scope.data.users[i];
+          for(var username in $scope.data.users) {
+            if (users.indexOf(username) < 0) {
+              delete $scope.data.users[i];
             }
           }
         });

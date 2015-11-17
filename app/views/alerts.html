@@ -1,0 +1,6 @@
+<div class="floating-alert">
+  <div ng-repeat="alert in data.alerts" class="alert alert-warning" role="alert">
+    <button ng-click="dismissAlert($index)" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {{alert.error}}
+  </div>
+</div>

@@ -120,7 +120,6 @@ angular.module('answerAThingApp')
           e.preventDefault();
           mouse.x = e.touches[0].pageX - cumulativeOffset(canvas).left;
           mouse.y = e.touches[0].pageY - cumulativeOffset(canvas).top;
-          console.log(mouse);
           if (scope.painting) {
             onPaint();
           }
