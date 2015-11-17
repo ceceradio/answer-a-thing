@@ -1,9 +1,27 @@
-var app = require('http').createServer(handler)
+var options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/cert.pem')
+};
+
+var serverType = 'http';
+if (process.argv.length >= 3 && process.argv[2] == 'https') {
+  serverType = https;
+}
+
+var app;
+if (serverType=='http') {
+  var app = require(serverType).createServer(handler)
+}
+else {
+  var app = require(serverType).createServer(options,handler)
+}
 var io = require('socket.io')(app);
 var fs = require('fs');
 var md5 = require('MD5');
 var User = require('./User.js');
 var Room = require('./Room.js');
+
+
 
 app.listen(40001);
 console.log("Lobby Server started on 40001");
