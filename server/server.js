@@ -11,7 +11,8 @@ if (serverType=='http') {
 else {
   var options = {
     key: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/cert.pem')
+    cert: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/cert.pem'),
+    ca: fs.readFileSync('/etc/letsencrypt/live/devfluid.com/chain.pem')
   };
   var app = require(serverType).createServer(options,handler)
 }
