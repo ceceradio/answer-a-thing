@@ -40,6 +40,12 @@ body {
   padding:8px;
   margin:1%;
 }
+.receiver .selected {
+  font-size: 8vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 .receiver-container {
   position:relative;
 }

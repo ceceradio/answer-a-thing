@@ -149,7 +149,7 @@ io.on('connection', function(socket){
         if (users[key].accessToken !== data.accessToken) {
           return socket.emit('logout', { error: "This user already exists." });
         }
-        console.log('existing user');
+        console.log('existing user ' + data.username);
         // log out the user that's logged in
         if (users[key].socket) {
           users[key].socket.emit('logout', { message: "You've been logged out from another device." });
@@ -159,7 +159,7 @@ io.on('connection', function(socket){
         return onLogin();
       }
     }
-    console.log('new user');
+    console.log('new user ' + data.username);
     user = new User(socket);
     user.username = data.username;
     user.accessToken = data.accessToken;
@@ -205,7 +205,7 @@ io.on('connection', function(socket){
     if (!user.isInRoom() || user.isCaller()) { 
       return socket.emit('errorMessage', { error: "Your cannot bet." });
     }
-    if (!user.room.betOnUser(user, user.room.users[data.userIndex])) {
+    if (!user.room.betOnUser(user, data.username)) {
       return socket.emit('errorMessage', { error: "You cannot bet on this user." });
     }
   });
@@ -231,7 +231,7 @@ io.on('connection', function(socket){
     if (!user.isInRoom() || !user.isCaller()) { 
       return socket.emit('errorMessage', { error: "You cannot select a question." });
     }
-    if (!user.room.selectAnswer(data.userIndex)) {
+    if (!user.room.selectAnswer(data.username)) {
       return socket.emit('errorMessage', { error: "You cannot select this answer." });
     }
   });
@@ -259,7 +259,8 @@ io.on('connection', function(socket){
   });
   socket.on('disconnect', function () {
     if (user) {
-      users[users.indexOf(user)].socket = false;
+      if (socket == users[users.indexOf(user)].socket)
+        users[users.indexOf(user)].socket = false;
       setTimeout(function() {
         if (!users[users.indexOf(user)].socket) {
           var room = user.room;

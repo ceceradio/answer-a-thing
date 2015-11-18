@@ -1,19 +1,23 @@
 'use strict';
 
 angular.module('answerAThingApp')
-  .directive('receiver', function (drawSocket, gameState) {
+  .directive('receiver', function (drawSocket, gameState, drawboardService) {
     return {
       restrict: 'E',
       scope: {
         clickHandler: '='
       },
-      templateUrl: '/views/receiver.html',
+      templateUrl: '/views/receiver.html?'+Date.now(),
       controller: function($scope) {
         $scope.data = { users: {} };
-        drawSocket.on('drawboard', function(data) {
+        var listener = function(data) {
           if ($scope.data.users.hasOwnProperty(data.username)) {
             $scope.data.users[data.username].drawboard = data.drawboard;
           }
+        };
+        drawboardService.addListener(listener);
+        $scope.$on('$destroy', function() {
+          drawboardService.removeListener(listener);
         });
         $scope.$watch('gameState.user.room.users', function(users) {
           if (!users)

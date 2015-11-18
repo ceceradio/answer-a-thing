@@ -4,6 +4,25 @@ angular.module('answerAThingApp').
   factory('drawSocket', function (socketFactory) {
     return socketFactory({ ioSocket: io(window.location.protocol+'//'+window.location.hostname+':40001') });
   })
+  .factory('drawboardService', function(drawSocket) {
+    var service = {
+      listeners: [],
+      addListener: function(callback) {
+        this.listeners.push(callback);
+      },
+      removeListener: function(callback) {
+        if (this.listeners.indexOf(callback) > -1) {
+          this.listeners.splice(this.listeners.indexOf(callback), 1);
+        }
+      }
+    }
+    drawSocket.on('drawboard', function(data) {
+      for(var i = 0; i < service.listeners.length; i++) {
+        service.listeners[i](data);
+      }
+    });
+    return service;
+  })
   .factory('gameState', function(drawSocket, $location, $window) {
     var gameState = {
       rooms: [],

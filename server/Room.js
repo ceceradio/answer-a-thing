@@ -100,34 +100,47 @@ Room.prototype.submitAllAnswers = function() {
 Room.prototype.selectRandomAnswer = function() {
   var selectedIndex = 0;
   for(var n = 0; n < 100; n++) {
-    selectedIndex = Math.random()*(this.users.length-1);
+    selectedIndex = Math.floor(Math.random()*(this.users.length-1));
     if (this.caller != this.users[selectedIndex])
       break;
   }
-  this.selectAnswer(selectedIndex);
+  this.selectAnswer(this.users[selectedIndex].username);
 }
-Room.prototype.selectAnswer = function(index) {
-  if (this.caller == this.users[index])
+Room.prototype.selectAnswer = function(username) {
+  if (!this.isUserInRoom(username))
+    return false;
+  if (this.isUserCaller(username))
     return false;
   if (this.state.status !== 'callerSelectAnswer')
     return false;
-  this.winningUser = this.users[index];
+  this.winningUser = username;
   this.setState('playersBet');
   return true;
 }
-Room.prototype.betOnUser = function(bettor, target) {
+Room.prototype.isUserInRoom = function(username) {
+  for (var i = 0; i < this.users.length; i++) {
+    if (this.users[i].username == username) {
+      return true;
+    }
+  }
+  return false;
+}
+Room.prototype.isUserCaller = function(username) {
+  return this.caller.username == username;
+}
+Room.prototype.betOnUser = function(bettor, targetUsername) {
   if (this.state.status !== 'playersBet')
     return false;
   if (this.users.indexOf(bettor) < 0 || bettor == this.caller)
     return false;
-  if (this.users.indexOf(target) < 0 || target == this.caller)
+  if (!this.isUserInRoom(targetUsername) || this.isUserCaller(targetUsername))
     return false;
   if (bettor.bets === false || typeof bettor.bets === "undefined") {
     bettor.bets = [];
   }
   if (bettor.bets.length >= this.coinMax)
     return false;
-  bettor.bets.push(target.username);
+  bettor.bets.push(targetUsername);
   // check if all bets are submitted
   if (this.areAllBetsSubmitted()) {
     this.submitAllBets();
@@ -186,24 +199,24 @@ Room.prototype.setState = function(state) {
     this.state.timerEnd = null;
   }
   else if (state == 'callerSelectQuestion') {
-    this.state.timerHandle = setTimeout(function() { self.selectRandomQuestion() }, 30 * 1000);
-    this.state.timerEnd = Date.now() + 30 * 1000;
+    this.state.timerHandle = setTimeout(function() { self.selectRandomQuestion() }, 45 * 1000);
+    this.state.timerEnd = Date.now() + 45 * 1000;
   }
   else if (state == 'playersAnswerQuestion') {
     // reset user answer state
     for(var i = 0; i < this.users.length; i++) {
       this.users[i].answerSubmitted = false;
     }
-    this.state.timerHandle = setTimeout(function() { self.submitAllAnswers() }, 120 * 1000);
-    this.state.timerEnd = Date.now() + 120 * 1000;
+    this.state.timerHandle = setTimeout(function() { self.submitAllAnswers() }, 180 * 1000);
+    this.state.timerEnd = Date.now() + 180 * 1000;
   }
   else if (state == 'callerSelectAnswer') {
     this.state.timerHandle = setTimeout(function() { self.selectRandomAnswer() }, 120 * 1000);
-    this.state.timerEnd = Date.now() + 60 * 1000;
+    this.state.timerEnd = Date.now() + 120 * 1000;
   }
   else if (state == 'playersBet') {
     this.state.timerHandle = setTimeout(function() { self.submitAllBets() }, 120 * 1000);
-    this.state.timerEnd = Date.now() + 60 * 1000;
+    this.state.timerEnd = Date.now() + 120 * 1000;
   }
   else if (state == 'results') {
     this.state.timerHandle = setTimeout(function() { self.selectNewCaller() }, 30 * 1000);
@@ -247,7 +260,7 @@ Room.prototype.serialize = function(notRecursive) {
     }
     if (key == 'winningUser') {
       if (this.winningUser && this.state.status == 'results')
-        ret[key] = this.winningUser.username;
+        ret[key] = this.winningUser;
       else
         ret[key] = null;
     }
@@ -259,13 +272,17 @@ Room.prototype.serialize = function(notRecursive) {
     }
   }
   ret.bets = {};
+  // targets
   for(var i = 0; i < this.users.length; i++) {
     ret.bets[this.users[i].username] = [];
   }
+  // bettors
   for(var i = 0; i < this.users.length; i++) {
     if (Array.isArray(this.users[i].bets)) {
       for(var j = 0; j < this.users[i].bets.length; j++) {
-        ret.bets[this.users[i].bets[j]].push(this.users[i].username);
+        if (this.users[i].bets[j] in ret.bets) {
+          ret.bets[this.users[i].bets[j]].push(this.users[i].username);
+        }
       }
     }
   }

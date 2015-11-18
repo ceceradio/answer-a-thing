@@ -29,8 +29,8 @@ angular.module('answerAThingApp')
     $scope.selectQuestion = function(questionIndex) {
       drawSocket.emit('room.selectQuestion', {questionIndex: questionIndex} );
     };
-    $scope.selectAnswer = function(userIndex) {
-      drawSocket.emit('room.selectAnswer', {userIndex: userIndex});
+    $scope.selectAnswer = function(username) {
+      drawSocket.emit('room.selectAnswer', {username: username});
     };
     $scope.isCaller = function() {
       return gameState.user.hasOwnProperty('room') && gameState.user.room.hasOwnProperty('caller') && gameState.user.username === gameState.user.room.caller;
@@ -39,15 +39,15 @@ angular.module('answerAThingApp')
       var cantDrawStates = ['playersBet', 'callerSelectAnswer', 'results'];
       return gameState.user.hasOwnProperty('room') && cantDrawStates.indexOf(gameState.user.room.state.status) > -1;
     };
-    $scope.betOnUser = function(userIndex) {
-      drawSocket.emit('room.betOnUser', {userIndex: userIndex});
+    $scope.betOnUser = function(username) {
+      drawSocket.emit('room.betOnUser', {username: username});
     };
-    $scope.clickHandler = function(userIndex) {
+    $scope.clickHandler = function(username) {
       if ($scope.isCaller()) {
-        $scope.selectAnswer(userIndex);
+        $scope.selectAnswer(username);
       }
       else {
-        $scope.betOnUser(userIndex);
+        $scope.betOnUser(username);
       }
     };
     var stop;

@@ -1,13 +1,14 @@
 <h4>Other Players</h4>
 <div class="receivers">
   <div class="receiver" ng-repeat="(username, user) in data.users track by username" ng-hide="username == gameState.user.room.caller">
-    <div ng-click="clickHandler(user.userIndex)">
+    <div ng-click="clickHandler(username)">
       <p class="text-center">{{username}}</p>
       <div class="receiver-container">
         <div ng-style="{ color: user.drawboard.text.color }" class="text-overlay small" unselectable="on">
             {{user.drawboard.text.content}}
         </div>
         <img width="100%" ng-src="{{user.drawboard.image}}"/>
+        <span class="selected glyphicon glyphicon-heart" ng-show="username == gameState.user.room.winningUser"></span>
         <div class="bets">
           <p ng-repeat="username in user.bets track by $index">{{username}}</p>
         </div>
