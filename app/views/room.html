@@ -8,7 +8,7 @@
   </div>
 </h3>
 <h4 ng-show="isCaller()">You are the caller</h4>
-<p class="well well-sm" ng-show="!isArray(gameState.user.room.question) && gameState.user.room.question">QUESTION: {{gameState.user.room.question}}</p>
+<p class="well well-sm" ng-show="!isArray(gameState.user.room.question) && gameState.user.room.question">{{gameState.user.room.caller}} Asks: {{gameState.user.room.question}}</p>
 <div class="row question-row" ng-show="isArray(gameState.user.room.question) && isCaller()">
   <button class="btn btn-primary col-xs-12" ng-repeat="question in gameState.user.room.question track by $index" ng-click="selectQuestion($index)">Question: {{question}}</button>
 </div>
@@ -22,16 +22,16 @@
   Players are betting. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectQuestion' && !isCaller()">
-  Caller is selecting a question. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
+  {{gameState.user.room.caller}} is selecting a question. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'callerSelectAnswer' && !isCaller()">
-  Caller is selecting an answer. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
+  {{gameState.user.room.caller}} is selecting an answer. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'playersBet' && !isCaller()">
   Bet by clicking an answer below. <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <p class="well well-sm" ng-show="gameState.user.room.state.status == 'results'">
-  The round is over, the selected answer was: {{gameState.user.room.winningUser}}  <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
+  The round is over, {{gameState.user.room.caller}} selected the answer by: {{gameState.user.room.winningUser}}  <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span>
 </p>
 <div class="row question-row" ng-show="gameState.user.room.state.status=='waiting'">
   <button class="btn btn-primary col-xs-12" ng-click="startGame()">Start Game</button>
