@@ -65,6 +65,22 @@ module.exports = function (grunt) {
       }
     },
 
+    replace: {
+      dist: {
+        options: {
+          variables: {
+            'buildtime': Date.now()
+          }
+        },
+        files: [
+          {
+            src: ['dist/index.html'],
+            dest: 'dist/index.html'
+          }
+        ]        
+      }
+    },
+
     // The actual grunt server settings
     connect: {
       options: {
@@ -239,7 +255,8 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
-    'copy:dist'
+    'copy:dist',
+    'replace:dist'
   ]);
 
   grunt.registerTask('default', [
