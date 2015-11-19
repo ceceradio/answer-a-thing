@@ -66,12 +66,11 @@ function allRooms() {
 function broadcastDrawboardToRoom(user) {
   if (user.room && Array.isArray(user.room.users)) {
     for(var i = 0; i < user.room.users.length; i++) {
-      if (users[i].socket) {
-        users[i].socket.emit('drawboard', { username: user.username, drawboard: user.drawboard });
+      if (user.room.users[i].socket) {
+        user.room.users[i].socket.emit('drawboard', { username: user.username, drawboard: user.drawboard });
       }
     }
   }
-  
 }
 
 function broadcast() {
@@ -259,10 +258,10 @@ io.on('connection', function(socket){
   });
   socket.on('disconnect', function () {
     if (user) {
-      if (socket == users[users.indexOf(user)].socket)
-        users[users.indexOf(user)].socket = false;
+      if (socket == user.socket)
+        user.socket = false;
       setTimeout(function() {
-        if (!users[users.indexOf(user)].socket) {
+        if (!user.socket) {
           var room = user.room;
           if (room) {
             user.leaveRoom()
