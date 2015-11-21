@@ -3,9 +3,13 @@
 	<div class="col-xs-5 text-right"><a class="btn btn-default" ng-click="logout()">Logout</a></div>
 </div>
 <div class="rooms">
-  <div class="row well" ng-repeat="room in gameState.rooms">
-    <h4 class="col-xs-10 col-md-8 col-md-offset-1">{{room.name}}</h4>
+  <div class="row well" ng-repeat="room in gameState.rooms track by $id(room)">
+    <h4 class="col-xs-10 col-md-8 col-md-offset-1">{{room.name}} <span class="glyphicon glyphicon-lock" ng-if="room.password"></span></h4>
     <button class="col-xs-2  col-md-2 btn btn-primary" ng-click="joinRoom(room)">Join Room</button>
+    <div class="form-group col-xs-12 col-md-offset-1 col-md-10" ng-show="data.form == room.name">
+    	<label>Password</label>
+    	<input class="form-control" id="pw-{{room.$$hashKey}}" type="password" name="password" ng-model="data.password"/>
+    </div>
   </div>
 </div>
 <button class="btn btn-primary col-xs-12" ng-click="$location.url('createroom')"><h1>Create Room</h1></button>

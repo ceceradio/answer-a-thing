@@ -44,13 +44,17 @@ User.prototype.createRoom = function(roomName) {
   this.answerSubmitted = false;
   return true;
 };
-User.prototype.joinRoom = function(roomName) {
+User.prototype.joinRoom = function(roomName, roomPassword) {
   var rooms = Room.getRooms();
   if (typeof rooms[roomName] === "undefined") {
     return "This room does not exist.";
   }
-  if (this.room !== false)
+  if (this.room !== false) {
     return "You must leave your current room.";
+  }
+  if (rooms[roomName].password !== false && !rooms[roomName].verifyPassword(roomPassword)) {
+    return "Password is incorrect!";
+  }
   rooms[roomName].addUser(this);
   this.room = rooms[roomName];
   this.answerSubmitted = false;

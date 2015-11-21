@@ -12,10 +12,20 @@ angular.module('answerAThingApp')
     $scope.$location = $location;
     $scope.gameState = gameState;
     $scope.user = gameState.user;
+    $scope.data = { password: '', form: '' };
     $scope.logout = function() {
       drawSocket.emit('user.logout', {});
     }
     $scope.joinRoom = function(room) {
-      drawSocket.emit('user.joinRoom', room);
+      if (room.password && !$scope.data.password) {
+        $scope.data.form = room.name;
+        $("#pw-"+room.$$hashKey).focus();
+      }
+      else if (room.password && $scope.data.password) {
+        drawSocket.emit('user.joinRoom', angular.extend({}, room, $scope.data)); 
+      }
+      else {
+        drawSocket.emit('user.joinRoom', room);  
+      }
     };
   });

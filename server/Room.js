@@ -1,3 +1,4 @@
+var md5 = require('MD5');
 var questions = require('../questions.json');
 function Room(name) {
   this.name = name;
@@ -257,6 +258,14 @@ Room.prototype.serialize = function(notRecursive) {
         ret[key] = this.caller.username;
       else
         ret[key] = null;
+    }
+    if (key == 'password') {
+      if (this.password !== false) {
+        ret[key] = true;
+      }
+      else {
+        ret[key] = false;
+      }
     }
     if (key == 'winningUser') {
       if (this.winningUser && this.state.status == 'results')

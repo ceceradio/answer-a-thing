@@ -17,7 +17,6 @@ else {
   var app = require(serverType).createServer(options,handler)
 }
 var io = require('socket.io')(app);
-var md5 = require('MD5');
 var User = require('./User.js');
 var Room = require('./Room.js');
 
@@ -103,10 +102,13 @@ io.on('connection', function(socket){
     }
     var result;
     if ( (result = user.createRoom(data.name)) !== true ) {
-      socket.emit('errorMessage', { user: user.serialize(), error: result } );
+      return socket.emit('errorMessage', { user: user.serialize(), error: result } );
     }
     else {
       socket.emit('user', user.serialize() );
+    }
+    if (data.hasOwnProperty('password') && data.password.length > 0) {
+      user.room.setPassword(data.password);
     }
     user.room.broadcast('room', user.room.serialize());
   });
@@ -115,13 +117,13 @@ io.on('connection', function(socket){
       return socket.emit('logout', { error: "You are not logged in." });
     }
     var result;
-    if ( (result = user.joinRoom(data.name)) !== true ) {
-      socket.emit('errorMessage', { user: user.serialize(), error: result } );
+    if ( (result = user.joinRoom(data.name, data.password)) !== true ) {
+      return socket.emit('errorMessage', { user: user.serialize(), error: result } );
     }
     else {
       socket.emit('user', user.serialize() );
     }
-    user.room.broadcast('room', user.room.serialize());
+    user.room.broadcast('room', user.room.serialize(true));
   });
   socket.on('user.leaveRoom', function(data) {
     if (!user) {
@@ -130,7 +132,7 @@ io.on('connection', function(socket){
     var result;
     var room = user.room;
     if ( (result = user.leaveRoom()) !== true ) {
-      socket.emit('errorMessage', { user: user.serialize(), error: result } );
+      return socket.emit('errorMessage', { user: user.serialize(), error: result } );
     }
     else {
       socket.emit('user', user.serialize() );
