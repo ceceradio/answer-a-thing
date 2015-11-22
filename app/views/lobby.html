@@ -2,6 +2,7 @@
 	<div class="col-xs-7"><h5>Answer A Thing</h5></div>
 	<div class="col-xs-5 text-right"><a class="btn btn-default" ng-click="logout()">Logout</a></div>
 </div>
+<p>Join or create a room to play.</p>
 <div class="rooms">
   <div class="row well" ng-repeat="room in gameState.rooms track by $id(room)">
     <h4 class="col-xs-10 col-md-8 col-md-offset-1">{{room.name}} <span class="glyphicon glyphicon-lock" ng-if="room.password"></span></h4>

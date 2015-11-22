@@ -8,7 +8,7 @@
   </div>
 </h3>
 <h4 ng-show="isCaller()">You are the caller</h4>
-<p class="well well-sm" ng-show="!isArray(gameState.user.room.question) && gameState.user.room.question">{{gameState.user.room.caller}} Asks: {{gameState.user.room.question}} <span ng-show="gameState.user.room.state.timerEnd">({{ timeLeft }}s Left)</span></p>
+<p class="well well-sm" ng-show="!isArray(gameState.user.room.question) && gameState.user.room.question">{{gameState.user.room.caller}} Asks: {{gameState.user.room.question}} <span ng-show="gameState.user.room.state.timerEnd && !isCaller() && gameState.user.room.state.status == 'playersAnswerQuestion'">({{ timeLeft }}s Left)</span></p>
 <div class="row question-row" ng-show="isArray(gameState.user.room.question) && isCaller()">
   <button class="btn btn-primary col-xs-12" ng-repeat="question in gameState.user.room.question track by $index" ng-click="selectQuestion($index)">Question: {{question}}</button>
 </div>
