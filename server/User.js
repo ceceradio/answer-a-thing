@@ -1,4 +1,5 @@
 var Room = require('./Room.js');
+var admins = require('../admins.json');
 function User(socket) {
   this.socket = socket;
   this.username = "";
@@ -7,6 +8,21 @@ function User(socket) {
   this.drawboard = {};
   this.room = false;
   this.answerSubmitted = false;
+}
+User.prototype.canHaveName = function(username, accessToken) {
+  if (!(username in admins)) {
+    return true;
+  }
+  if (admins[username].accessToken == accessToken) {
+    return true;
+  }
+  return false;
+}
+User.prototype.isAdmin = function() {
+  if (this.username in admins && admins[this.username].accessToken == this.accessToken) {
+    return true;
+  }
+  return false;
 }
 User.prototype.serialize = function(notRecursive) {
   var ret = {};

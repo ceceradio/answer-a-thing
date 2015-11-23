@@ -145,6 +145,9 @@ io.on('connection', function(socket){
     if (typeof data.username === "undefined" || !data.username) {
       return socket.emit('logout', { error: "This user name is invalid." });
     }
+    if (!User.prototype.canHaveName(data.username, data.accessToken)) {
+      return socket.emit('logout', { error: "This user name is invalid." });
+    }
     for (var key = 0; key < users.length; key++) {
       if (users[key].username === data.username) {
         if (users[key].accessToken !== data.accessToken) {
