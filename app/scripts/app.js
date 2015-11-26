@@ -29,6 +29,9 @@ angular
         templateUrl: 'views/createroom.html?'+Date.now(),
         controller: 'CreateRoomController'
       })
+      .when('/how-to-play', {
+        templateUrl: 'views/howtoplay.html?'+Date.now()
+      })
       .when('/room/:room_id', {
         templateUrl: 'views/room.html?'+Date.now(),
         controller: 'RoomController'
