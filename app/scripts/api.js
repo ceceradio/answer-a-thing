@@ -15,7 +15,7 @@ angular.module('answerAThingApp').
           this.listeners.splice(this.listeners.indexOf(callback), 1);
         }
       }
-    }
+    };
     drawSocket.on('drawboard', function(data) {
       for(var i = 0; i < service.listeners.length; i++) {
         service.listeners[i](data);

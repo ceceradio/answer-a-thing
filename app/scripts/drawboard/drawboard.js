@@ -11,10 +11,34 @@ angular.module('answerAThingApp')
       },
       templateUrl: '/views/drawboard.html',
       controller: function($scope) {
+        $scope.allColors = [
+          '#f00',
+          '#f90',
+          '#cf0',
+          '#3f0',
+          '#0f6',
+          '#0ff',
+          '#06f',
+          '#30f',
+          '#c0f',
+          '#f09',
+          "#fff",
+          "#ccc",
+          "#999",
+          "#666",
+          "#333",
+          "#000"
+        ];
         $scope.aspectRatio = 3/2;
         $scope.painting = false;
         $scope.lastFrame = true;
         $scope.color=$window.localStorage.getItem('color');
+        $scope.setColor = function(colorToSet) {
+          $scope.color = colorToSet;
+        };
+        $scope.setTextColor = function(colorToSet) {
+          $scope.text.color = colorToSet;
+        };
         if (!$scope.color) {
           $scope.color= '#'+Math.floor(Math.random()*16777215).toString(16);
           $window.localStorage.setItem('color', $scope.color);

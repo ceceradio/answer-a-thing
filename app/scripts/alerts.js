@@ -9,7 +9,7 @@ angular.module('answerAThingApp')
         $scope.data = {alerts: gameState.alerts};
         $scope.dismissAlert = function(index) {
           $scope.data.alerts.splice(index,1);
-        }
+        };
       }
     };
   });

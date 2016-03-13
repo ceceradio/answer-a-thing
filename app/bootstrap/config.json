@@ -20,15 +20,15 @@
     "@font-family-serif": "Georgia, \"Times New Roman\", Times, serif",
     "@font-family-monospace": "Menlo, Monaco, Consolas, \"Courier New\", monospace",
     "@font-family-base": "@font-family-sans-serif",
-    "@font-size-base": "2vw",
-    "@font-size-large": "6vw",
-    "@font-size-small": "2vw",
-    "@font-size-h1": "6vw",
-    "@font-size-h2": "5vw",
-    "@font-size-h3": "4vw",
-    "@font-size-h4": "3vw",
-    "@font-size-h5": "2vw",
-    "@font-size-h6": "2vw",
+    "@font-size-base": "16px",
+    "@font-size-large": "20px",
+    "@font-size-small": "14px",
+    "@font-size-h1": "32px",
+    "@font-size-h2": "24px",
+    "@font-size-h3": "20px",
+    "@font-size-h4": "16px",
+    "@font-size-h5": "14px",
+    "@font-size-h6": "14px",
     "@line-height-base": "1.428571429",
     "@line-height-computed": "floor((@font-size-base * @line-height-base))",
     "@headings-font-family": "inherit",
@@ -378,6 +378,7 @@
     "@blockquote-border-color": "@gray-lighter",
     "@page-header-border-color": "@gray-lighter",
     "@dl-horizontal-offset": "@component-offset-horizontal",
+    "@dl-horizontal-breakpoint": "@grid-float-breakpoint",
     "@hr-border": "@gray-lighter"
   },
   "css": [
@@ -430,5 +431,5 @@
     "scrollspy.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=34a6ad410b94573c12e2"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=05a964addb5813f3a1ad"
 }

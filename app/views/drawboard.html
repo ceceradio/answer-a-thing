@@ -6,21 +6,41 @@
         <canvas></canvas>
     </div>
     <div class="tools">
-        <div class="col-xs-5 col-sm-12">
+        <div class="col-xs-12">
             <p>Brush</p>
-            <button class="btn btn-primary btn-dimple" colorpicker ng-model="color"><span ng-style="{'background': color}" class="color-dimple"></span></button>
-            <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==3, 'btn-default': size !== 3 }" ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></button>
-            <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==5, 'btn-default': size !== 5 }" ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></button>
-            <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==8, 'btn-default': size !== 8 }" ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></button>
+            <div class="brush-buttons row">
+                <div class="col-xs-3">
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-dimple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span ng-style="{'background': color}" class="color-dimple"></span><span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu color-dropdown">
+                            <li ng-repeat="listedColor in allColors"><a ng-click="setColor(listedColor)"><span ng-style="{'background': listedColor}" class="color-dimple"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==3, 'btn-default': size !== 3 }" ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></button>
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==5, 'btn-default': size !== 5 }" ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></button>
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==8, 'btn-default': size !== 8 }" ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></button>
+                </div>
+            </div>
         </div>
         <div class="clearfix visible-sm-block hidden-xs"></div>
-        <div class="form-group col-xs-7 col-sm-12">
+        <div class="form-group col-xs-12">
             <p>Text</p>
             <div class="input-group">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" colorpicker ng-model="text.color">
-                        <span ng-style="{'background': text.color }" class="color-dimple"></span>
+                    <button class="btn btn-primary btn-dimple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span ng-style="{'background': text.color}" class="color-dimple"></span><span class="caret"></span>
                     </button>
+                    <ul class="dropdown-menu color-dropdown">
+                        <li ng-repeat="listedColor in allColors"><a ng-click="setTextColor(listedColor)"><span ng-style="{'background': listedColor}" class="color-dimple"></a></li>
+                    </ul>
                 </span>
                 <input type="text" class="form-control" ng-model="text.content"/>
             </div> 

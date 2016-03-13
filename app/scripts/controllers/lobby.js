@@ -15,7 +15,7 @@ angular.module('answerAThingApp')
     $scope.data = { password: '', form: '' };
     $scope.logout = function() {
       drawSocket.emit('user.logout', {});
-    }
+    };
     $scope.joinRoom = function(room) {
       if (room.password && !$scope.data.password) {
         $scope.data.form = room.name;

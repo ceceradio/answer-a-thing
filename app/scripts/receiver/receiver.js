@@ -20,8 +20,9 @@ angular.module('answerAThingApp')
           drawboardService.removeListener(listener);
         });
         $scope.$watch('gameState.user.room.users', function(users) {
-          if (!users)
+          if (!users) {
             return;
+          }
           for (var i = 0; i < users.length; i++) {
             if (!$scope.data.users.hasOwnProperty(users[i])) {
               $scope.data.users[users[i]] = {};

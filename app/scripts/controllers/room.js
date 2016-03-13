@@ -52,10 +52,12 @@ angular.module('answerAThingApp')
     };
     var stop;
     $interval(function() {
-      if (gameState.user.room && gameState.user.room.state.timerEnd)
+      if (gameState.user.room && gameState.user.room.state.timerEnd) {
         $scope.timeLeft = Math.floor((gameState.user.room.state.timerEnd - Date.now()) / 1000);
-      else
-        $scope.timeLeft = 0
+      }
+      else {
+        $scope.timeLeft = 0;
+      }
     }, 1000);
     $scope.$on('$destroy', function() {
       if (angular.isDefined(stop)) {
