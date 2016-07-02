@@ -22,10 +22,10 @@ angular.module('answerAThingApp')
         $("#pw-"+room.$$hashKey).focus();
       }
       else if (room.password && $scope.data.password) {
-        drawSocket.emit('user.joinRoom', angular.extend({}, room, $scope.data)); 
+        drawSocket.emit('room.join', angular.extend({}, room, $scope.data)); 
       }
       else {
-        drawSocket.emit('user.joinRoom', room);  
+        drawSocket.emit('room.join', room);  
       }
     };
   });

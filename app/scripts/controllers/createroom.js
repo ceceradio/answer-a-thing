@@ -13,7 +13,7 @@ angular.module('answerAThingApp')
     $scope.room = {name: '', password: ''};
     $scope.error = false;
     $scope.createRoom = function() {
-      drawSocket.emit('user.createRoom', $scope.room);
+      drawSocket.emit('room.create', $scope.room);
     };
     drawSocket.on('error', function(error) {
       $scope.error = error;

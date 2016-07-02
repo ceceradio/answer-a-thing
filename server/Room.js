@@ -1,4 +1,6 @@
+"use strict";
 var md5 = require('MD5');
+const User = require('./User.js');
 var questions = require('../questions.json');
 function Room(name) {
   this.name = name;
@@ -7,10 +9,10 @@ function Room(name) {
   this.caller = null;
   this.state = {
     status: 'waiting',
-    timerHandle: null,
+    _timerHandle: null,
     timerEnd: null
   };
-  this.coinMax = 2;
+  this.betMax = 2;
   this.winningUser = null;
   this.question = null;
   this.users = [];
@@ -19,6 +21,19 @@ var rooms = {};
 Room.getRooms = function() {
   return rooms;
 }
+Room.create = function(user, roomName) {
+  if (rooms.hasOwnProperty(roomName)) throw new Error("A room with this name already exists.");
+  if (user.room) throw new Error("You must leave your current room.");
+  rooms[roomName] = new Room(roomName);
+  rooms[roomName].addUser(user);
+  user.answerSubmitted = false;
+  return rooms[roomName];
+}
+Room.prototype.onUserBet = function() {
+  if (this.areAllBetsSubmitted()) {
+    this.calculateResults();
+  }
+}
 Room.prototype.broadcast = function(eventType, data) {
   for(var i = 0; i < this.users.length; i++) {
     if (this.users[i].socket) {
@@ -26,10 +41,23 @@ Room.prototype.broadcast = function(eventType, data) {
     }
   }
 }
+Room.prototype.join = function(user, roomPassword) {
+  if (user.room !== false) throw new Error("You must leave your current room.");
+  if (this.password && !this.verifyPassword(roomPassword)) throw new Error("Password is incorrect!");
+  this.addUser(user);
+  user.answerSubmitted = false;
+  return this;
+};
+Room.prototype.leave = function(user) {
+  if (user.room !== this) throw new Error("You are not in this room");
+  this.removeUser(user);
+  user.answerSubmitted = false;
+  return this;
+};
 Room.prototype.resetBets = function() {
-  for(var i = 0; i < this.users.length; i++) {
-    this.users[i].bets = false;
-  }
+  this.users.forEach(function(user) {
+    user.resetBet();
+  });
 }
 Room.prototype.resetCaller = function() {
   if (this.users.length < 1) {
@@ -91,23 +119,23 @@ Room.prototype.selectQuestion = function(index) {
   return true;
 }
 Room.prototype.submitAllAnswers = function() {
-  for(var i = 0; i < this.users.length; i++) {
-    if (this.users[i] == this.caller)
-      continue;
-    this.users[i].answerSubmitted = true;
-  }
+  this.users.forEach(function(user) {
+    if (user === this.caller)
+      return;
+    user.submitAnswer();
+  })
   this.setState('callerSelectAnswer');
 }
 Room.prototype.selectRandomAnswer = function() {
   var selectedIndex = 0;
   for(var n = 0; n < 100; n++) {
     selectedIndex = Math.floor(Math.random()*(this.users.length-1));
-    if (this.caller != this.users[selectedIndex])
+    if (this.caller !== this.users[selectedIndex])
       break;
   }
   this.selectAnswer(this.users[selectedIndex].username);
 }
-Room.prototype.selectAnswer = function(username) {
+Room.prototype.selectWinner = function(username) {
   if (!this.isUserInRoom(username))
     return false;
   if (this.isUserCaller(username))
@@ -120,47 +148,26 @@ Room.prototype.selectAnswer = function(username) {
 }
 Room.prototype.isUserInRoom = function(username) {
   for (var i = 0; i < this.users.length; i++) {
-    if (this.users[i].username == username) {
+    if (this.users[i].username === username) {
       return true;
     }
   }
   return false;
 }
 Room.prototype.isUserCaller = function(username) {
-  return this.caller.username == username;
+  if (!this.caller) return false;
+  return this.caller.username === username;
 }
-Room.prototype.betOnUser = function(bettor, targetUsername) {
-  if (this.state.status !== 'playersBet')
-    return false;
-  if (this.users.indexOf(bettor) < 0 || bettor == this.caller)
-    return false;
-  if (!this.isUserInRoom(targetUsername) || this.isUserCaller(targetUsername))
-    return false;
-  if (bettor.bets === false || typeof bettor.bets === "undefined") {
-    bettor.bets = [];
-  }
-  if (bettor.bets.length >= this.coinMax)
-    return false;
-  bettor.bets.push(targetUsername);
-  // check if all bets are submitted
-  if (this.areAllBetsSubmitted()) {
-    this.submitAllBets();
-  }
-  else {
-    this.broadcast('room', this.serialize(true));
-  }
-  return true;
+Room.prototype.canPlayersBet = function() {
+  return this.state.status === 'playersBet';
 }
 Room.prototype.areAllAnswersSubmitted = function() {
   if (this.state.status !== 'playersAnswerQuestion') {
     return false;
   }
   for(var i =0; i < this.users.length; i++) {
-    if (this.users[i] == this.caller)
-      continue;
-    var user = this.users[i];
-    if (!user.answerSubmitted)
-      return false;
+    if (this.users[i].isCaller()) continue;
+    if (!this.users[i].answerSubmitted) return false;
   }
   return true;
 }
@@ -169,65 +176,75 @@ Room.prototype.areAllBetsSubmitted = function() {
     return false;
   }
   for(var i =0; i < this.users.length; i++) {
-    if (this.users[i] === this.caller)
-      continue;
+    if (this.users[i].isCaller()) continue;
     var user = this.users[i];
-    if (!Array.isArray(user.bets)) {
-      return false;
-    }
-    if (user.bets.length < this.coinMax) {
-      return false;
-    }
+    if (!Array.isArray(user.bets)) return false;
+    if (user.bets.length < this.betMax) return false;
   }
   return true;
 }
-Room.prototype.submitAllBets = function() {
+Room.prototype.calculateResults = function() {
   // TODO calculate results
   this.setState('results');
 }
+Room.stateTransitions = {
+  waiting: {
+  },
+  callerSelectQuestion: {
+    timeLimitFunction: Room.prototype.selectRandomQuestion,
+    timeLimit: 45 * 1000
+  },
+  playersAnswerQuestion: {
+    on: function() {
+      for(var i = 0; i < this.users.length; i++) {
+        this.users[i].answerSubmitted = false;
+      }
+    },
+    timeLimitFunction: Room.prototype.submitAllAnswers,
+    timeLimit: 180 * 1000
+  },
+  callerSelectAnswer: {
+    timeLimitFunction: Room.prototype.selectRandomAnswer,
+    timeLimit: 120 * 1000,
+  },
+  playersBet: {
+    timeLimitFunction: Room.prototype.calculateResults,
+    timeLimit: 120 * 1000,
+  },
+  results: {
+    timeLimitFunction: Room.prototype.selectNewCaller,
+    timeLimit: 30 * 1000,
+  },
+  
+}
 Room.prototype.setState = function(state) {
-  var self = this;
   this.state.status = state;
-  if (this.state.timerHandle) {
-    clearTimeout(this.state.timerHandle);
+  if (this.state._timerHandle) {
+    clearTimeout(this.state._timerHandle);
   }
   if (this.users.length <= 1) {
     state = 'waiting';
     this.state.status = 'waiting';
   }
-  if (state == 'waiting') {
-    this.state.timerHandle = null;
-    this.state.timerEnd = null;
+  if (!Room.stateTransitions.hasOwnProperty(state)) {
+    console.log('State '+state+' does not exist!');
+    throw new Error('State '+state+' does not exist!');
   }
-  else if (state == 'callerSelectQuestion') {
-    this.state.timerHandle = setTimeout(function() { self.selectRandomQuestion() }, 45 * 1000);
-    this.state.timerEnd = Date.now() + 45 * 1000;
-  }
-  else if (state == 'playersAnswerQuestion') {
-    // reset user answer state
-    for(var i = 0; i < this.users.length; i++) {
-      this.users[i].answerSubmitted = false;
+  var stateTransition = Room.stateTransitions[state];
+  if (stateTransition.hasOwnProperty('on')) stateTransition.on();
+  if (stateTransition.hasOwnProperty('timeLimit')) {
+    var timeLimitFunction = stateTransition.timeLimitFunction.bind(this);
+    function timeout() {
+      timeLimitFunction();
+      this.broadcast('room', this.serialize());
     }
-    this.state.timerHandle = setTimeout(function() { self.submitAllAnswers() }, 180 * 1000);
-    this.state.timerEnd = Date.now() + 180 * 1000;
+    this.state._timerHandle = setTimeout(timeout.bind(this), stateTransition.timeLimit);
+    this.state.timerEnd = Date.now() + stateTransition.timeLimit;
   }
-  else if (state == 'callerSelectAnswer') {
-    this.state.timerHandle = setTimeout(function() { self.selectRandomAnswer() }, 120 * 1000);
-    this.state.timerEnd = Date.now() + 120 * 1000;
-  }
-  else if (state == 'playersBet') {
-    this.state.timerHandle = setTimeout(function() { self.submitAllBets() }, 120 * 1000);
-    this.state.timerEnd = Date.now() + 120 * 1000;
-  }
-  else if (state == 'results') {
-    this.state.timerHandle = setTimeout(function() { self.selectNewCaller() }, 30 * 1000);
-    this.state.timerEnd = Date.now() + 30 * 1000;
-  }
-  this.broadcast('room', this.serialize(true));
 }
 Room.prototype.setCaller = function(user) {
   for(var i = 0; i < this.users.length; i++) {
-    if (user.username == this.users[i].username) {
+    if (user.username === this.users[i].username) {
       this.caller = this.users[i];
       return true;
     }
@@ -235,85 +252,46 @@ Room.prototype.setCaller = function(user) {
   return false;
 }
 Room.prototype.isCaller = function(user) {
-  return (this.caller.username == user.username)
+  return this.isUserCaller(user.username);
 }
-Room.prototype.serialize = function(notRecursive) {
-  function serializeUsers(self) {
-    var ret = [];
-    if (typeof self.users !== "undefined" && typeof self.users.length !== "undefined") {
-      for(var i = 0; i < self.users.length; i++) {
-        ret.push(self.users[i].username);
-      }
+Room.prototype.serialize = function() {
+  function replacer(key, value) {
+    if (key === 'password' || key.charAt(0) === '_') return undefined;
+    if (key === 'caller') {
+      if (value) return value.username;
+      return null;
     }
-    return ret;
-  }
-  var ret = {};
-  var keys = Object.keys(this);
-  for(var i in keys) {
-    var key = keys[i];
-    if (key != 'users' && key != 'password' && key != 'caller' && key != 'winningUser' && key != 'state' && key != 'bets')
-      ret[key] = this[key];
-    if (key == 'caller') {
-      if (this.caller)
-        ret[key] = this.caller.username;
-      else
-        ret[key] = null;
-    }
-    if (key == 'password') {
-      if (this.password !== false) {
-        ret[key] = true;
+    if (key === 'winningUser') {
+      if (this.state.status === 'results') {
+        return this.winningUser;
       }
       else {
-        ret[key] = false;
+        return undefined;
       }
     }
-    if (key == 'winningUser') {
-      if (this.winningUser && this.state.status == 'results')
-        ret[key] = this.winningUser;
-      else
-        ret[key] = null;
-    }
-    if (key == "state" ) {
-      ret[key] = { status: this.state.status, timerEnd: this.state.timerEnd };
-    }
-    if (key == "users") {
-      ret[key] = serializeUsers(this);
-    }
+    if (value instanceof User) return value.serialize();
+    return value;
   }
-  ret.bets = {};
-  // targets
-  for(var i = 0; i < this.users.length; i++) {
-    ret.bets[this.users[i].username] = [];
-  }
-  // bettors
-  for(var i = 0; i < this.users.length; i++) {
-    if (Array.isArray(this.users[i].bets)) {
-      for(var j = 0; j < this.users[i].bets.length; j++) {
-        if (this.users[i].bets[j] in ret.bets) {
-          ret.bets[this.users[i].bets[j]].push(this.users[i].username);
-        }
-      }
-    }
-  }
-  return ret;
+  return JSON.parse(JSON.stringify(this, replacer));
 };
 Room.prototype.setPassword = function(password) {
   this.password = md5(password);
 }
 Room.prototype.verifyPassword = function(passwordTest) {
-  if (this.password === false)
-    return true;
+  if (this.password === false) return true;
   return md5(passwordTest) === this.password;
 }
 Room.prototype.addUser = function(user) {
-  if (this.users.indexOf(user) > -1)
-    return true;
+  user.room = this;
+  user.on('bet', this.onUserBet.bind(this));
+  if (this.users.indexOf(user) > -1) return true;
   this.users.push(user);
   return true;
 };
 Room.prototype.removeUser = function(user) {
-  if (this.users.indexOf(user) == -1)
-    return true;
+  user.room = false;
+  user.removeAllListeners('bet');
+  if (this.users.indexOf(user) === -1) return true;
   this.users.splice(this.users.indexOf(user), 1);
   if (this.caller && user.username === this.caller.username) {
     if (this.resetCaller() === false) {

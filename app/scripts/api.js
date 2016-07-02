@@ -27,6 +27,7 @@ angular.module('answerAThingApp').
     var gameState = {
       rooms: [],
       user: { username: '', accessToken: '' },
+      room: {},
       state: 'loggedout',
       errorMessage: '',
       alerts: []
@@ -41,16 +42,16 @@ angular.module('answerAThingApp').
       gameState.rooms = rooms;
     });
     drawSocket.on('room', function(room) {
-      gameState.user.room = room;
+      gameState.room = room;
     });
     drawSocket.on('errorMessage', function(data) {
       gameState.alerts.push(data);
     });
     drawSocket.on('user', function(user) {
       angular.extend(gameState.user, user);
-      if (user.room !== false) {
+      if (user.room) {
         gameState.state = 'inroom';
-        $location.url('/room/'+user.room.name);
+        $location.url('/room/'+user.room);
       }
       else {
         gameState.state = 'inlobby';

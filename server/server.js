@@ -1,3 +1,4 @@
+"use strict";
 var fs = require('fs');
 var serverType = 'http';
 if (process.argv.length >= 3 && process.argv[2] == 'https') {
@@ -72,6 +73,15 @@ function broadcastDrawboardToRoom(user) {
   }
 }
 
+function getUserByUsername(username) {
+  for(var i in users) {
+    if (users[i].username === username) {
+      return users[i];
+    }
+  }
+  return false;
+}
+
 function broadcast() {
   for(var i in users) {
     if (users[i].socket) {
@@ -94,53 +104,59 @@ io.on('connection', function(socket){
   function onLogin() {
     socket.emit('users', allUsers());
     socket.emit('user', user.serialize() );
+    if (user.room) socket.emit('room', user.room.serialize() );
     sendRooms(user);
   }
-  socket.on('user.createRoom', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
+  function validateLogin(callback) {
+    return function(data) {
+      if (!user) {
+        return socket.emit('logout', { error: "You are not logged in." });
+      }
+      callback(data);  
+    };
+  }
+  socket.on('room.create', validateLogin(function(data) {
+    var room;
+    try {
+      room = Room.create(user, data.name);  
     }
-    var result;
-    if ( (result = user.createRoom(data.name)) !== true ) {
-      return socket.emit('errorMessage', { user: user.serialize(), error: result } );
+    catch(e) {
+      return socket.emit('errorMessage', { user: user.serialize(), error: e.message } );
     }
-    else {
-      socket.emit('user', user.serialize() );
+    if (data.hasOwnProperty('password') && data.password) {
+      room.setPassword(data.password);
     }
-    if (data.hasOwnProperty('password') && data.password.length > 0) {
-      user.room.setPassword(data.password);
+    socket.emit('user', user.serialize());
+    room.broadcast('room', room.serialize());
+  }));
+  socket.on('room.join', validateLogin(function(data) {
+    var room;
+    if (!rooms.hasOwnProperty(data.name)) {
+      return socket.emit('errorMessage', { user: user.serialize(), error: 'Room does not exist' } );
     }
-    user.room.broadcast('room', user.room.serialize());
-  });
-  socket.on('user.joinRoom', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
+    room = rooms[data.name];
+    try {
+      room.join(user, data.password);
     }
-    var result;
-    if ( (result = user.joinRoom(data.name, data.password)) !== true ) {
-      return socket.emit('errorMessage', { user: user.serialize(), error: result } );
+    catch (e) {
+      return socket.emit('errorMessage', { user: user.serialize(), error: e.message } );
     }
-    else {
-      socket.emit('user', user.serialize() );
+
+    socket.emit('user', user.serialize());
+    room.broadcast('room', room.serialize());
+  }));
+  socket.on('room.leave', validateLogin(function(data) {
+    if (!user.room) return socket.emit('errorMessage', { user: user.serialize(), error: 'You are not in a room' } );
+    var room;
+    try {
+      room = user.room.leave(user);  
     }
-    user.room.broadcast('room', user.room.serialize(true));
-  });
-  socket.on('user.leaveRoom', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
+    catch (e) {
+      return socket.emit('errorMessage', { user: user.serialize(), error: e.message } );
     }
-    var result;
-    var room = user.room;
-    if ( (result = user.leaveRoom()) !== true ) {
-      return socket.emit('errorMessage', { user: user.serialize(), error: result } );
-    }
-    else {
-      socket.emit('user', user.serialize() );
-    }
-    if (room) {
-      room.broadcast('room', room.serialize());
-    }
-  });
+    socket.emit('user', user.serialize() );
+    room.broadcast('room', room.serialize());
+  }));
   socket.on('user.login', function(data) {
     if (typeof data.username === "undefined" || !data.username) {
       return socket.emit('logout', { error: "This user name is invalid." });
@@ -172,95 +188,78 @@ io.on('connection', function(socket){
   });
 
   // room functions
-  socket.on('room.getDrawboards', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+  socket.on('room.getDrawboards', validateLogin(function(data) {
     if (!user.isInRoom()) { 
       return socket.emit('errorMessage', { error: "You are not in a room." });
     }
     for (var i = 0; i < user.room.users.length; i++) {
       socket.emit('drawboard', { username: user.room.users[i].username, drawboard: user.room.users[i].drawboard });
     }
-  });
-  socket.on('room.startGame', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+  }));
+  socket.on('room.startGame', validateLogin(function(data) {
     if (!user.isInRoom() || user.room.users.length < 3) { 
       return socket.emit('errorMessage', { error: "You cannot start the game yet." });
     }
     user.room.selectNewCaller();
-  });
-  socket.on('room.selectQuestion', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+    user.room.broadcast('room', user.room.serialize());
+  }));
+  socket.on('room.selectQuestion', validateLogin(function(data) {
     if (!user.isInRoom() || !user.isCaller()) { 
       return socket.emit('errorMessage', { error: "You cannot select a question." });
     }
     user.room.selectQuestion(data.questionIndex);
-  });
+    user.room.broadcast('room', user.room.serialize());
+  }));
 
-  socket.on('room.betOnUser', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+  socket.on('user.betOnUser', validateLogin(function(data) {
     if (!user.isInRoom() || user.isCaller()) { 
-      return socket.emit('errorMessage', { error: "Your cannot bet." });
+      return socket.emit('errorMessage', { error: "You cannot bet." });
     }
-    if (!user.room.betOnUser(user, data.username)) {
+    var targetUser = getUserByUsername(data.username);
+    if (!targetUser) socket.emit('errorMessage', { error: "Cannot find the target user." });
+    if (!user.betOnUser(targetUser)) {
       return socket.emit('errorMessage', { error: "You cannot bet on this user." });
     }
-  });
-  socket.on('room.submitAnswer', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+    socket.emit('user', user.serialize() );
+    user.room.broadcast('room', user.room.serialize());
+  }));
+  socket.on('user.submitAnswer', validateLogin(function(data) {
     if (!user.isInRoom() || user.isCaller()) { 
       return socket.emit('errorMessage', { error: "You cannot submit an answer." });
     }
-    user.answerSubmitted = true;
+    user.submitAnswer();
     if (user.room.areAllAnswersSubmitted()) {
       user.room.submitAllAnswers();
     }
-    else {
-      user.room.broadcast('room', user.room.serialize());
-    }
-  });
-  socket.on('room.selectAnswer', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+    user.room.broadcast('room', user.room.serialize());
+  }));
+  socket.on('room.selectWinner', validateLogin(function(data) {
     if (!user.isInRoom() || !user.isCaller()) { 
       return socket.emit('errorMessage', { error: "You cannot select a question." });
     }
-    if (!user.room.selectAnswer(data.username)) {
+    if (!user.room.selectWinner(data.username)) {
       return socket.emit('errorMessage', { error: "You cannot select this answer." });
     }
-  });
+    user.room.broadcast('room', user.room.serialize());
+  }));
 
-  socket.on('user.drawboard', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+  socket.on('user.drawboard', validateLogin(function(data) {
     console.log(user.username + ' sent an image');
     user.drawboard = data.drawboard;
     broadcastDrawboardToRoom(user);
-  });
-  socket.on('user.logout', function(data) {
-    if (!user) {
-      return socket.emit('logout', { error: "You are not logged in." });
-    }
+  }));
+  socket.on('user.logout', validateLogin(function(data) {
     var room = user.room;
     if (room) {
-      user.leaveRoom()
+      try {
+        room.leave(user);
+      } catch (e) {}
       room.broadcast('room', room.serialize());
     }
     delete users[user.username];
     user=false;
     socket.emit('logout', { error: "You are now logged out!" });
-  });
+  }));
   socket.on('disconnect', function () {
     if (user) {
       if (socket == user.socket)
@@ -269,7 +268,7 @@ io.on('connection', function(socket){
         if (!user.socket) {
           var room = user.room;
           if (room) {
-            user.leaveRoom()
+            room.leave(user)
             room.broadcast('room', room.serialize());
           }
         }

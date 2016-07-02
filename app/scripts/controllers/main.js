@@ -32,10 +32,10 @@ angular.module('answerAThingApp')
       $scope.activePage = 'login';
     });
     $scope.joinRoom = function(room) {
-      drawSocket.emit('user.joinRoom', room);
+      drawSocket.emit('room.join', room);
     };
     $scope.leaveRoom = function() {
-      drawSocket.emit('user.leaveRoom', {});
+      drawSocket.emit('room.leave', {});
     };
     $scope.progress = function(data) {
       $scope.drawboard = data;

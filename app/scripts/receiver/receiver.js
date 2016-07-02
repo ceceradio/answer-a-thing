@@ -11,32 +11,19 @@ angular.module('answerAThingApp')
       controller: function($scope) {
         $scope.data = { users: {} };
         var listener = function(data) {
-          if ($scope.data.users.hasOwnProperty(data.username)) {
-            $scope.data.users[data.username].drawboard = data.drawboard;
+          if (!$scope.gameState.room) return;
+          for (var i in $scope.gameState.room.users) {
+            if ($scope.gameState.room.users[i].username === data.username) {
+              $scope.gameState.room.users[i].drawboard = data.drawboard;  
+            }
           }
         };
         drawboardService.addListener(listener);
         $scope.$on('$destroy', function() {
           drawboardService.removeListener(listener);
         });
-        $scope.$watch('gameState.user.room.users', function(users) {
-          if (!users) {
-            return;
-          }
-          for (var i = 0; i < users.length; i++) {
-            if (!$scope.data.users.hasOwnProperty(users[i])) {
-              $scope.data.users[users[i]] = {};
-              $scope.data.users[users[i]].userIndex = i;
-              $scope.data.users[users[i]].drawboard = { image: "", text: {content: "", color: "#000000"} };
-            }
-          }
-          for(var username in $scope.data.users) {
-            if (users.indexOf(username) < 0) {
-              delete $scope.data.users[username];
-            }
-          }
-        });
-        $scope.$watch('gameState.user.room.bets', function(bets) {
+        // @TODO
+        $scope.$watch('gameState.room.bets', function(bets) {
           for (var username in bets) {
             if ($scope.data.users.hasOwnProperty(username)) {
               $scope.data.users[username].bets = bets[username];
