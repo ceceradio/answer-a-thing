@@ -17,22 +17,22 @@ angular
   .config(function ($routeProvider) {
     $routeProvider
       .when('/login', {
-        templateUrl: 'views/login.html?'+Date.now(),
+        templateUrl: 'components/login/login.html?'+Date.now(),
         controller: 'LoginController'
       })
       .when('/lobby', {
-        templateUrl: 'views/lobby.html?'+Date.now(),
+        templateUrl: 'components/lobby/lobby.html?'+Date.now(),
         controller: 'LobbyController'
       })
       .when('/createroom', {
-        templateUrl: 'views/createroom.html?'+Date.now(),
+        templateUrl: 'components/createroom//createroom.html?'+Date.now(),
         controller: 'CreateRoomController'
       })
       .when('/how-to-play', {
         templateUrl: 'views/howtoplay.html?'+Date.now()
       })
       .when('/room/:room_id', {
-        templateUrl: 'views/room.html?'+Date.now(),
+        templateUrl: 'components/room/room.html?'+Date.now(),
         controller: 'RoomController'
       })
       .otherwise({

@@ -36,7 +36,7 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        files: ['<%= yeoman.app %>/components/**/*.js', '<%= yeoman.app %>/scripts/**/*.js', ],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -82,7 +82,7 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: '0.0.0.0',
+        hostname: 'localhost',
         livereload: 35729
       },
       livereload: {
@@ -207,7 +207,7 @@ module.exports = function (grunt) {
 
     // lobby server runner
     exec: {
-      lobby: 'node server/server.js'
+      lobby: 'node --debug server/server.js'
     },
 
     // Test settings
@@ -216,6 +216,9 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+    concurrent: {
+      dev: ['exec:lobby', ['connect:livereload', 'watch']]
     }
   });
 
@@ -223,16 +226,10 @@ module.exports = function (grunt) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
-
-    if (target === 'lobby') {
-      return grunt.task.run(['exec:lobby']);
-    }
-
     grunt.task.run([
       'clean:server',
       'wiredep',
-      'connect:livereload',
-      'watch'
+      'concurrent:dev'
     ]);
   });
 

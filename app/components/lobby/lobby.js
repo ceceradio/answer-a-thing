@@ -8,7 +8,7 @@
  * Controller of the answerAThingApp
  */
 angular.module('answerAThingApp')
-  .controller('LobbyController', function ($scope, drawSocket, gameState, $location) {
+  .controller('LobbyController', function ($scope, drawSocket, gameState, $location, $interval) {
     $scope.$location = $location;
     $scope.gameState = gameState;
     $scope.user = gameState.user;
@@ -16,6 +16,12 @@ angular.module('answerAThingApp')
     $scope.logout = function() {
       drawSocket.emit('user.logout', {});
     };
+    var getRoomsInterval = $interval(function getRooms() {
+      drawSocket.emit('rooms', {});
+    }, 5000);
+    $scope.$on('$destroy', function() {
+      $interval.cancel(getRoomsInterval);
+    })
     $scope.joinRoom = function(room) {
       if (room.password && !$scope.data.password) {
         $scope.data.form = room.name;

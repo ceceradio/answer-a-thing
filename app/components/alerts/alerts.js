@@ -4,7 +4,7 @@ angular.module('answerAThingApp')
   .directive('alerts', function (drawSocket, gameState) {
     return {
       restrict: 'E',
-      templateUrl: '/views/alerts.html?'+Date.now(),
+      templateUrl: '/components/alerts/alerts.html?'+Date.now(),
       controller: function($scope) {
         $scope.data = {alerts: gameState.alerts};
         $scope.dismissAlert = function(index) {

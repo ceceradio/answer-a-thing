@@ -7,7 +7,7 @@ angular.module('answerAThingApp')
       scope: {
         clickHandler: '='
       },
-      templateUrl: '/views/receiver.html?'+Date.now(),
+      templateUrl: '/components/receiver/receiver.html?'+Date.now(),
       controller: function($scope) {
         $scope.data = { users: {} };
         var listener = function(data) {

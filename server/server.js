@@ -156,6 +156,10 @@ io.on('connection', function(socket){
     }
     socket.emit('user', user.serialize() );
     room.broadcast('room', room.serialize());
+    sendRooms(user);
+  }));
+  socket.on('rooms', validateLogin(function() {
+    sendRooms(user);
   }));
   socket.on('user.login', function(data) {
     if (typeof data.username === "undefined" || !data.username) {

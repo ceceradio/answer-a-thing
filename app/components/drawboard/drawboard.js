@@ -9,7 +9,7 @@ angular.module('answerAThingApp')
         onSubmit: '=',
         onProgress: '=?'
       },
-      templateUrl: '/views/drawboard.html',
+      templateUrl: '/components/drawboard/drawboard.html',
       controller: function($scope) {
         $scope.allColors = [
           '#f00',
