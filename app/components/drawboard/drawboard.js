@@ -1,7 +1,37 @@
 'use strict';
 
 angular.module('answerAThingApp')
-  .directive('drawboard', function ($document, $window) {
+  .controller('EditTextModal', function() {
+
+  })
+  .component('pickColorModal', {
+    templateUrl: '/components/drawboard/pickColorModal.html',
+    bindings: {
+      close: '&'
+    },
+    controller: function PickColorController() {
+      var $ctrl = this;
+      $ctrl.allColors = [
+        '#f00',
+        '#f90',
+        '#cf0',
+        '#3f0',
+        '#0f6',
+        '#0ff',
+        '#06f',
+        '#30f',
+        '#c0f',
+        '#f09',
+        "#fff",
+        "#ccc",
+        "#999",
+        "#666",
+        "#333",
+        "#000"
+      ];
+    }
+  })
+  .directive('drawboard', function ($document, $window, $uibModal) {
     return {
       restrict: 'E',
       scope: {
@@ -47,6 +77,19 @@ angular.module('answerAThingApp')
         $scope.mode = 'paint';
         $scope.text = { content: '', color: '#000000'};
         $scope.cachedImageData = '';
+        $scope.editText = function() {
+          $uibModal.open({
+            templateUrl: '/components/drawboard/editTextModal.html',
+            controller: 'EditTextModal',
+            scope: $scope
+          });
+        }
+        $scope.openColorPicker = function(callback) {
+          var modal = $uibModal.open({
+            component: 'pickColorModal'
+          });
+          modal.result.then(callback);
+        }
       },
       link: function(scope, element) {
         var cumulativeOffset = function(element) {
@@ -68,16 +111,16 @@ angular.module('answerAThingApp')
 
         var ctx = canvas.getContext('2d');
 
-        canvas.width = parseInt($(row).innerWidth());
-        canvas.height = parseInt($(row).innerHeight());
+        canvas.width = parseInt($(row).innerWidth())-1;
+        canvas.height = parseInt($(row).innerWidth()/scope.aspectRatio);
 
         var resizeTimer;
         
         $(window).on('resize', function() {
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(function() {
-            var newWidth = parseInt($(row).innerWidth());
-            var newHeight = parseInt($(row).innerHeight());
+            var newWidth = parseInt($(row).innerWidth())-1;
+            var newHeight = parseInt($(row).innerWidth()/scope.aspectRatio);
             var data = resize(newWidth, newHeight);
             canvas.width = newWidth;
             canvas.height= newHeight;

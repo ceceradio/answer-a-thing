@@ -1,0 +1,14 @@
+<div class="row color-columns">
+    <ul class="list-unstyled col-xs-3">
+        <li ng-repeat="listedColor in $ctrl.allColors | limitTo:4:0"><a ng-click="$ctrl.close({$value: listedColor})"><span ng-style="{'background': listedColor}" class="color-dimple"></span></a></li>
+    </ul>
+    <ul class="list-unstyled col-xs-3">
+        <li ng-repeat="listedColor in $ctrl.allColors | limitTo:4:4"><a ng-click="$ctrl.close({$value: listedColor})"><span ng-style="{'background': listedColor}" class="color-dimple"></span></a></li>
+    </ul>
+    <ul class="list-unstyled col-xs-3">
+        <li ng-repeat="listedColor in $ctrl.allColors | limitTo:4:8"><a ng-click="$ctrl.close({$value: listedColor})"><span ng-style="{'background': listedColor}" class="color-dimple"></span></a></li>
+    </ul>
+    <ul class="list-unstyled col-xs-3">
+        <li ng-repeat="listedColor in $ctrl.allColors | limitTo:4:12"><a ng-click="$ctrl.close({$value: listedColor})"><span ng-style="{'background': listedColor}" class="color-dimple"></span></a></li>
+    </ul>
+</div>

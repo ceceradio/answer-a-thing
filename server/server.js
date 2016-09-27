@@ -24,10 +24,12 @@ var Room = require('./Room.js');
 
 
 app.listen(40001);
+/*
 if (process.setgid) {
   process.setgid('ubuntu');
   process.setuid('ubuntu');
 }
+*/
 console.log("Lobby Server started on 40001");
 
 function handler (req, res) {

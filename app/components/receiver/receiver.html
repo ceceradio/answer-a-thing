@@ -1,16 +1,20 @@
-<h4>Other Players</h4>
-<div class="receivers">
-  <div class="receiver" ng-repeat="user in gameState.room.users track by user.username" ng-hide="user.username == gameState.room.caller">
-    <div ng-click="clickHandler(user.username)">
-      <p class="text-center">{{user.username}}</p>
-      <div class="receiver-container">
-        <div ng-style="{ color: user.drawboard.text.color }" class="text-overlay small" unselectable="on">
-            {{user.drawboard.text.content}}
-        </div>
-        <img width="100%" ng-src="{{user.drawboard.image}}"/>
-        <span class="selected glyphicon glyphicon-heart" ng-show="gameState.room.winningUser && user.username === gameState.room.winningUser"></span>
-        <div class="bets">
-          <p ng-repeat="username in user.reverseBets track by $index">{{username}}</p>
+<br/>
+<br/>
+<h4>All Players</h4>
+<div class="receivers row">
+  <div class="col-xs-12 col-sm-6" ng-repeat="user in gameState.room.users track by user.username" ng-hide="user.username == gameState.room.caller">
+    <div class="receiver">
+      <div ng-click="clickHandler(user.username)">
+        <p class="text-center">{{user.username}}</p>
+        <div class="receiver-container">
+          <div ng-style="{ color: user.drawboard.text.color }" class="text-overlay small" unselectable="on">
+              {{user.drawboard.text.content}}
+          </div>
+          <img width="100%" ng-src="{{user.drawboard.image}}"/>
+          <span class="selected glyphicon glyphicon-heart" ng-show="gameState.room.winningUser && user.username === gameState.room.winningUser"></span>
+          <div class="bets">
+            <p ng-repeat="username in user.reverseBets track by $index">{{username}}</p>
+          </div>
         </div>
       </div>
     </div>

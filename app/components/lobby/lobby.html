@@ -1,16 +1,37 @@
 <div class="row">
-	<div class="col-xs-7"><h5>Answer A Thing</h5></div>
-	<div class="col-xs-5 text-right"><a class="btn btn-default" ng-click="logout()">Logout</a></div>
+	<div class="col-xs-10"><h1>Special Answer</h1></div>
+	<div class="col-xs-2 text-right"><a class="btn btn-default" ng-click="logout()">Exit</a></div>
 </div>
-<p>Join or create a room to play.<br/><a href="#/how-to-play">How to Play?</a></p>
-<div class="rooms">
-  <div class="row well" ng-repeat="room in gameState.rooms track by $id(room)">
-    <h4 class="col-xs-7 col-md-8 col-md-offset-1">{{room.name}} <span class="glyphicon glyphicon-lock" ng-if="room.password"></span></h4>
-    <button class="col-xs-5  col-md-2 btn btn-primary" ng-click="joinRoom(room)">Join Room</button>
-    <div class="form-group col-xs-12 col-md-offset-1 col-md-10" ng-show="data.form == room.name">
-    	<label>Password</label>
-    	<input class="form-control" id="pw-{{room.$$hashKey}}" type="password" name="password" ng-model="data.password"/>
+<p>Join or create a room to play.<br/><a ng-click="openHowToPlay()">How to Play?</a></p>
+<div class="rooms row">
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="room-card well">
+      <h3>New Room <span class="glyphicon glyphicon-lock" ng-if="room.password"></span></h3>
+      <div class="players-container">
+        <div class="players empty">
+          <h4>Let's Go!</h4>
+        </div>
+      </div>
+      <button class="btn btn-primary" ng-click="$location.url('createroom')"><h4>Create Room</h4></button>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="room in gameState.rooms track by room.name">
+    <div class="room-card well">
+      <h3>{{room.name}} <span class="glyphicon glyphicon-lock" ng-if="room.password"></span></h3>
+      <div class="players-container">
+        <div class="players row">
+          <div ng-repeat="number in slots" class="player-icon col-xs-4" ng-class="{active: room.users.length > $index}"><div class="inner"><span class="glyphicon glyphicon-thumbs-up"></span></div></div>
+          <div class="col-xs-12">
+            <p ng-if="room.state.status=='waiting'">Waiting for players...</p>
+            <p ng-if="!room.state.status=='waiting'">Game in progress!</p>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" ng-click="joinRoom(room)"><h4>Join Room</h4></button>
+      <div class="form-group col-xs-12 col-md-offset-1 col-md-10" ng-show="data.form == room.name">
+      	<label>Password</label>
+      	<input class="form-control" id="pw-{{room.$$hashKey}}" type="password" name="password" ng-model="data.password"/>
+      </div>
     </div>
   </div>
 </div>
-<button class="btn btn-primary col-xs-12" ng-click="$location.url('createroom')"><h1>Create Room</h1></button>

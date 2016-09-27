@@ -10,6 +10,7 @@
  */
 angular
   .module('answerAThingApp', [
+    'ui.bootstrap',
     'ngRoute',
     'ngTouch',
     'btford.socket-io'

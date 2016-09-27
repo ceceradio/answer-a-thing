@@ -1,12 +1,11 @@
-<h3 class="row">
+<div class="row">
   <div class="col-xs-10">
-    {{gameState.room.name}}
+    <h3>{{gameState.room.name}}</h3>
   </div>
   <div class="col-xs-2 text-right">
-    
     <button class="btn btn-default" ng-click="leaveRoom()"><span class="glyphicon glyphicon-remove"></span></button>
   </div>
-</h3>
+</div>
 <h4 ng-show="isCaller()">You are the caller</h4>
 <p class="well well-sm" ng-show="!isArray(gameState.room.question) && gameState.room.question">{{gameState.room.caller}} Asks: {{gameState.room.question}} <span ng-show="gameState.room.state.timerEnd && !isCaller() && gameState.room.state.status == 'playersAnswerQuestion'">({{ timeLeft }}s Left)</span></p>
 <div class="row question-row" ng-show="isArray(gameState.room.question) && isCaller()">

@@ -9,6 +9,7 @@
  */
 angular.module('answerAThingApp')
   .controller('LobbyController', function ($scope, drawSocket, gameState, $location, $interval) {
+    $scope.slots = [0, 1, 2, 3, 4, 5];
     $scope.$location = $location;
     $scope.gameState = gameState;
     $scope.user = gameState.user;

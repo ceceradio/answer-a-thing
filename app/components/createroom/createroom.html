@@ -1,13 +1,14 @@
-<div class="row">
-  <form ng-submit="createRoom(room)">
-    <div class="form-group">
-      <label>Room Name</label>
-      <input type="text" class="form-control" ng-model="room.name"/>
-    </div>
-    <div class="form-group">
-      <label>Password (optional)</label>
-      <input type="text" class="form-control" ng-model="room.password"/>
-    </div>
-    <button type="submit" class="btn btn-primary">Create Room</button>
-  </form>
-</div>
+<h1>Special Answer</h1>
+<h5>Create a Room</h5>
+<br/>
+<form ng-submit="createRoom(room)">
+  <div class="form-group">
+    <label>Room Name</label>
+    <input type="text" class="form-control" ng-model="room.name"/>
+  </div>
+  <div class="form-group">
+    <label>Password (optional)</label>
+    <input type="text" class="form-control" ng-model="room.password"/>
+  </div>
+  <button type="submit" class="btn btn-primary">Create Room</button>
+</form>

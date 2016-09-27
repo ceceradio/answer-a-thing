@@ -1,57 +1,100 @@
 <div class="drawboard-container row">
-    <div ng-keypress="keypress($event)" ng-click="click($event)" tabindex="0" class="drawboard">
-        <div ng-style="{ color: text.color }" class="text-overlay large" unselectable="on">
-            {{text.content}}
+    <div class="col-xs-12 col-sm-11 col-md-11 col-lg-9">
+        <div class="drawboard" ng-keypress="keypress($event)" ng-click="click($event)" tabindex="0">
+            <div ng-style="{ color: text.color }" class="text-overlay large" unselectable="on">
+                {{text.content}}
+            </div>
+            <canvas></canvas>
         </div>
-        <canvas></canvas>
     </div>
-    <div class="tools">
-        <div class="col-xs-12">
-            <p>Brush</p>
-            <div class="brush-buttons row">
-                <div class="col-xs-3">
-                    <div class="btn-group">
-                        <button class="btn btn-primary btn-dimple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span ng-style="{'background': color}" class="color-dimple"></span><span class="caret"></span>
+    <div class="hidden-xs col-sm-1 col-md-1 col-lg-3 drawboard-controls-md">
+        <h4 class="visible-lg-block">Drawing Tools</h4>
+        <h4><span class="glyphicon glyphicon-pencil"></span></h4>
+        <span class="brush-buttons">
+            <button class="btn btn-default btn-dimple" ng-click="openColorPicker(setColor)">
+                <span ng-style="{'background': color}" class="color-dimple"></span>
+            </button>
+            <div class="btn-group">
+                <button class="btn btn-default btn-dimple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="dimple-container">
+                        <span ng-style="{'background': color}" class="dimple" ng-class="{'small': size==3, 'medium': size==5, 'large': size==8}"></span>
+                    </div>
+                </button>
+                <ul class="dropdown-menu size-dropdown">
+                    <li class="size3"><a ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></a></li>
+                    <li class="size5"><a ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></a></li>
+                    <li class="size8"><a ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></a></li>
+                </ul>
+            </div>
+        </span>
+        <br/>
+        <br/>
+        <h4><span class="glyphicon glyphicon-font"></span></h4>
+        <span class="text-buttons">
+            <button class="btn btn-default btn-dimple" ng-click="openColorPicker(setTextColor)">
+                <span ng-style="{'background': text.color}" class="color-dimple"></span>
+            </button>
+            <button type="button" class="btn btn-default" ng-click="editText()"><span class="glyphicon glyphicon-text-color"></span></button>
+        </span>
+        <br/>
+        <br/>
+        <h4><span class="glyphicon glyphicon-picture"></span></h4>
+        <button type="button" class="btn btn-default" ng-click="clear()"><span class="glyphicon glyphicon-trash"></span></button>
+        <button type="button" class="btn btn-default" ng-click="onSubmit()"><span class="glyphicon glyphicon-ok"></span></button>
+    </div>
+    <div class="visible-xs-block col-xs-12 drawboard-controls">
+        <div class="col-xs-12 text-center">
+            <div class="row">
+                <div class="col-xs-2">
+                    <h6><span class="glyphicon glyphicon-pencil"></span></h6>
+                </div>
+                <div class="col-xs-5">
+                    <button class="btn btn-default btn-dimple" ng-click="openColorPicker(setColor)">
+                        <span ng-style="{'background': color}" class="color-dimple"></span> Color
+                    </button>
+                </div>
+                <div class="col-xs-5">
+                    <div class="btn-group dropup">
+                        <button class="btn btn-default btn-dimple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="dimple-container">
+                                <span ng-style="{'background': color}" class="dimple" ng-class="{'small': size==3, 'medium': size==5, 'large': size==8}"></span> Size
+                            </div>
                         </button>
-                        <ul class="dropdown-menu color-dropdown">
-                            <li ng-repeat="listedColor in allColors"><a ng-click="setColor(listedColor)"><span ng-style="{'background': listedColor}" class="color-dimple"></span></a></li>
+                        <ul class="dropdown-menu size-dropdown">
+                            <li><a ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></a></li>
+                            <li><a ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></a></li>
+                            <li><a ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-xs-3">
-                    <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==3, 'btn-default': size !== 3 }" ng-click="size=3"><span ng-style="{'background': color}" class="dimple small"></span></button>
-                </div>
-                <div class="col-xs-3">
-                    <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==5, 'btn-default': size !== 5 }" ng-click="size=5"><span ng-style="{'background': color}" class="dimple medium"></span></button>
-                </div>
-                <div class="col-xs-3">
-                    <button class="btn btn-dimple" ng-class="{ 'btn-primary': size==8, 'btn-default': size !== 8 }" ng-click="size=8"><span ng-style="{'background': color}" class="dimple large"></span></button>
-                </div>
             </div>
         </div>
-        <div class="clearfix visible-sm-block hidden-xs"></div>
-        <div class="form-group col-xs-12">
-            <p>Text</p>
-            <div class="input-group">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary btn-dimple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span ng-style="{'background': text.color}" class="color-dimple"></span><span class="caret"></span>
+        <div class="col-xs-12 text-center">
+            <div class="row">
+                <div class="col-xs-2">
+                    <h6><span class="glyphicon glyphicon-font"></span></h6>
+                </div>
+                <div class="col-xs-5">
+                    <button class="btn btn-default btn-dimple" ng-click="openColorPicker(setTextColor)">
+                        <span ng-style="{'background': text.color}" class="color-dimple"></span> Color
                     </button>
-                    <ul class="dropdown-menu color-dropdown">
-                        <li ng-repeat="listedColor in allColors"><a ng-click="setTextColor(listedColor)"><span ng-style="{'background': listedColor}" class="color-dimple"></a></li>
-                    </ul>
-                </span>
-                <input type="text" class="form-control" ng-model="text.content"/>
-            </div> 
-        </div>
-        <div class="clearfix"></div>
-        <div class="row clear-and-submit">
-            <div class="col-xs-6">
-                <button type="button" class="btn btn-default" ng-click="clear()">Clear</button>
+                </div>
+                <div class="col-xs-5">
+                    <button type="button" class="btn btn-default" ng-click="editText()"><span class="glyphicon glyphicon-text-color"></span> Input</button>
+                </div>
             </div>
-            <div class="col-xs-6 text-right">
-                <button type="button" class="btn btn-default" ng-click="onSubmit()">Submit</button>
+        </div>
+        <div class="col-xs-12 text-center">
+            <div class="row">
+                <div class="col-xs-2">
+                    <h6><span class="glyphicon glyphicon-picture"></span></h6>
+                </div>
+                <div class="col-xs-5">
+                    <button type="button" class="btn btn-default" ng-click="clear()"><span class="glyphicon glyphicon-trash"></span> Clear</button>
+                </div>
+                <div class="col-xs-5">
+                    <button type="button" class="btn btn-default" ng-click="onSubmit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+                </div>
             </div>
         </div>
     </div>

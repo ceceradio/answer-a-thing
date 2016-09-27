@@ -1,6 +1,262 @@
+@font-face {
+    font-family: 'Andes';
+    src:url('../fonts/Andes.ttf.woff') format('woff'),
+        url('../fonts/Andes.ttf.svg#Andes') format('svg'),
+        url('../fonts/Andes.ttf.eot'),
+        url('../fonts/Andes.ttf.eot?#iefix') format('embedded-opentype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+/** Ultra Light */
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 100;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-ultralight-webfont.woff");
+}
+
+/** Thin */
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff");
+}
+
+/** Regular */
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 400;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff");
+}
+
+/** Medium */
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 500;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff");
+}
+
+/** Semi Bold */
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 600;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff");
+}
+
+/** Bold */ 
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 700;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff");
+}
 body {
   padding: 0;
+  font-family: 'San Francisco';
+  font-weight:400;
 }
+h6 { font-size: 1.5em; }
+h5 { font-size: 2.0em; }
+h4 { font-size: 2.5em; }
+h3 { font-size: 3.0em; }
+h2 { font-size: 3.5em; }
+h1 { font-size: 4.0em; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin:0;
+  font-family: 'Andes';
+  text-transform: lowercase;
+}
+label {
+  font-family: 'San Francisco';
+  font-weight:400;
+}
+.room-card {
+  text-align:center;
+  border:4px solid #B378D3;
+  
+  border-radius:4px;
+  position: relative;
+  background:transparent;
+  left:0px;
+  top:0px;
+  box-sizing:content-box;
+}
+.room-card::before {
+  content: ' ';
+  display:block;
+  border:5px solid #ccc;
+  border-radius:4px;
+  background:transparent;
+  position:absolute;
+  left:-2px;
+  top:-2px;
+  height:100%;
+  width:100%;
+  box-sizing:content-box;
+  z-index:-10000;
+}
+.room-card h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top:0;
+  margin-bottom:0;
+}
+.room-card button {
+  width:100%;
+}
+.room-card .players-container {
+  height:280px;
+}
+.room-card .players {
+  height:240px;
+  margin: 28px 0;
+}
+.room-card .players.empty {
+  border:4px solid #ccc;
+  border-radius:4px;
+  background:repeating-linear-gradient(
+    45deg,
+    #FFF0F5,
+    #FFF0F5 10px,
+    #E6E6FA 10px,
+    #E6E6FA 20px
+  );
+  position:relative;
+  left:3px;
+  top:3px;
+  box-sizing:content-box;
+}
+.room-card .players.empty::before {
+  content: ' ';
+  display:block;
+  border:4px solid #B378D3;
+  border-radius:4px;
+  background:transparent;
+  position:absolute;
+  left:-7px;
+  top:-7px;
+  height:240px;
+  width:100%;
+  box-sizing:content-box;
+}
+.room-card .players.empty h4 {
+  padding-top:80px;
+  -webkit-animation: letsgo 5s infinite; /* Chrome, Safari, Opera */
+  animation: letsgo 5s infinite;
+}
+@keyframes letsgo {
+  from {
+    margin-top:0;
+    font-size:40px;
+  }
+  50% {
+    margin-top:-10px;
+    font-size:42px;
+  }
+  to {
+    margin-top:0;
+    font-size:40px;
+  }
+}
+.room-card .player-icon {
+  margin-bottom:30px;
+}
+.room-card .player-icon .inner {
+  font-size:4.5em;
+  width:1em;
+  height:1em;
+  border:3px solid #ccc;
+  border-radius:4px;
+  background:repeating-linear-gradient(
+    45deg,
+    #FFF0F5,
+    #FFF0F5 10px,
+    #E6E6FA 10px,
+    #E6E6FA 20px
+  );
+  position:relative;
+  left:3px;
+  top:3px;
+  box-sizing:content-box;
+}
+.room-card .player-icon .inner::before {
+  content: ' ';
+  display:block;
+  border:3px solid #B378D3;
+  border-radius:4px;
+  background:transparent;
+  position:absolute;
+  left:-5px;
+  top:-5px;
+  height:1em;
+  width:1em;
+  box-sizing:content-box;
+}
+.room-card .player-icon .glyphicon {
+  vertical-align: 45%;
+  font-size:0.6em;
+  opacity:0;
+}
+@keyframes playericon {
+  from {
+    vertical-align: 30%;
+    font-size:0.6em;
+  }
+  50% {
+    vertical-align: 50%;
+    font-size:0.66em;
+  }
+  to {
+    vertical-align: 30%;
+    font-size:0.6em;
+  }
+}
+.room-card .player-icon.active .glyphicon {
+  opacity:1;
+  -webkit-animation: playericon 3s infinite; /* Chrome, Safari, Opera */
+  animation: playericon 3s infinite;
+}
+@media (min-width: 992px) and (max-width: 1200px) {
+  .room-card .players,
+  .room-card .players.empty::before {
+    height:200px;
+  }
+  .room-card .players.empty h4 {
+    padding-top:70px;
+  }
+  .room-card .player-icon .inner {
+    font-size:4em;
+  }
+}
+@media (min-width: 768px) and (max-width: 992px) {
+  .room-card .players,
+  .room-card .players.empty::before {
+    height:200px;
+  }
+  .room-card .players.empty h4 {
+    padding-top:60px;
+  }
+  .room-card .player-icon .inner {
+    font-size:4em;
+  }
+}
+@media (max-width: 768px) {
+  .room-card .players,
+  .room-card .players.empty::before {
+    height:200px;
+  }
+  .room-card .players.empty h4 {
+    padding-top:60px;
+  }
+  .room-card .player-icon .inner {
+    font-size:16vw;
+  }
+}
+
 .btn > h1,
 .btn > h2,
 .btn > h3,
@@ -9,22 +265,14 @@ body {
 .btn > h6 {
   margin:0;
 }
-.drawboard-container {
-  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
-  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
-  display: -ms-flexbox;      /* TWEENER - IE 10 */
-  display: -webkit-flex;     /* NEW - Chrome */
-  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
 .drawboard {
-  width:90vw;
-  height:60vw;
-  margin-left:auto;
-  margin-right:auto;
-  border:1px solid #ccc;
-  position:relative;
+  padding:0;
+  border:4px solid #B378D3;
+  border-radius:4px;
+  position: relative;
+  background:transparent;
+  left:0px;
+  top:0px;
 }
 .tools {
   width:90vw;
@@ -32,21 +280,28 @@ body {
 .rooms {
   margin-top:2vw;
 }
-.receivers {
-  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
-  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
-  display: -ms-flexbox;      /* TWEENER - IE 10 */
-  display: -webkit-flex;     /* NEW - Chrome */
-  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
 .receiver {
-  width:48%;
-  border: 1px solid #ccc;
+  border:4px solid #B378D3;
   border-radius:4px;
+  background:transparent;
+  left:0px;
+  top:0px;
   padding:8px;
-  margin:1%;
+  position:relative;
+}
+.receiver::before {
+  content: ' ';
+  display:block;
+  border:5px solid #ccc;
+  border-radius:4px;
+  background:transparent;
+  position:absolute;
+  left:-2px;
+  top:-2px;
+  height:100%;
+  width:100%;
+  box-sizing:content-box;
+  z-index:-10000;
 }
 .receiver .selected {
   font-size: 8vw;
@@ -84,32 +339,20 @@ body {
 }
 .btn-dimple {
   min-width:2.4em;
-  height:2.4em;
   padding:0.2em;
   position: relative;
 }
-.btn-dimple.dropdown-toggle {
-  padding-left: 2.2em;
-}
 .color-dimple {
-  position: absolute;
+  display:inline-block;
   width:1.5em;
   height:1.5em;
   left:0.35em;
   top:0.35em;
+  margin-left: 3px;
+  margin-right: 3px;
 }
 .input-group-btn .btn-dimple {
-  padding: 6px 12px;
-  padding-left: 2em;
-  height:auto;
-  width:auto;
-}
-.input-group-btn .btn-dimple .color-dimple {
-  position: absolute;
-  width:1.5em;
-  height:1.5em;
-  left:0.2em;
-  top:0.35em;
+  margin:auto;
 }
 .text-overlay.large {
   font-size: 8vw;
@@ -123,7 +366,7 @@ body {
   width:1em;
   height:1em;
   border-radius:0.5em;
-  display:block;
+  display:inline-block;
   background:#999;
   margin:auto;
 }
@@ -146,21 +389,117 @@ body {
   margin-right:15px;
   margin-bottom:2vw;
 }
+.size-dropdown,
 .color-dropdown {
   min-width:0;
+  background:repeating-linear-gradient(
+    45deg,
+    #FFF0F5,
+    #FFF0F5 10px,
+    #E6E6FA 10px,
+    #E6E6FA 20px
+  );
 }
-.brush-buttons>.btn-group,
-.brush-buttons>.btn {
+.size-dropdown li {
+  height:32px;
+  margin-top:12px;
+  text-align: center;
+}
+.color-columns {
+  background:repeating-linear-gradient(
+    45deg,
+    #FFF0F5,
+    #FFF0F5 10px,
+    #E6E6FA 10px,
+    #E6E6FA 20px
+  );
+  font-size:6vw;
+}
+.color-columns span {
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:6px;
+  margin-bottom:6px;
+  display:block;
+}
+.text-buttons button{
+  width:42px;
+}
+.brush-buttons button {
+  width:42px;
+}
+.btn-dimple .dimple-container {
+  height:24px;
+}
+.btn-dimple span.small {
+  position:relative;
+  margin-left:8px;
+  margin-right:8px;
+}
+.btn-dimple span.medium {
+  position:relative;
+  vertical-align: -20%;
+  margin-left:4px;
+  margin-right:4px;
+}
+.btn-dimple .color-dimple {
+  vertical-align: -30%;
+}
+.visible-xs-block .btn-dimple {
+  padding-right:8px;
+}
+.visible-xs-block .btn-dimple span.small {
+  top:0;
+  vertical-align: 10%;
+}
+.visible-xs-block .btn-dimple span.medium {
+  top:0;
+  vertical-align: -10%;
+}
+.visible-xs-block .btn-dimple span.large {
+  top:0;
+  vertical-align: -20%;
+}
+.visible-xs-block .color-dimple {
+  vertical-align: -30%;
+}
+.hidden-xs button .glyphicon {
+  vertical-align: -15%;
+}
+.visible-xs-block button .glyphicon {
+  vertical-align: -10%;
+}
+.drawboard-controls .btn-group,
+.drawboard-controls h6,
+.drawboard-controls-md h4 {
   display:inline-block;
-  float:none;
+}
+.drawboard-controls li {
+  height:32px;
+}
+.drawboard-controls button {
+  height:40px;
+  margin-bottom:12px;
+  margin-right:8px;
+}
+.drawboard-controls-md button {
+  height:36px;
+  margin-bottom:12px;
+  margin-right:12px;
+}
+.drawboard-controls h6 {
+  vertical-align: -50%;
+  margin-bottom:12px;
+  margin-right:12px;
+}
+.drawboard-controls-md h4 {
+  vertical-align: -15%;
+  margin-bottom:12px;
+  margin-right:12px;
 }
 
 @media (min-width: 768px) {
   .drawboard {
-    width:70vw;
-    height:46.67vw;
-    margin-left:auto;
-    margin-right:auto;
   }
   .tools {
     width:25vw;
